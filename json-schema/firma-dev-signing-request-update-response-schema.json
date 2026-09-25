@@ -1,0 +1,397 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/firma-dev/main/json-schema/firma-dev-signing-request-update-response-schema.json",
+  "title": "SigningRequestUpdateResponse",
+  "description": "Signing request update result",
+  "x-generated": "2026-09-25",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/firma-dev-signing-requests-api-openapi.yml#/components/schemas/SigningRequestUpdateResponse",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Signing request ID (for backward compatibility)"
+    },
+    "name": {
+      "type": "string",
+      "description": "Signing request name (for backward compatibility)"
+    },
+    "signing_request": {
+      "type": "object",
+      "description": "Summary of the updated signing request (subset of full SigningRequest schema)",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Signing request ID"
+        },
+        "name": {
+          "type": "string",
+          "description": "Signing request name"
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Signing request description (mapped from template_description)"
+        },
+        "document_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Pre-signed URL to the PDF document"
+        },
+        "document_url_expires_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "description": "When the document URL expires"
+        },
+        "document_page_count": {
+          "type": "integer",
+          "description": "Number of pages in the document"
+        },
+        "status": {
+          "type": "string",
+          "description": "Current status of the signing request"
+        },
+        "expiration_hours": {
+          "type": "integer",
+          "description": "Hours until signing request expires"
+        },
+        "settings": {
+          "type": "object",
+          "description": "Subset of signing request settings returned in PUT response",
+          "properties": {
+            "allow_download": {
+              "type": "boolean",
+              "description": "Whether recipients can download the document"
+            },
+            "attach_pdf_on_finish": {
+              "type": "boolean",
+              "description": "Whether to attach PDF on completion"
+            },
+            "hand_drawn_only": {
+              "type": "boolean",
+              "description": "Whether only hand-drawn signatures are allowed"
+            }
+          }
+        },
+        "template_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid",
+          "description": "Template ID if created from a template"
+        },
+        "expires_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "description": "ISO 8601 timestamp when the signing request expires"
+        },
+        "created_date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation timestamp"
+        },
+        "sent_date": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "description": "When the signing request was sent"
+        },
+        "finished_date": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "description": "When all signatures were completed"
+        },
+        "cancelled_date": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "description": "When the signing request was cancelled"
+        }
+      }
+    },
+    "recipients": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Recipient"
+      },
+      "description": "Updated recipients list"
+    },
+    "reminders": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Reminder"
+      },
+      "description": "Updated reminders list"
+    },
+    "summary": {
+      "type": "object",
+      "description": "Summary of all changes made in this update",
+      "properties": {
+        "properties_updated": {
+          "type": "boolean",
+          "description": "Whether any properties were updated"
+        },
+        "recipients_created": {
+          "type": "integer",
+          "description": "Number of new recipients created"
+        },
+        "recipients_updated": {
+          "type": "integer",
+          "description": "Number of existing recipients updated"
+        },
+        "recipients_deleted": {
+          "type": "integer",
+          "description": "Number of recipients soft-deleted"
+        },
+        "fields_created": {
+          "type": "integer",
+          "description": "Number of new fields created"
+        },
+        "fields_updated": {
+          "type": "integer",
+          "description": "Number of existing fields updated"
+        },
+        "fields_reassigned": {
+          "type": "integer",
+          "description": "Number of fields reassigned to another recipient"
+        },
+        "fields_deleted": {
+          "type": "integer",
+          "description": "Number of fields soft-deleted"
+        },
+        "reminders_created": {
+          "type": "integer",
+          "description": "Number of new reminders created"
+        },
+        "reminders_updated": {
+          "type": "integer",
+          "description": "Number of existing reminders updated"
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Email format warnings for recipients (non-blocking)"
+        }
+      }
+    }
+  },
+  "required": [
+    "id",
+    "name"
+  ],
+  "$defs": {
+    "Recipient": {
+      "type": "object",
+      "required": [
+        "first_name",
+        "email",
+        "designation"
+      ],
+      "description": "Recipient schema with auto-construction and mapping behaviors. **Name field**: Auto-constructed from first_name and last_name ('First Last' if both present, otherwise 'First'). Manual name values are overwritten. **Order assignment**: ALL recipients MUST have an explicit order value. Order determines the signing sequence, which is always enforced. Recipients must sign in order, with lower numbers signing first. **Custom fields**: Supports both flat structure (e.g., company_name at root) and nested structure (custom_fields object). Both formats are normalized internally. **Template field mapping**: When creating from a template with custom recipients, use template_user_id or order to match template users. Only user info (name, email, phone, etc.) can be updated - order and designation are inherited from template. A recipient with designation CC is never matched to a template user; it is added as a CC recipient, and the template's CC recipients are copied to the signing request, skipping any whose email (case-insensitive) is already on a CC recipient of the request. **Temporary IDs**: For document-based creation, use temporary IDs (format: 'temp_1', 'temp_2', etc.) to reference recipients in fields and reminders before they're created. **CC recipients**: CC recipients receive a completed copy but cannot sign or have fields assigned. At least one Signer is required. An existing recipient cannot be changed between CC and Signer/Approver (400); delete it and create it again.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier. For updates: use existing UUID. For document-based creation: optionally use temporary ID (format: 'temp_1', 'temp_2', etc.) to reference recipients in fields and reminders before creation. Temporary IDs are automatically resolved to real UUIDs in the response."
+        },
+        "_temp_id": {
+          "type": "string",
+          "description": "Temporary identifier for new recipients in PUT (comprehensive update) requests (e.g., 'temp_1'). Use this when creating new recipients alongside existing ones in comprehensive updates. Must start with 'temp_' and be unique within the request. Not used for POST (create) requests - use 'id' field instead."
+        },
+        "template_user_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "When creating from a template, the ID of the template user to update. If provided, this recipient's data will update the matching template user. If not provided, falls back to matching by order. Only user info (name, email, phone, address, title, company) can be updated - order and designation are always inherited from the template. Not used for CC recipients, which are never matched to a template user."
+        },
+        "first_name": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Recipient's first name"
+        },
+        "last_name": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Recipient's last name (optional, but required if using full_name or last_name prefilled variables)"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "maxLength": 255,
+          "description": "Recipient's email address"
+        },
+        "designation": {
+          "type": "string",
+          "enum": [
+            "Signer",
+            "Approver",
+            "CC"
+          ],
+          "description": "Role of the recipient. Signer signs the document, Approver approves with approval fields, CC receives a copy when complete."
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Signing sequence number. Recipients must sign in order, with lower numbers signing first. This field is required for all recipients."
+        },
+        "phone_number": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 50,
+          "description": "Recipient's phone number"
+        },
+        "street_address": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 255,
+          "description": "Street address"
+        },
+        "city": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 100,
+          "description": "City"
+        },
+        "state_province": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 100,
+          "description": "State or province"
+        },
+        "postal_code": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 20,
+          "description": "Postal/ZIP code"
+        },
+        "country": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 100,
+          "description": "Country"
+        },
+        "title": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 100,
+          "description": "Job title"
+        },
+        "company": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 255,
+          "description": "Company name"
+        },
+        "custom_fields": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Custom key-value pairs for additional recipient data"
+        }
+      }
+    },
+    "Reminder": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Unique identifier for the reminder"
+        },
+        "hours": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Hours after sending before reminder is sent"
+        },
+        "subject": {
+          "type": "string",
+          "description": "Email subject for the reminder",
+          "maxLength": 255
+        },
+        "message": {
+          "type": "string",
+          "description": "Email message body for the reminder",
+          "maxLength": 5000
+        },
+        "all_users": {
+          "type": "boolean",
+          "description": "Whether reminder applies to all users"
+        },
+        "template_user_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid",
+          "description": "Specific user to send reminder to (used in template context)"
+        },
+        "recipient_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid",
+          "description": "Specific recipient to send reminder to (used in signing request context, same as template_user_id)"
+        },
+        "sent_on": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "description": "Timestamp when the reminder was actually sent"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Reminder creation timestamp"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Reminder last update timestamp"
+        }
+      },
+      "required": [
+        "id",
+        "hours",
+        "subject",
+        "message"
+      ]
+    }
+  }
+}

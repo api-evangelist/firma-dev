@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/firma-dev/main/json-schema/firma-dev-custom-field-list-response-schema.json",
+  "title": "CustomFieldListResponse",
+  "description": "List of custom fields",
+  "x-generated": "2026-09-25",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/firma-dev-custom-fields-api-openapi.yml#/components/schemas/CustomFieldListResponse",
+  "type": "object",
+  "properties": {
+    "custom_fields": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/WorkspaceCustomField"
+      }
+    }
+  },
+  "required": [
+    "custom_fields"
+  ],
+  "$defs": {
+    "WorkspaceCustomField": {
+      "type": "object",
+      "description": "A custom field definition for a workspace",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Unique identifier"
+        },
+        "field_name": {
+          "type": "string",
+          "description": "Machine-readable field name (auto-generated from label)"
+        },
+        "field_label": {
+          "type": "string",
+          "description": "Human-readable display label"
+        },
+        "is_preset": {
+          "type": "boolean",
+          "description": "If true, this field has a preset value for all users"
+        },
+        "preset_value": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Preset value (only used when is_preset=true)"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "field_name",
+        "field_label"
+      ]
+    }
+  }
+}

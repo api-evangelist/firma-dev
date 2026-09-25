@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/firma-dev/main/json-schema/firma-dev-api-key-regenerate-response-schema.json",
+  "title": "ApiKeyRegenerateResponse",
+  "description": "API key regeneration result",
+  "x-generated": "2026-09-25",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/firma-dev-workspaces-api-openapi.yml#/components/schemas/ApiKeyRegenerateResponse",
+  "type": "object",
+  "properties": {
+    "new_key": {
+      "type": "object",
+      "description": "The newly generated API key",
+      "properties": {
+        "api_key": {
+          "type": "string",
+          "description": "The new API key value"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the key was created"
+        }
+      }
+    },
+    "key_type": {
+      "type": "string",
+      "enum": [
+        "live",
+        "test"
+      ],
+      "description": "The key type that was regenerated"
+    },
+    "expiring_keys": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "api_key": {
+            "type": "string",
+            "description": "The expiring API key value"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "description": "List of keys that were set to expire in 24 hours"
+    },
+    "workspace_id": {
+      "type": "string",
+      "format": "uuid"
+    }
+  },
+  "required": [
+    "new_key",
+    "key_type",
+    "workspace_id"
+  ]
+}

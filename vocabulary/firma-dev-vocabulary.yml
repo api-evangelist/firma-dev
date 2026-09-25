@@ -1,0 +1,421 @@
+generated: '2026-09-25'
+method: derived
+generator: derive-vocabulary.py
+source:
+- openapi/firma-dev-company-api-openapi.yml
+- openapi/firma-dev-custom-fields-api-openapi.yml
+- openapi/firma-dev-email-domains-api-openapi.yml
+- openapi/firma-dev-email-templates-api-openapi.yml
+- openapi/firma-dev-jwt-management-api-openapi.yml
+vocabulary:
+  name: Firma.dev Domain Vocabulary
+  description: 'Terms declared by Firma.dev''s own API contract: its resource groups, objects and enumerations, with the contract''s definitions.
+    Derived, not authored.'
+  version: '2026-09-25'
+  terms:
+  - term: Company
+    definition: Company information and settings
+    tags:
+    - Resource Group
+    source: openapi/firma-dev-company-api-openapi.yml
+  - term: Custom Fields
+    definition: Custom field definition management for workspaces, templates, and signing requests
+    tags:
+    - Resource Group
+    source: openapi/firma-dev-custom-fields-api-openapi.yml
+  - term: Email Domains
+    definition: Email domain setup and verification for sending signing request emails from custom domains
+    tags:
+    - Resource Group
+    source: openapi/firma-dev-email-domains-api-openapi.yml
+  - term: Email Templates
+    definition: Email template management for workspace and company-level customization of signing request notifications
+    tags:
+    - Resource Group
+    source: openapi/firma-dev-email-templates-api-openapi.yml
+  - term: JWT Management
+    definition: JWT token generation and revocation for embedded templates
+    tags:
+    - Resource Group
+    source: openapi/firma-dev-jwt-management-api-openapi.yml
+  - term: Organization Seals
+    definition: 'Organization seal management: create, update, revoke, and erase seals applied to signing requests'
+    tags:
+    - Resource Group
+    source: openapi/firma-dev-organization-seals-api-openapi.yml
+  - term: Signer Terms
+    definition: Custom signer terms-of-service / consent statements, company-level with per-language workspace overrides
+    tags:
+    - Resource Group
+    source: openapi/firma-dev-signer-terms-api-openapi.yml
+  - term: Signing Requests
+    definition: Document signing request operations
+    tags:
+    - Resource Group
+    source: openapi/firma-dev-signing-requests-api-openapi.yml
+  - term: Templates
+    definition: Template management operations
+    tags:
+    - Resource Group
+    source: openapi/firma-dev-templates-api-openapi.yml
+  - term: Webhooks
+    definition: Webhook configuration and management
+    tags:
+    - Resource Group
+    source: openapi/firma-dev-webhooks-api-openapi.yml
+  - term: Workspace Settings
+    definition: Workspace configuration and settings
+    tags:
+    - Resource Group
+    source: openapi/firma-dev-workspace-settings-api-openapi.yml
+  - term: Workspaces
+    definition: Workspace management operations
+    tags:
+    - Resource Group
+    source: openapi/firma-dev-workspaces-api-openapi.yml
+  - term: CompanySettings
+    definition: 'Object declared by the contract with fields: default_expiration_hours, require_terms_acceptance, show_custom_branding_only, require_otp_verification,
+      allow_presigning_download, disable_guided_navigation, show_signature_frame, show_partial_watermark, email_local_part, color_primary, color_primary_fg,
+      color_background. (15 more)'
+    tags:
+    - Object
+    source: openapi/firma-dev-company-api-openapi.yml#/components/schemas/CompanySettings
+  - term: Error
+    definition: 'Organization Seal error codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID,
+      SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
+    tags:
+    - Object
+    source: openapi/firma-dev-company-api-openapi.yml#/components/schemas/Error
+  - term: LogoUploadResponse
+    definition: Logo upload confirmation with URL
+    tags:
+    - Object
+    source: openapi/firma-dev-company-api-openapi.yml#/components/schemas/LogoUploadResponse
+  - term: LogoDeleteResponse
+    definition: Logo deletion confirmation
+    tags:
+    - Object
+    source: openapi/firma-dev-company-api-openapi.yml#/components/schemas/LogoDeleteResponse
+  - term: MessageResponse
+    definition: Simple success response with a message
+    tags:
+    - Object
+    source: openapi/firma-dev-custom-fields-api-openapi.yml#/components/schemas/MessageResponse
+  - term: SigningRequestCustomField
+    definition: A custom field definition for a signing request
+    tags:
+    - Object
+    source: openapi/firma-dev-custom-fields-api-openapi.yml#/components/schemas/SigningRequestCustomField
+  - term: WorkspaceCustomField
+    definition: A custom field definition for a workspace
+    tags:
+    - Object
+    source: openapi/firma-dev-custom-fields-api-openapi.yml#/components/schemas/WorkspaceCustomField
+  - term: TemplateCustomField
+    definition: A custom field definition for a template
+    tags:
+    - Object
+    source: openapi/firma-dev-custom-fields-api-openapi.yml#/components/schemas/TemplateCustomField
+  - term: CustomFieldListResponse
+    definition: List of custom fields
+    tags:
+    - Object
+    source: openapi/firma-dev-custom-fields-api-openapi.yml#/components/schemas/CustomFieldListResponse
+  - term: DomainFinalizeResponse
+    definition: Domain finalization with DNS records
+    tags:
+    - Object
+    source: openapi/firma-dev-email-domains-api-openapi.yml#/components/schemas/DomainFinalizeResponse
+  - term: DomainCreateResponse
+    definition: Domain created with verification instructions
+    tags:
+    - Object
+    source: openapi/firma-dev-email-domains-api-openapi.yml#/components/schemas/DomainCreateResponse
+  - term: DomainListResponse
+    definition: List of domains with workspace context
+    tags:
+    - Object
+    source: openapi/firma-dev-email-domains-api-openapi.yml#/components/schemas/DomainListResponse
+  - term: DomainDeleteResponse
+    definition: Domain deletion confirmation
+    tags:
+    - Object
+    source: openapi/firma-dev-email-domains-api-openapi.yml#/components/schemas/DomainDeleteResponse
+  - term: DomainSetPrimaryResponse
+    definition: Primary domain update confirmation
+    tags:
+    - Object
+    source: openapi/firma-dev-email-domains-api-openapi.yml#/components/schemas/DomainSetPrimaryResponse
+  - term: Domain
+    definition: Email domain configuration for sending signing request emails
+    tags:
+    - Object
+    source: openapi/firma-dev-email-domains-api-openapi.yml#/components/schemas/Domain
+  - term: DomainDnsRecord
+    definition: DNS record required for email domain verification
+    tags:
+    - Object
+    source: openapi/firma-dev-email-domains-api-openapi.yml#/components/schemas/DomainDnsRecord
+  - term: DomainVerifyOwnershipResponse
+    definition: Domain ownership verification result
+    tags:
+    - Object
+    source: openapi/firma-dev-email-domains-api-openapi.yml#/components/schemas/DomainVerifyOwnershipResponse
+  - term: DomainVerifyDnsResponse
+    definition: DNS verification result
+    tags:
+    - Object
+    source: openapi/firma-dev-email-domains-api-openapi.yml#/components/schemas/DomainVerifyDnsResponse
+  - term: EmailTemplateDefaultsResponse
+    definition: Default email templates for a language
+    tags:
+    - Object
+    source: openapi/firma-dev-email-templates-api-openapi.yml#/components/schemas/EmailTemplateDefaultsResponse
+  - term: EmailTemplate
+    definition: Custom email template for signing request notifications
+    tags:
+    - Object
+    source: openapi/firma-dev-email-templates-api-openapi.yml#/components/schemas/EmailTemplate
+  - term: EmailTemplateDeleteResponse
+    definition: Email template deletion confirmation
+    tags:
+    - Object
+    source: openapi/firma-dev-email-templates-api-openapi.yml#/components/schemas/EmailTemplateDeleteResponse
+  - term: WorkspaceEmailTemplateListResponse
+    definition: List of workspace email templates
+    tags:
+    - Object
+    source: openapi/firma-dev-email-templates-api-openapi.yml#/components/schemas/WorkspaceEmailTemplateListResponse
+  - term: EmailTemplatePlaceholdersResponse
+    definition: Available email template placeholders
+    tags:
+    - Object
+    source: openapi/firma-dev-email-templates-api-openapi.yml#/components/schemas/EmailTemplatePlaceholdersResponse
+  - term: CompanyEmailTemplateListResponse
+    definition: List of company email templates
+    tags:
+    - Object
+    source: openapi/firma-dev-email-templates-api-openapi.yml#/components/schemas/CompanyEmailTemplateListResponse
+  - term: GenerateSigningRequestJWTRequest
+    definition: 'Object declared by the contract with fields: companies_workspaces_signing_requests_id.'
+    tags:
+    - Object
+    source: openapi/firma-dev-jwt-management-api-openapi.yml#/components/schemas/GenerateSigningRequestJWTRequest
+  - term: RevokeJWTResponse
+    definition: 'Object declared by the contract with fields: message, jwt_id, revoked.'
+    tags:
+    - Object
+    source: openapi/firma-dev-jwt-management-api-openapi.yml#/components/schemas/RevokeJWTResponse
+  - term: GenerateJWTRequest
+    definition: 'Object declared by the contract with fields: companies_workspaces_templates_id.'
+    tags:
+    - Object
+    source: openapi/firma-dev-jwt-management-api-openapi.yml#/components/schemas/GenerateJWTRequest
+  - term: GenerateSigningRequestJWTResponse
+    definition: 'Object declared by the contract with fields: jwt, jwt_id, expires_at, signing_request_id, created_at.'
+    tags:
+    - Object
+    source: openapi/firma-dev-jwt-management-api-openapi.yml#/components/schemas/GenerateSigningRequestJWTResponse
+  - term: RevokeSigningRequestJWTResponse
+    definition: 'Object declared by the contract with fields: message, jwt_id, revoked.'
+    tags:
+    - Object
+    source: openapi/firma-dev-jwt-management-api-openapi.yml#/components/schemas/RevokeSigningRequestJWTResponse
+  - term: GenerateTemplateTokenResponse
+    definition: Generated JWT token for template
+    tags:
+    - Object
+    source: openapi/firma-dev-jwt-management-api-openapi.yml#/components/schemas/GenerateTemplateTokenResponse
+  - term: RevokeSigningRequestJWTRequest
+    definition: 'Object declared by the contract with fields: jwt_id.'
+    tags:
+    - Object
+    source: openapi/firma-dev-jwt-management-api-openapi.yml#/components/schemas/RevokeSigningRequestJWTRequest
+  - term: RevokeJWTRequest
+    definition: 'Object declared by the contract with fields: jwt_id.'
+    tags:
+    - Object
+    source: openapi/firma-dev-jwt-management-api-openapi.yml#/components/schemas/RevokeJWTRequest
+  - term: SealStatement
+    definition: Attestation statement affirming authority to apply the seal.
+    tags:
+    - Object
+    source: openapi/firma-dev-organization-seals-api-openapi.yml#/components/schemas/SealStatement
+  - term: SealImage
+    definition: Seal image response.
+    tags:
+    - Object
+    source: openapi/firma-dev-organization-seals-api-openapi.yml#/components/schemas/SealImage
+  - term: OrganizationSealCreate
+    definition: Request body to create an organization seal.
+    tags:
+    - Object
+    source: openapi/firma-dev-organization-seals-api-openapi.yml#/components/schemas/OrganizationSealCreate
+  - term: SealErrorCode
+    definition: Error codes specific to organization seal operations.
+    tags:
+    - Enumeration
+    source: openapi/firma-dev-organization-seals-api-openapi.yml#/components/schemas/SealErrorCode
+  - term: SealAccessLogEntry
+    definition: Access log entry for a seal lineage.
+    tags:
+    - Object
+    source: openapi/firma-dev-organization-seals-api-openapi.yml#/components/schemas/SealAccessLogEntry
+  - term: SealApplication
+    definition: Record of a seal being applied to a signing request.
+    tags:
+    - Object
+    source: openapi/firma-dev-organization-seals-api-openapi.yml#/components/schemas/SealApplication
+  - term: OrganizationSeal
+    definition: Organization seal metadata (image and statement internals are stripped from list/get responses).
+    tags:
+    - Object
+    source: openapi/firma-dev-organization-seals-api-openapi.yml#/components/schemas/OrganizationSeal
+  - term: SignerTermsListResponse
+    definition: List of signer terms by language
+    tags:
+    - Object
+    source: openapi/firma-dev-signer-terms-api-openapi.yml#/components/schemas/SignerTermsListResponse
+  - term: SignerTermsDeleteResponse
+    definition: Signer terms deletion confirmation
+    tags:
+    - Object
+    source: openapi/firma-dev-signer-terms-api-openapi.yml#/components/schemas/SignerTermsDeleteResponse
+  - term: SignerTerms
+    definition: 'Object declared by the contract with fields: language, statement_text, terms_url, updated_at.'
+    tags:
+    - Object
+    source: openapi/firma-dev-signer-terms-api-openapi.yml#/components/schemas/SignerTerms
+  - term: SignerTermsUpdateResponse
+    definition: Signer terms update result
+    tags:
+    - Object
+    source: openapi/firma-dev-signer-terms-api-openapi.yml#/components/schemas/SignerTermsUpdateResponse
+  - term: InsufficientCreditsError
+    definition: Insufficient credits error
+    tags:
+    - Object
+    source: openapi/firma-dev-signing-requests-api-openapi.yml#/components/schemas/InsufficientCreditsError
+  - term: AuditTrailListResponse
+    definition: List of audit trail entries
+    tags:
+    - Object
+    source: openapi/firma-dev-signing-requests-api-openapi.yml#/components/schemas/AuditTrailListResponse
+  - term: CreateAndSendResponse
+    definition: Signing request created and sent
+    tags:
+    - Object
+    source: openapi/firma-dev-signing-requests-api-openapi.yml#/components/schemas/CreateAndSendResponse
+  - term: SigningRequestDeleteResponse
+    definition: Signing request deletion confirmation
+    tags:
+    - Object
+    source: openapi/firma-dev-signing-requests-api-openapi.yml#/components/schemas/SigningRequestDeleteResponse
+  - term: SigningRequestDetail
+    definition: Detailed signing request as returned by GET /signing-requests/{id} (nested shape with status object and timestamps)
+    tags:
+    - Object
+    source: openapi/firma-dev-signing-requests-api-openapi.yml#/components/schemas/SigningRequestDetail
+  - term: SigningRequestUser
+    definition: 'Object declared by the contract with fields: id, name, email, first_name, last_name, designation, order, finished_on, declined_on,
+      decline_reason, phone_number, street_address. (11 more)'
+    tags:
+    - Object
+    source: openapi/firma-dev-signing-requests-api-openapi.yml#/components/schemas/SigningRequestUser
+  - term: SigningRequestCreateField
+    definition: Field as returned in CREATE signing request responses (flat position, database-style)
+    tags:
+    - Object
+    source: openapi/firma-dev-signing-requests-api-openapi.yml#/components/schemas/SigningRequestCreateField
+  - term: SealParticipant
+    definition: Seal participant on a signing request or template.
+    tags:
+    - Object
+    source: openapi/firma-dev-signing-requests-api-openapi.yml#/components/schemas/SealParticipant
+  - term: ConditionGroup
+    definition: 'Object declared by the contract with fields: conditions.'
+    tags:
+    - Object
+    source: openapi/firma-dev-signing-requests-api-openapi.yml#/components/schemas/ConditionGroup
+  - term: SigningRequestListRecipient
+    definition: Recipient as returned in LIST signing request responses (simplified shape)
+    tags:
+    - Object
+    source: openapi/firma-dev-signing-requests-api-openapi.yml#/components/schemas/SigningRequestListRecipient
+  - term: SigningRequestFieldListResponse
+    definition: List of signing request fields
+    tags:
+    - Object
+    source: openapi/firma-dev-signing-requests-api-openapi.yml#/components/schemas/SigningRequestFieldListResponse
+  - term: DateFormatRules
+    definition: Formatting rules for date fields. Specifies how date values should be displayed and formatted.
+    tags:
+    - Object
+    source: openapi/firma-dev-signing-requests-api-openapi.yml#/components/schemas/DateFormatRules
+  - term: SigningRequestListResponse
+    definition: Paginated list of signing requests
+    tags:
+    - Object
+    source: openapi/firma-dev-signing-requests-api-openapi.yml#/components/schemas/SigningRequestListResponse
+  - term: CancelSigningRequestResponse
+    definition: Signing request cancellation result
+    tags:
+    - Object
+    source: openapi/firma-dev-signing-requests-api-openapi.yml#/components/schemas/CancelSigningRequestResponse
+  - term: ConditionSet
+    definition: 'A set of condition groups with nested logic. The outer ''logic'' operator combines groups, while each group''s conditions use
+      the opposite operator. Example: logic=''and'' means all groups must match, and within each group any condition can match (OR).'
+    tags:
+    - Object
+    source: openapi/firma-dev-signing-requests-api-openapi.yml#/components/schemas/ConditionSet
+  - term: FieldValidationRules
+    definition: Validation rules for field values. Reserved for future use - currently not enforced for any field types.
+    tags:
+    - Object
+    source: openapi/firma-dev-signing-requests-api-openapi.yml#/components/schemas/FieldValidationRules
+  - term: ResendSigningRequestResponse
+    definition: Signing request resend result
+    tags:
+    - Object
+    source: openapi/firma-dev-signing-requests-api-openapi.yml#/components/schemas/ResendSigningRequestResponse
+  - term: SigningRequestSettings
+    definition: Settings returned by the signing request list and detail endpoints. Templates use the TemplateSettings schema (no identity fields).
+    tags:
+    - Object
+    source: openapi/firma-dev-signing-requests-api-openapi.yml#/components/schemas/SigningRequestSettings
+  - term: DeletedRecipient
+    definition: 'Object declared by the contract with fields: recipient_id, field_action, reassign_to_recipient_id.'
+    tags:
+    - Object
+    source: openapi/firma-dev-signing-requests-api-openapi.yml#/components/schemas/DeletedRecipient
+  - term: SigningRequestUpdateResponse
+    definition: Signing request update result
+    tags:
+    - Object
+    source: openapi/firma-dev-signing-requests-api-openapi.yml#/components/schemas/SigningRequestUpdateResponse
+  - term: AnchorTag
+    definition: Anchor tag definition for automatic field placement. Anchor tags are text markers embedded in a PDF document (e.g., '{{SIGN_HERE}}')
+      that are automatically located and converted into positioned fields. The anchor text is removed from the PDF after processing by default.
+    tags:
+    - Object
+    source: openapi/firma-dev-signing-requests-api-openapi.yml#/components/schemas/AnchorTag
+  - term: SigningRequestReminder
+    definition: 'Object declared by the contract with fields: id, hours, all_users, recipient_id, subject, message.'
+    tags:
+    - Object
+    source: openapi/firma-dev-signing-requests-api-openapi.yml#/components/schemas/SigningRequestReminder
+  - term: SigningRequestCreateRecipient
+    definition: Recipient as returned in CREATE signing request responses
+    tags:
+    - Object
+    source: openapi/firma-dev-signing-requests-api-openapi.yml#/components/schemas/SigningRequestCreateRecipient
+  - term: SigningRequestListItem
+    definition: Signing request as returned by the LIST endpoint (GET /signing-requests)
+    tags:
+    - Object
+    source: openapi/firma-dev-signing-requests-api-openapi.yml#/components/schemas/SigningRequestListItem
+  - term: SigningRequestCreateResponse
+    definition: Signing request as returned by CREATE endpoints (POST /signing-requests)
+    tags:
+    - Object
+    source: openapi/firma-dev-signing-requests-api-openapi.yml#/components/schemas/SigningRequestCreateResponse

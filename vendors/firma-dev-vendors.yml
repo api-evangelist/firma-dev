@@ -1,0 +1,69 @@
+generated: '2026-09-25'
+method: probed
+source: pre-flight dossier (docs platform, portal detections) + CNAME chains and response headers of the hosts apis.yml names
+registry: all/0-working/vendors.yml
+areas_vocabulary:
+- documentation
+- developer-portal
+- api-gateway
+- cdn
+- hosting
+- sdk-generation
+- api-collections
+- status-page
+- support
+- community
+- identity
+- mcp-hosting
+vendors:
+- vendor: postman
+  name: Postman
+  area: api-collections
+  host: www.postman.com
+  evidence: https://www.postman.com/firma-dev/workspace
+  signal: url:postman.com
+  confidence: high
+  kin_score:
+  - postman_collection
+- vendor: mintlify
+  name: Mintlify
+  area: documentation
+  host: docs.firma.dev
+  evidence: markup:mintlify
+  signal: docs-platform
+  confidence: medium
+  kin_score:
+  - openapi_published
+  - llms_txt
+  - mcp_server
+  - markdown_negotiation
+  - x_mint_pointer
+- vendor: vercel
+  name: Vercel
+  area: hosting
+  host: docs.firma.dev
+  evidence: cname:cname.vercel-dns.com
+  signal: docs-platform
+  confidence: medium
+  kin_score: []
+reliance:
+  areas_vendor_served:
+  - api-collections
+  - documentation
+  - hosting
+  vendor_count: 3
+  areas_observed: 12
+  share_of_observable_areas: 0.25
+  note: areas where a third party was DETECTED serving this provider; an area absent here was either self-run or not observed, and this script
+    cannot tell those apart
+checked:
+- 'docs-platform: mintlify'
+- status.firma.dev (StatusPage)
+- firma.dev (Website)
+- docs.firma.dev (Documentation)
+- docs.firma.dev (APIReference)
+- docs.firma.dev (GettingStarted)
+- app.firma.dev (SignUp)
+- firma.dev (Support)
+- www.postman.com (Postman)
+- docs.firma.dev (mcp)

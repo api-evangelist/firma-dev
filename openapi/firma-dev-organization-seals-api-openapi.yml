@@ -1,0 +1,936 @@
+openapi: 3.2.0
+info:
+  title: Firma Partner Organization Seals API
+  description: RESTful API for document signing and template management.
+  version: 01.38.00
+  contact:
+    name: API Support
+    url: https://firma.com/support
+servers:
+- url: https://api.firma.dev/functions/v1/signing-request-api
+  description: Production API - Recommended (Current)
+- url: https://api.firma.dev/api/v1
+  description: Production API - Planned
+security:
+- ApiKeyAuth: []
+tags:
+- name: Organization Seals
+  description: 'Organization seal management: create, update, revoke, and erase seals applied to signing requests'
+paths:
+  /seals:
+    get:
+      summary: List organization seals
+      description: List organization seal heads for the company. Returns active (non-revoked, non-deleted) seal heads by default. Pass include_revoked=true to include revoked heads.
+      tags:
+      - Organization Seals
+      operationId: listOrganizationSeals
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: include_revoked
+        in: query
+        schema:
+          type: boolean
+          default: false
+        description: Include revoked seal heads in the response
+      - name: workspace_id
+        in: query
+        schema:
+          type: string
+          format: uuid
+        description: Filter seals by workspace scope
+      responses:
+        '200':
+          description: Seal list retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  seals:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/OrganizationSeal'
+                required:
+                - seals
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+    post:
+      summary: Create an organization seal
+      description: Create a new organization seal with an uploaded, typed, or drawn image. Company-scope seals require a protected API key.
+      tags:
+      - Organization Seals
+      operationId: createOrganizationSeal
+      security:
+      - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganizationSealCreate'
+      responses:
+        '201':
+          description: Seal created successfully
+          headers:
+            X-Firma-Deprecation:
+              schema:
+                type: string
+              description: Present when the operation is available but will be moved to the primary API host in a future release. The value describes the timeline.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationSeal'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+        '503':
+          description: Seal image processing is unavailable on this host (SEAL_CREATION_DISABLED_EDGE). Retry against the primary API host.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 'Conflict. Possible codes: SEAL_ALREADY_REVOKED, SEAL_ORDER_COLLISION, SEAL_ERASE_NOT_ELIGIBLE'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  code:
+                    $ref: '#/components/schemas/SealErrorCode'
+  /seals/{id}:
+    get:
+      summary: Get an organization seal
+      description: Retrieve a single organization seal by ID.
+      tags:
+      - Organization Seals
+      operationId: getOrganizationSeal
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Seal ID
+      responses:
+        '200':
+          description: Seal retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationSeal'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+    patch:
+      summary: Update an organization seal
+      description: Update a seal's name, display name, image, or default status. Image-changing updates create a new version (replace). Company-scope seals require a protected API key for mutations.
+      tags:
+      - Organization Seals
+      operationId: updateOrganizationSeal
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Seal ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  maxLength: 120
+                  description: New internal name
+                display_name:
+                  type: string
+                  maxLength: 200
+                  description: New display name (triggers image re-render)
+                signatory_title:
+                  type:
+                  - string
+                  - 'null'
+                  maxLength: 200
+                  description: New signatory title
+                image:
+                  type: string
+                  description: New base64 PNG data URI
+                typed:
+                  type: object
+                  properties:
+                    text:
+                      type: string
+                    style:
+                      type: string
+                statement:
+                  $ref: '#/components/schemas/SealStatement'
+                is_default:
+                  type: boolean
+                  description: Set as default seal for its scope
+      responses:
+        '200':
+          description: Seal updated successfully
+          headers:
+            X-Firma-Deprecation:
+              schema:
+                type: string
+              description: Present when the operation is available but will be moved to the primary API host in a future release. The value describes the timeline.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationSeal'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+        '503':
+          description: Seal image processing is unavailable on this host (SEAL_CREATION_DISABLED_EDGE). Retry against the primary API host.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 'Conflict. Possible codes: SEAL_ALREADY_REVOKED, SEAL_ORDER_COLLISION, SEAL_ERASE_NOT_ELIGIBLE'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  code:
+                    $ref: '#/components/schemas/SealErrorCode'
+    delete:
+      summary: Revoke an organization seal
+      description: Revoke (soft-delete) a seal. Optionally stop pending signing requests that reference it. Company-scope seals require a protected API key.
+      tags:
+      - Organization Seals
+      operationId: revokeOrganizationSeal
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Seal ID
+      - name: stop_pending
+        in: query
+        schema:
+          type: boolean
+          default: false
+        description: Cancel pending signing requests referencing this seal
+      responses:
+        '200':
+          description: Seal revoked successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  lineage_id:
+                    type: string
+                    format: uuid
+                    description: Shared across versions of the same seal
+                  version:
+                    type: integer
+                    minimum: 1
+                  companies_id:
+                    type: string
+                    format: uuid
+                  companies_workspaces_id:
+                    type:
+                    - string
+                    - 'null'
+                    format: uuid
+                    description: Null for company-scope seals
+                  name:
+                    type: string
+                    maxLength: 120
+                  display_name:
+                    type: string
+                    maxLength: 200
+                  signatory_title:
+                    type:
+                    - string
+                    - 'null'
+                    maxLength: 200
+                  kind:
+                    type: string
+                    enum:
+                    - uploaded
+                    - typed
+                    - drawn
+                  is_default:
+                    type: integer
+                    enum:
+                    - 0
+                    - 1
+                    description: 1 if this is the default seal for its scope
+                  statement_language:
+                    type: string
+                  statement_version:
+                    type: integer
+                    minimum: 1
+                  signatory_name:
+                    type: string
+                    maxLength: 200
+                  signatory_title_attested:
+                    type:
+                    - string
+                    - 'null'
+                    maxLength: 200
+                  attested_at:
+                    type: string
+                    format: date-time
+                  revoked_on:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  created_at:
+                    type: string
+                    format: date-time
+                  deleted:
+                    type: integer
+                    enum:
+                    - 0
+                    - 1
+                  in_flight_requests:
+                    type: integer
+                    description: Number of in-flight signing requests that referenced this seal
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+        '409':
+          description: 'Conflict. Possible codes: SEAL_ALREADY_REVOKED, SEAL_ORDER_COLLISION, SEAL_ERASE_NOT_ELIGIBLE'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  code:
+                    $ref: '#/components/schemas/SealErrorCode'
+  /seals/{id}/image:
+    get:
+      summary: Get seal image
+      description: Retrieve the seal's rendered PNG image as a base64 data URI. Rate limited to 60/min. Each retrieval is audit-logged.
+      tags:
+      - Organization Seals
+      operationId: getOrganizationSealImage
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Seal ID
+      responses:
+        '200':
+          description: Seal image retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SealImage'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+  /seals/{id}/erase:
+    delete:
+      summary: Erase a seal lineage
+      description: Permanently erase all versions of a seal lineage. The seal must be revoked first. This is irreversible and removes all image data. Requires a protected API key.
+      tags:
+      - Organization Seals
+      operationId: eraseOrganizationSealLineage
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Seal ID (any version in the lineage)
+      responses:
+        '200':
+          description: Seal lineage erased successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  lineage_id:
+                    type: string
+                    format: uuid
+                  versions_erased:
+                    type: integer
+                    description: Number of versions erased
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+        '409':
+          description: 'Conflict. Possible codes: SEAL_ALREADY_REVOKED, SEAL_ORDER_COLLISION, SEAL_ERASE_NOT_ELIGIBLE'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  code:
+                    $ref: '#/components/schemas/SealErrorCode'
+  /seals/{id}/applications:
+    get:
+      summary: List seal applications
+      description: List signing requests where this seal has been applied, is pending, or was paused.
+      tags:
+      - Organization Seals
+      operationId: listOrganizationSealApplications
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Seal ID
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 25
+        description: Maximum results per page
+      - name: cursor
+        in: query
+        schema:
+          type: string
+        description: Pagination cursor from a previous response
+      responses:
+        '200':
+          description: Seal applications retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  applications:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SealApplication'
+                  cursor:
+                    type:
+                    - string
+                    - 'null'
+                    description: Cursor for the next page, null if no more results
+                required:
+                - applications
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+  /seals/{id}/access-log:
+    get:
+      summary: List seal access log
+      description: Retrieve the access log for a seal's lineage, including creation, replacement, revocation, rename, and image read events.
+      tags:
+      - Organization Seals
+      operationId: listOrganizationSealAccessLog
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Seal ID
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 25
+        description: Maximum results per page
+      - name: cursor
+        in: query
+        schema:
+          type: string
+        description: Pagination cursor from a previous response
+      responses:
+        '200':
+          description: Access log retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  entries:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SealAccessLogEntry'
+                  cursor:
+                    type:
+                    - string
+                    - 'null'
+                    description: Cursor for the next page, null if no more results
+                required:
+                - entries
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+components:
+  schemas:
+    SealStatement:
+      type: object
+      required:
+      - language
+      - signatory_name
+      - text
+      - accepted
+      description: Attestation statement affirming authority to apply the seal.
+      properties:
+        language:
+          type: string
+          description: Language code of the statement
+        signatory_name:
+          type: string
+          maxLength: 200
+          description: Name of the person attesting
+        signatory_title:
+          type:
+          - string
+          - 'null'
+          maxLength: 200
+          description: Title of the person attesting
+        text:
+          type: string
+          description: On create, the statement rendered with the authority name (the stored workspace or company name exactly as returned by the API, including HTML escaping). On replace, it must equal the seal's stored statement text.
+        accepted:
+          type: boolean
+          description: Must be true to confirm acceptance
+        version:
+          type: integer
+          minimum: 1
+          description: Statement version number
+    SealAccessLogEntry:
+      type: object
+      description: Access log entry for a seal lineage.
+      properties:
+        id:
+          type: string
+          format: uuid
+        organization_seals_id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        lineage_id:
+          type: string
+          format: uuid
+        action:
+          type: string
+          enum:
+          - created
+          - replaced
+          - revoked
+          - renamed
+          - default_changed
+          - erased
+          - image_read
+          - participant_swapped
+        actor_kind:
+          type: string
+          enum:
+          - user
+          - api_key
+          - system
+        details:
+          type:
+          - object
+          - 'null'
+        created_at:
+          type: string
+          format: date-time
+    OrganizationSeal:
+      type: object
+      description: Organization seal metadata (image and statement internals are stripped from list/get responses).
+      properties:
+        id:
+          type: string
+          format: uuid
+        lineage_id:
+          type: string
+          format: uuid
+          description: Shared across versions of the same seal
+        version:
+          type: integer
+          minimum: 1
+        companies_id:
+          type: string
+          format: uuid
+        companies_workspaces_id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+          description: Null for company-scope seals
+        authority_name:
+          type:
+          - string
+          - 'null'
+          description: 'The name the seal was attested for: the company for company scope or the protected workspace, otherwise the workspace. Null for seals whose lineage was created before pinning; they certify in the company''s current name.'
+        name:
+          type: string
+          maxLength: 120
+        display_name:
+          type: string
+          maxLength: 200
+        signatory_title:
+          type:
+          - string
+          - 'null'
+          maxLength: 200
+        kind:
+          type: string
+          enum:
+          - uploaded
+          - typed
+          - drawn
+        is_default:
+          type: integer
+          enum:
+          - 0
+          - 1
+          description: 1 if this is the default seal for its scope
+        statement_language:
+          type: string
+        statement_version:
+          type: integer
+          minimum: 1
+        signatory_name:
+          type: string
+          maxLength: 200
+        signatory_title_attested:
+          type:
+          - string
+          - 'null'
+          maxLength: 200
+        attested_at:
+          type: string
+          format: date-time
+        revoked_on:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        deleted:
+          type: integer
+          enum:
+          - 0
+          - 1
+    SealImage:
+      type: object
+      description: Seal image response.
+      properties:
+        kind:
+          type: string
+          enum:
+          - uploaded
+          - typed
+          - drawn
+        content_type:
+          type: string
+          example: image/png
+        data_url:
+          type: string
+          description: Base64-encoded PNG data URI
+    OrganizationSealCreate:
+      type: object
+      required:
+      - name
+      - display_name
+      - kind
+      - scope
+      - statement
+      description: Request body to create an organization seal.
+      properties:
+        name:
+          type: string
+          maxLength: 120
+          description: Internal name for the seal
+        display_name:
+          type: string
+          maxLength: 200
+          description: Display name rendered on the seal image
+        signatory_title:
+          type:
+          - string
+          - 'null'
+          maxLength: 200
+          description: Signatory title rendered on the seal image
+        kind:
+          type: string
+          enum:
+          - uploaded
+          - typed
+          - drawn
+          description: How the seal image was created
+        scope:
+          type: string
+          enum:
+          - company
+          - workspace
+          description: Scope of the seal. Company-scope requires a protected API key.
+        workspace_id:
+          type: string
+          format: uuid
+          description: Required when scope is 'workspace'
+        image:
+          type: string
+          description: Base64-encoded PNG data URI (data:image/png;base64,...). Required for 'uploaded' and 'drawn' kinds.
+        typed:
+          type: object
+          description: Typed seal parameters. Required for 'typed' kind.
+          properties:
+            text:
+              type: string
+              description: Text to render on the seal
+            style:
+              type: string
+              description: Style variant for the typed seal
+        statement:
+          $ref: '#/components/schemas/SealStatement'
+        is_default:
+          type: boolean
+          default: false
+          description: Set as default seal for this scope
+    SealApplication:
+      type: object
+      description: Record of a seal being applied to a signing request.
+      properties:
+        id:
+          type: string
+          format: uuid
+        signing_request_id:
+          type: string
+          format: uuid
+        signing_request_name:
+          type: string
+        seal_id:
+          type: string
+          format: uuid
+        seal_name:
+          type: string
+        status:
+          type: string
+          enum:
+          - applied
+          - paused
+          - pending
+          description: Application status
+        applied_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+    SealErrorCode:
+      type: string
+      enum:
+      - SEALS_DISABLED
+      - SEAL_ALREADY_REVOKED
+      - SEAL_CREATION_DISABLED_EDGE
+      - SEAL_ERASE_NOT_ELIGIBLE
+      - SEAL_IMAGE_INVALID
+      - SEAL_MUTATION_NOT_ALLOWED
+      - SEAL_NOT_FOUND
+      - SEAL_ORDER_COLLISION
+      - SEAL_PAUSED
+      - SEAL_SCOPE_FORBIDDEN
+      - SEAL_UNAVAILABLE
+      description: Error codes specific to organization seal operations.
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Human-readable error message
+        code:
+          type: string
+          description: 'Machine-readable error code Seal-related codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
+        errors:
+          type: array
+          description: All validation errors when multiple failures are reported together. The top-level error repeats the first item for backward compatibility.
+          items:
+            type: object
+            required:
+            - message
+            properties:
+              message:
+                type: string
+        message:
+          type: string
+          description: Detailed error description
+        details:
+          type: object
+          description: Additional error details
+          additionalProperties: true
+      required:
+      - error
+      description: '
+
+
+        Organization Seal error codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
+  responses:
+    RateLimitError:
+      description: Too Many Requests - Rate limit exceeded
+      headers:
+        X-RateLimit-Limit:
+          schema:
+            type: integer
+          description: Maximum requests per minute
+        X-RateLimit-Remaining:
+          schema:
+            type: integer
+          description: Requests remaining
+        X-RateLimit-Reset:
+          schema:
+            type: integer
+          description: Unix timestamp of reset
+        Retry-After:
+          schema:
+            type: integer
+          description: Seconds until retry allowed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Rate Limit Exceeded
+            message: Too many requests. Please wait before retrying.
+            details:
+              retry_after: 45
+    NotFoundError:
+      description: Not Found - Resource does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Not Found
+            message: The requested resource was not found
+    ValidationError:
+      description: Bad Request - Validation failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Validation Error
+            message: Invalid input data
+            details:
+              name: Name is required
+              email: Invalid email format
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Unauthorized
+            message: Invalid API key
+    ForbiddenError:
+      description: Forbidden - Insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Forbidden
+            message: You do not have permission to access this resource
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: API key for authentication. Use your API key directly without any prefix (e.g., 'your-api-key'). Bearer prefix is optional but not required.

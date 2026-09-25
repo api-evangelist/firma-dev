@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/firma-dev/main/json-schema/firma-dev-generate-signing-request-jwtrequest-schema.json",
+  "title": "GenerateSigningRequestJWTRequest",
+  "x-generated": "2026-09-25",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/firma-dev-jwt-management-api-openapi.yml#/components/schemas/GenerateSigningRequestJWTRequest",
+  "type": "object",
+  "required": [
+    "companies_workspaces_signing_requests_id"
+  ],
+  "properties": {
+    "companies_workspaces_signing_requests_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "ID of the signing request to generate JWT for"
+    }
+  }
+}

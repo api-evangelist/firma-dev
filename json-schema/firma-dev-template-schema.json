@@ -1,0 +1,529 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/firma-dev/main/json-schema/firma-dev-template-schema.json",
+  "title": "Template",
+  "x-generated": "2026-09-25",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/firma-dev-templates-api-openapi.yml#/components/schemas/Template",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier for the template"
+    },
+    "name": {
+      "type": "string",
+      "description": "Template name",
+      "maxLength": 255
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Template description"
+    },
+    "document_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Pre-signed URL to the PDF document. This is a time-limited signed URL for secure access - see document_url_expires_at for expiration time. Initial URLs are valid for 7 days; refreshed URLs are valid for 1 hour. Request a new template retrieval to get a fresh URL if expired."
+    },
+    "document_url_expires_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when the document_url will expire. After this time, the URL will return an access denied error. Fetch the template again to receive a fresh signed URL."
+    },
+    "page_count": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Number of pages in the document"
+    },
+    "expiration_hours": {
+      "type": "integer",
+      "minimum": 1,
+      "default": 168,
+      "description": "Hours until signing requests created from this template expire"
+    },
+    "credit_cost": {
+      "type": "integer",
+      "minimum": 1,
+      "default": 1,
+      "description": "Number of credits consumed when a signing request is sent from this template. Minimum value is 1."
+    },
+    "settings": {
+      "$ref": "#/$defs/SigningRequestSettings"
+    },
+    "recipients": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/TemplateUser"
+      },
+      "description": "Template recipients (included in GET single template)"
+    },
+    "fields": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/TemplateField"
+      },
+      "description": "Template fields (included in GET single template)"
+    },
+    "created_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Template creation timestamp"
+    },
+    "updated_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Template last update timestamp"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "created_date"
+  ],
+  "$defs": {
+    "DateFormatRules": {
+      "type": "object",
+      "description": "Formatting rules for date fields. Specifies how date values should be displayed and formatted.",
+      "properties": {
+        "dateFormat": {
+          "type": "string",
+          "description": "Date format pattern. Use predefined formats or custom patterns with: yyyy (4-digit year), MM (2-digit month), dd (2-digit day), MMMM (full month name), MMM (abbreviated month name), HH (24-hour), mm (minute), ss (second). Examples: 'MM/dd/yyyy' displays as 01/31/2024, 'MMMM dd, yyyy' displays as January 31, 2024.",
+          "enum": [
+            "MM/dd/yyyy",
+            "dd/MM/yyyy",
+            "yyyy-MM-dd",
+            "MMMM dd, yyyy",
+            "MMM dd, yyyy",
+            "dd MMMM yyyy"
+          ],
+          "default": "MM/dd/yyyy"
+        },
+        "fontSize": {
+          "type": "integer",
+          "minimum": 8,
+          "maximum": 48,
+          "description": "Optional starting/maximum font size in pixels for the rendered field value. Text still auto-shrinks to fit the field box. Omit for automatic sizing. Values outside 8-48 are clamped."
+        }
+      }
+    },
+    "FieldValidationRules": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "Validation rules for field values. Reserved for future use - currently not enforced for any field types.",
+      "additionalProperties": true
+    },
+    "SigningRequestSettings": {
+      "type": "object",
+      "description": "Settings returned by the signing request list and detail endpoints. Templates use the TemplateSettings schema (no identity fields).",
+      "properties": {
+        "allow_download": {
+          "type": "boolean",
+          "description": "Whether recipients can download the document",
+          "default": true
+        },
+        "attach_pdf_on_finish": {
+          "type": "boolean",
+          "description": "Whether to attach PDF when signing is complete",
+          "default": true
+        },
+        "allow_editing_before_sending": {
+          "type": "boolean",
+          "description": "Whether the signing request can be edited before sending",
+          "default": false
+        },
+        "use_signing_order": {
+          "type": "boolean",
+          "description": "Whether signing order is enforced among recipients. When true, signers receive the document in sequence based on their order. When false, all signers receive the document simultaneously.",
+          "default": true
+        },
+        "hand_drawn_only": {
+          "type": "boolean",
+          "description": "When enabled, signers can only hand-draw their signatures and cannot use typed/font-based signatures",
+          "default": false
+        },
+        "send_signing_email": {
+          "type": "boolean",
+          "description": "Whether to send signing request notification emails to signers",
+          "default": true
+        },
+        "send_finish_email": {
+          "type": "boolean",
+          "description": "Whether to send completion email when all signers finish",
+          "default": true
+        },
+        "send_expiration_email": {
+          "type": "boolean",
+          "description": "Whether to send expiration notification email when request expires",
+          "default": true
+        },
+        "send_cancellation_email": {
+          "type": "boolean",
+          "description": "Whether to send cancellation notification email when request is cancelled",
+          "default": true
+        },
+        "require_otp_verification": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Whether signers must verify their email with a one-time code before accessing the document. null = inherit from workspace/company setting.",
+          "default": null
+        },
+        "disable_guided_navigation": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Disable automatic scrolling to the next required field during signing. Inherits from workspace or company if not set."
+        },
+        "allow_presigning_download": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Allow signers to download the original document before signing. Inherits from workspace or company setting when null."
+        },
+        "show_qr_code": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Show a QR code on the signing page that lets signers continue on their phone. Inherits from workspace or company setting when null."
+        },
+        "identity_editable_fields": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "Identity fields signers may edit before signing (e.g. [\"name\", \"company\"]). null = disabled. When set, a confirmation dialog lets signers edit the specified fields."
+        },
+        "notify_identity_change_email": {
+          "type": "boolean",
+          "default": false,
+          "description": "Send an email notification when a signer changes their identity."
+        }
+      }
+    },
+    "TemplateField": {
+      "type": "object",
+      "description": "A field placed on a template document",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Unique identifier for the field"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "text",
+            "signature",
+            "date",
+            "checkbox",
+            "dropdown",
+            "radio_buttons",
+            "number",
+            "text_area",
+            "file",
+            "initial",
+            "stamp",
+            "approval_signature",
+            "approval_checkmark",
+            "approval_date"
+          ],
+          "description": "Type of the field"
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Whether the field is required"
+        },
+        "recipient_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid",
+          "description": "ID of assigned recipient"
+        },
+        "variable_name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Variable name for field (used in templates)"
+        },
+        "variable_defined_name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Human-readable field name from the custom field definition (e.g. 'artist_name'). Only present for fields linked to a custom field definition, null otherwise."
+        },
+        "position": {
+          "type": "object",
+          "description": "Position and dimensions of the field on the document. All values are percentages (0-100). The field must fit within the page: x + width <= 100 and y + height <= 100.",
+          "properties": {
+            "x": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "X coordinate of field position (percentage, 0-100)"
+            },
+            "y": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Y coordinate of field position (percentage, 0-100)"
+            },
+            "width": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Width of the field (percentage, 0-100). Note: x + width must be <= 100"
+            },
+            "height": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Height of the field (percentage, 0-100). Note: y + height must be <= 100"
+            }
+          }
+        },
+        "page_number": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1,
+          "description": "Page number where the field is located (1-indexed). Must not exceed the document's total page count."
+        },
+        "dropdown_options": {
+          "description": "Options for dropdown fields",
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object"
+            }
+          ]
+        },
+        "multi_group_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid",
+          "description": "Group ID for linking multiple checkbox or radio button fields together. Fields sharing the same multi_group_id behave as a mutually exclusive group (like radio buttons) - selecting one automatically deselects the others in the group. Use the same UUID across multiple fields to create a group where only one option can be selected at a time."
+        },
+        "date_default": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date",
+          "description": "Default date value for date fields (ISO 8601 format, e.g., '2024-01-15')"
+        },
+        "date_signing_default": {
+          "type": "boolean",
+          "description": "Use signing date as default for date fields"
+        },
+        "format_rules": {
+          "$ref": "#/$defs/DateFormatRules",
+          "description": "Formatting rules - currently used for date fields to specify display format"
+        },
+        "validation_rules": {
+          "$ref": "#/$defs/FieldValidationRules"
+        },
+        "read_only": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether this field is read-only (pre-filled before signing)"
+        },
+        "read_only_value": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Static value for read-only fields"
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "page_number"
+      ]
+    },
+    "TemplateUser": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Unique identifier for the template user"
+        },
+        "name": {
+          "type": "string",
+          "description": "Recipient name (combined first and last name)"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Recipient email address"
+        },
+        "first_name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Recipient first name"
+        },
+        "last_name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Recipient last name"
+        },
+        "designation": {
+          "type": "string",
+          "enum": [
+            "Signer",
+            "Approver",
+            "CC"
+          ],
+          "description": "Role of the recipient. Signer signs the document, Approver approves with approval fields, CC receives a copy when complete."
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Order in which the recipient should sign"
+        },
+        "phone_number": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Recipient phone number"
+        },
+        "street_address": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Recipient street address"
+        },
+        "city": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Recipient city"
+        },
+        "state_province": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Recipient state or province"
+        },
+        "postal_code": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Recipient postal code"
+        },
+        "country": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Recipient country"
+        },
+        "title": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Recipient job title"
+        },
+        "company": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Recipient company name"
+        },
+        "required_fields": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of recipient data fields required for sending (based on template fields with variable_name mappings). Always includes 'email' and 'first_name'."
+        },
+        "missing_fields": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of required fields that are currently empty for this recipient"
+        },
+        "required_read_only_fields": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "variable_name": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Variable name of the read-only field"
+              },
+              "variable_defined_name": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Human-readable field name from the custom field definition (e.g. 'artist_name'). Only present for fields linked to a custom field definition, null otherwise."
+              },
+              "field_type": {
+                "type": "string",
+                "description": "Type of the field (text, date, etc.)"
+              }
+            }
+          },
+          "description": "List of required read-only fields that need pre-filled values before sending"
+        },
+        "ready_to_send": {
+          "type": "boolean",
+          "description": "Whether this recipient has all required data filled in for sending"
+        }
+      },
+      "required": [
+        "id",
+        "first_name",
+        "email",
+        "designation",
+        "order"
+      ]
+    }
+  }
+}

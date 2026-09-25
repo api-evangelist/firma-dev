@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/firma-dev/main/json-schema/firma-dev-template-copy-response-schema.json",
+  "title": "TemplateCopyResponse",
+  "description": "Template copy response",
+  "x-generated": "2026-09-25",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/firma-dev-templates-api-openapi.yml#/components/schemas/TemplateCopyResponse",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "ID of the newly created template copy"
+    },
+    "name": {
+      "type": "string",
+      "description": "Name of the copied template"
+    },
+    "workspace_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Target workspace the template was copied to"
+    },
+    "created_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Creation timestamp"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "workspace_id",
+    "created_date"
+  ]
+}

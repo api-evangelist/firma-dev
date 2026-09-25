@@ -1,0 +1,23 @@
+generated: '2026-09-25'
+method: generated
+generator: extract-docs-artifacts.py skills (local)
+source: openapi/app_firma_dev_openapi.json
+skills:
+- file: skills/firma-dev-create-and-test-webhook.md
+  name: firma-dev-create-and-test-webhook
+  api: openapi/app_firma_dev_openapi.json
+  operations:
+  - createWebhook
+  - testWebhook
+- file: skills/firma-dev-create-workspace-with-logo.md
+  name: firma-dev-create-workspace-with-logo
+  api: openapi/app_firma_dev_openapi.json
+  operations:
+  - createWorkspace
+  - uploadWorkspaceLogo
+- file: skills/firma-dev-jwt-management-generate-and-revoke-signing-request.md
+  name: firma-dev-jwt-management-generate-and-revoke-signing-request
+  api: openapi/app_firma_dev_openapi.json
+  operations:
+  - generateSigningRequestToken
+  - revokeSigningRequestToken

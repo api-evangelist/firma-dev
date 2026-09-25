@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/firma-dev/main/json-schema/firma-dev-logo-upload-response-schema.json",
+  "title": "LogoUploadResponse",
+  "description": "Logo upload confirmation with URL",
+  "x-generated": "2026-09-25",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/firma-dev-company-api-openapi.yml#/components/schemas/LogoUploadResponse",
+  "type": "object",
+  "properties": {
+    "success": {
+      "type": "boolean"
+    },
+    "icon_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Public URL to the uploaded logo"
+    }
+  },
+  "required": [
+    "success",
+    "icon_url"
+  ]
+}

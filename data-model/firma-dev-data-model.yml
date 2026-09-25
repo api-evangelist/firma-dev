@@ -1,0 +1,621 @@
+generated: '2026-09-25'
+method: derived
+generator: derive-data-model.py
+source:
+- openapi/firma-dev-company-api-openapi.yml
+- openapi/firma-dev-custom-fields-api-openapi.yml
+- openapi/firma-dev-email-domains-api-openapi.yml
+- openapi/firma-dev-email-templates-api-openapi.yml
+- openapi/firma-dev-jwt-management-api-openapi.yml
+- openapi/firma-dev-organization-seals-api-openapi.yml
+- openapi/firma-dev-signer-terms-api-openapi.yml
+- openapi/firma-dev-signing-requests-api-openapi.yml
+- openapi/firma-dev-templates-api-openapi.yml
+- openapi/firma-dev-webhooks-api-openapi.yml
+- openapi/firma-dev-workspace-settings-api-openapi.yml
+- openapi/firma-dev-workspaces-api-openapi.yml
+notation: has_one = property $ref; has_many = array of $ref; belongs_to = <entity>_id field
+summary:
+  entities: 103
+  entities_in_spec: 103
+  relationships: 76
+entities:
+- name: AnchorTag
+  fields: 25
+  description: Anchor tag definition for automatic field placement. Anchor tags are text markers embedded in a PDF
+    document (e.g., '{{SIGN_HERE}}') that are automatically located and converted into positioned fields
+- name: ApiKeyExpireResponse
+  fields: 4
+  description: API key expiration result
+- name: ApiKeyRegenerateResponse
+  fields: 4
+  description: API key regeneration result
+- name: AuditTrailListResponse
+  fields: 1
+  description: List of audit trail entries
+- name: CancelSigningRequestResponse
+  fields: 5
+  description: Signing request cancellation result
+- name: Company
+  fields: 10
+- name: CompanyEmailTemplateListResponse
+  fields: 1
+  description: List of company email templates
+- name: CompanySettings
+  fields: 27
+- name: Condition
+  fields: 3
+  description: A single condition that evaluates a field's value.
+- name: ConditionGroup
+  fields: 1
+- name: ConditionSet
+  fields: 2
+  description: 'A set of condition groups with nested logic. The outer ''logic'' operator combines groups, while
+    each group''s conditions use the opposite operator. Example: logic=''and'' means all groups must match, and '
+- name: CreateAndSendResponse
+  fields: 16
+  description: Signing request created and sent
+- name: CreateAndSendValidationError
+  fields: 5
+  description: Validation error during create-and-send
+- name: CustomFieldListResponse
+  fields: 1
+  description: List of custom fields
+- name: DateFormatRules
+  fields: 2
+  description: Formatting rules for date fields. Specifies how date values should be displayed and formatted.
+- name: DeletedRecipient
+  fields: 3
+- name: Domain
+  fields: 10
+  description: Email domain configuration for sending signing request emails
+- name: DomainCreateResponse
+  fields: 2
+  description: Domain created with verification instructions
+- name: DomainDeleteResponse
+  fields: 2
+  description: Domain deletion confirmation
+- name: DomainDnsRecord
+  fields: 6
+  description: DNS record required for email domain verification
+- name: DomainFinalizeResponse
+  fields: 4
+  description: Domain finalization with DNS records
+- name: DomainListResponse
+  fields: 2
+  description: List of domains with workspace context
+- name: DomainSetPrimaryResponse
+  fields: 2
+  description: Primary domain update confirmation
+- name: DomainVerifyDnsResponse
+  fields: 4
+  description: DNS verification result
+- name: DomainVerifyOwnershipResponse
+  fields: 3
+  description: Domain ownership verification result
+- name: EmailTemplate
+  fields: 6
+  description: Custom email template for signing request notifications
+- name: EmailTemplateDefaultsResponse
+  fields: 2
+  description: Default email templates for a language
+- name: EmailTemplateDeleteResponse
+  fields: 2
+  description: Email template deletion confirmation
+- name: EmailTemplatePlaceholdersResponse
+  fields: 1
+  description: Available email template placeholders
+- name: Error
+  fields: 5
+  description: 'Organization Seal error codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE,
+    SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COL'
+- name: ErrorResponse
+  fields: 0
+  description: Referenced by this document but never defined in it. API Evangelist added this empty placeholder
+    so the document resolves; the shape is unknown and is NOT a claim about the API.
+- name: Field
+  fields: 22
+  description: 'Field definition for signing requests. **Read-only fields**: Set read_only=true to pre-fill a field
+    value that signers cannot edit. Use read_only_value for static text, or prefilled_data to auto-popul'
+- name: FileFormatRules
+  fields: 1
+  description: Formatting rules for file upload fields. Specifies which file types signers are allowed to upload.
+- name: GenerateJWTRequest
+  fields: 1
+- name: GenerateSigningRequestJWTRequest
+  fields: 1
+- name: GenerateSigningRequestJWTResponse
+  fields: 5
+- name: GenerateTemplateTokenResponse
+  fields: 3
+  description: Generated JWT token for template
+- name: InsufficientCreditsError
+  fields: 3
+  description: Insufficient credits error
+- name: LogoDeleteResponse
+  fields: 1
+  description: Logo deletion confirmation
+- name: LogoUploadResponse
+  fields: 2
+  description: Logo upload confirmation with URL
+- name: MessageResponse
+  fields: 1
+  description: Simple success response with a message
+- name: OrganizationSeal
+  fields: 19
+  description: Organization seal metadata (image and statement internals are stripped from list/get responses).
+- name: OrganizationSealCreate
+  fields: 10
+  description: Request body to create an organization seal.
+- name: Pagination
+  fields: 4
+  description: Pagination metadata for list responses
+- name: Recipient
+  fields: 17
+  description: 'Recipient schema with auto-construction and mapping behaviors. **Name field**: Auto-constructed
+    from first_name and last_name (''First Last'' if both present, otherwise ''First''). Manual name values are '
+- name: Reminder
+  fields: 10
+- name: ResendConflictError
+  fields: 3
+  description: Resend conflict error
+- name: ResendSigningRequestResponse
+  fields: 5
+  description: Signing request resend result
+- name: RevokeJWTRequest
+  fields: 1
+- name: RevokeJWTResponse
+  fields: 3
+- name: RevokeSigningRequestJWTRequest
+  fields: 1
+- name: RevokeSigningRequestJWTResponse
+  fields: 3
+- name: RotateSecretResponse
+  fields: 4
+  description: Secret rotation result with grace period
+- name: SealAccessLogEntry
+  fields: 7
+  description: Access log entry for a seal lineage.
+- name: SealApplication
+  fields: 8
+  description: Record of a seal being applied to a signing request.
+- name: SealImage
+  fields: 3
+  description: Seal image response.
+- name: SealParticipant
+  fields: 6
+  description: Seal participant on a signing request or template.
+- name: SealParticipantInput
+  fields: 3
+  description: Seal participant assignment for a signing request or template.
+- name: SealStatement
+  fields: 6
+  description: Attestation statement affirming authority to apply the seal.
+- name: SecretStatusResponse
+  fields: 4
+  description: Webhook secret status and rotation info
+- name: SendSigningRequestResponse
+  fields: 4
+- name: SignerTerms
+  fields: 4
+- name: SignerTermsDeleteResponse
+  fields: 2
+  description: Signer terms deletion confirmation
+- name: SignerTermsListResponse
+  fields: 1
+  description: List of signer terms by language
+- name: SignerTermsUpdateResponse
+  fields: 3
+  description: Signer terms update result
+- name: SigningRequestCreateField
+  fields: 18
+  description: Field as returned in CREATE signing request responses (flat position, database-style)
+- name: SigningRequestCreateRecipient
+  fields: 17
+  description: Recipient as returned in CREATE signing request responses
+- name: SigningRequestCreateResponse
+  fields: 18
+  description: Signing request as returned by CREATE endpoints (POST /signing-requests)
+- name: SigningRequestCustomField
+  fields: 6
+  description: A custom field definition for a signing request
+- name: SigningRequestDeleteResponse
+  fields: 3
+  description: Signing request deletion confirmation
+- name: SigningRequestDetail
+  fields: 26
+  description: Detailed signing request as returned by GET /signing-requests/{id} (nested shape with status object
+    and timestamps)
+- name: SigningRequestDownloadResponse
+  fields: 5
+- name: SigningRequestField
+  fields: 32
+  description: Field associated with a signing request, containing position, type, and value information
+- name: SigningRequestFieldListResponse
+  fields: 1
+  description: List of signing request fields
+- name: SigningRequestListItem
+  fields: 21
+  description: Signing request as returned by the LIST endpoint (GET /signing-requests)
+- name: SigningRequestListRecipient
+  fields: 7
+  description: Recipient as returned in LIST signing request responses (simplified shape)
+- name: SigningRequestListResponse
+  fields: 2
+  description: Paginated list of signing requests
+- name: SigningRequestReminder
+  fields: 6
+- name: SigningRequestSettings
+  fields: 15
+  description: Settings returned by the signing request list and detail endpoints. Templates use the TemplateSettings
+    schema (no identity fields).
+- name: SigningRequestUpdateError
+  fields: 3
+  description: Signing request update validation error
+- name: SigningRequestUpdateResponse
+  fields: 6
+  description: Signing request update result
+- name: SigningRequestUser
+  fields: 23
+- name: SigningRequestUserListResponse
+  fields: 1
+  description: List of signing request users
+- name: Template
+  fields: 13
+- name: TemplateCopyResponse
+  fields: 4
+  description: Template copy response
+- name: TemplateCustomField
+  fields: 5
+  description: A custom field definition for a template
+- name: TemplateDuplicateResponse
+  fields: 6
+  description: Duplicated template details
+- name: TemplateField
+  fields: 16
+  description: A field placed on a template document
+- name: TemplateFieldListResponse
+  fields: 1
+  description: List of template fields
+- name: TemplateListResponse
+  fields: 2
+  description: Paginated list of templates
+- name: TemplatePatchResponse
+  fields: 3
+  description: Template partial update result
+- name: TemplateUser
+  fields: 19
+- name: TemplateUserListResponse
+  fields: 1
+  description: List of template users
+- name: TestWebhookResponse
+  fields: 5
+  description: Webhook test execution result
+- name: UnprocessableEntityError
+  fields: 2
+  description: Unprocessable entity error
+- name: UpdateSigningRequestBodySchema
+  fields: 7
+- name: Webhook
+  fields: 9
+- name: WebhookListResponse
+  fields: 2
+  description: Paginated list of webhooks
+- name: Workspace
+  fields: 13
+- name: WorkspaceCustomField
+  fields: 7
+  description: A custom field definition for a workspace
+- name: WorkspaceEmailTemplateListResponse
+  fields: 2
+  description: List of workspace email templates
+- name: WorkspaceListResponse
+  fields: 2
+  description: Paginated list of workspaces
+- name: WorkspaceSettings
+  fields: 32
+relationships:
+- from: CustomFieldListResponse
+  to: WorkspaceCustomField
+  type: has_many
+  via: custom_fields
+- from: DomainFinalizeResponse
+  to: Domain
+  type: has_one
+  via: domain
+- from: DomainFinalizeResponse
+  to: DomainDnsRecord
+  type: has_many
+  via: dns_records
+- from: DomainCreateResponse
+  to: Domain
+  type: has_one
+  via: domain
+- from: DomainListResponse
+  to: Domain
+  type: has_many
+  via: results
+- from: DomainListResponse
+  to: Workspace
+  type: belongs_to
+  via: workspace_id
+- from: DomainDeleteResponse
+  to: Domain
+  type: belongs_to
+  via: domain_id
+- from: DomainSetPrimaryResponse
+  to: Domain
+  type: has_one
+  via: domain
+- from: DomainVerifyOwnershipResponse
+  to: Domain
+  type: has_one
+  via: domain
+- from: DomainVerifyDnsResponse
+  to: Domain
+  type: has_one
+  via: domain
+- from: DomainVerifyDnsResponse
+  to: DomainDnsRecord
+  type: has_many
+  via: dns_records
+- from: WorkspaceEmailTemplateListResponse
+  to: EmailTemplate
+  type: has_many
+  via: results
+- from: WorkspaceEmailTemplateListResponse
+  to: Workspace
+  type: belongs_to
+  via: workspace_id
+- from: CompanyEmailTemplateListResponse
+  to: EmailTemplate
+  type: has_many
+  via: results
+- from: OrganizationSealCreate
+  to: Workspace
+  type: belongs_to
+  via: workspace_id
+- from: OrganizationSealCreate
+  to: SealStatement
+  type: has_one
+  via: statement
+- from: SignerTermsListResponse
+  to: SignerTerms
+  type: has_many
+  via: terms
+- from: CreateAndSendResponse
+  to: SigningRequestSettings
+  type: has_one
+  via: settings
+- from: CreateAndSendResponse
+  to: Template
+  type: belongs_to
+  via: template_id
+- from: CreateAndSendResponse
+  to: Field
+  type: has_many
+  via: fields
+- from: SigningRequestDetail
+  to: SigningRequestSettings
+  type: has_one
+  via: settings
+- from: SigningRequestDetail
+  to: SealParticipant
+  type: has_many
+  via: seal_participants
+- from: SigningRequestCreateField
+  to: Recipient
+  type: belongs_to
+  via: recipient_id
+- from: ConditionGroup
+  to: Condition
+  type: has_many
+  via: conditions
+- from: SigningRequestFieldListResponse
+  to: SigningRequestField
+  type: has_many
+  via: results
+- from: SigningRequestListResponse
+  to: SigningRequestListItem
+  type: has_many
+  via: results
+- from: SigningRequestListResponse
+  to: Pagination
+  type: has_one
+  via: pagination
+- from: ConditionSet
+  to: ConditionGroup
+  type: has_many
+  via: groups
+- from: DeletedRecipient
+  to: Recipient
+  type: belongs_to
+  via: recipient_id
+- from: SigningRequestUpdateResponse
+  to: Recipient
+  type: has_many
+  via: recipients
+- from: SigningRequestUpdateResponse
+  to: Reminder
+  type: has_many
+  via: reminders
+- from: AnchorTag
+  to: Recipient
+  type: belongs_to
+  via: recipient_id
+- from: SigningRequestReminder
+  to: Recipient
+  type: belongs_to
+  via: recipient_id
+- from: SigningRequestListItem
+  to: Template
+  type: belongs_to
+  via: template_id
+- from: SigningRequestListItem
+  to: SigningRequestSettings
+  type: has_one
+  via: settings
+- from: SigningRequestListItem
+  to: SigningRequestListRecipient
+  type: has_many
+  via: recipients
+- from: SigningRequestListItem
+  to: SealParticipant
+  type: has_many
+  via: seal_participants
+- from: SigningRequestCreateResponse
+  to: Template
+  type: belongs_to
+  via: template_id
+- from: SigningRequestCreateResponse
+  to: SigningRequestSettings
+  type: has_one
+  via: settings
+- from: SigningRequestCreateResponse
+  to: SigningRequestCreateRecipient
+  type: has_many
+  via: recipients
+- from: SigningRequestCreateResponse
+  to: SigningRequestCreateField
+  type: has_many
+  via: fields
+- from: SigningRequestCreateResponse
+  to: SealParticipant
+  type: has_many
+  via: seal_participants
+- from: Recipient
+  to: TemplateUser
+  type: belongs_to
+  via: template_user_id
+- from: Condition
+  to: Field
+  type: belongs_to
+  via: field_id
+- from: Field
+  to: TemplateField
+  type: belongs_to
+  via: template_field_id
+- from: Field
+  to: Recipient
+  type: belongs_to
+  via: recipient_id
+- from: Field
+  to: DateFormatRules
+  type: has_one
+  via: format_rules
+- from: Field
+  to: FileFormatRules
+  type: has_one
+  via: format_rules
+- from: Field
+  to: ConditionSet
+  type: has_one
+  via: required_conditions
+- from: Field
+  to: ConditionSet
+  type: has_one
+  via: visibility_conditions
+- from: UpdateSigningRequestBodySchema
+  to: Recipient
+  type: has_many
+  via: recipients
+- from: UpdateSigningRequestBodySchema
+  to: DeletedRecipient
+  type: has_many
+  via: deleted_recipients
+- from: UpdateSigningRequestBodySchema
+  to: Field
+  type: has_many
+  via: fields
+- from: UpdateSigningRequestBodySchema
+  to: SigningRequestReminder
+  type: has_many
+  via: reminders
+- from: SigningRequestField
+  to: Recipient
+  type: belongs_to
+  via: recipient_id
+- from: SigningRequestUserListResponse
+  to: SigningRequestUser
+  type: has_many
+  via: results
+- from: Reminder
+  to: TemplateUser
+  type: belongs_to
+  via: template_user_id
+- from: Reminder
+  to: Recipient
+  type: belongs_to
+  via: recipient_id
+- from: TemplateUserListResponse
+  to: TemplateUser
+  type: has_many
+  via: results
+- from: Template
+  to: SigningRequestSettings
+  type: has_one
+  via: settings
+- from: Template
+  to: TemplateUser
+  type: has_many
+  via: recipients
+- from: Template
+  to: TemplateField
+  type: has_many
+  via: fields
+- from: TemplateListResponse
+  to: Template
+  type: has_many
+  via: results
+- from: TemplateListResponse
+  to: Pagination
+  type: has_one
+  via: pagination
+- from: TemplateField
+  to: Recipient
+  type: belongs_to
+  via: recipient_id
+- from: TemplateField
+  to: DateFormatRules
+  type: has_one
+  via: format_rules
+- from: TemplateCopyResponse
+  to: Workspace
+  type: belongs_to
+  via: workspace_id
+- from: TemplateFieldListResponse
+  to: TemplateField
+  type: has_many
+  via: results
+- from: TemplateDuplicateResponse
+  to: Workspace
+  type: belongs_to
+  via: workspace_id
+- from: WebhookListResponse
+  to: Webhook
+  type: has_many
+  via: results
+- from: WebhookListResponse
+  to: Pagination
+  type: has_one
+  via: pagination
+- from: WorkspaceSettings
+  to: Workspace
+  type: belongs_to
+  via: workspace_id
+- from: WorkspaceListResponse
+  to: Workspace
+  type: has_many
+  via: results
+- from: WorkspaceListResponse
+  to: Pagination
+  type: has_one
+  via: pagination
+- from: ApiKeyExpireResponse
+  to: Workspace
+  type: belongs_to
+  via: workspace_id
+- from: ApiKeyRegenerateResponse
+  to: Workspace
+  type: belongs_to
+  via: workspace_id

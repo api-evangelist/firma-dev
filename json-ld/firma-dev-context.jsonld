@@ -1,0 +1,1353 @@
+{
+  "@context": {
+    "@vocab": "https://firma.dev/schema#",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "firma": "https://firma.dev/schema#",
+    "Company": "firma:Company",
+    "id": {
+      "@id": "firma:id",
+      "@type": "xsd:string"
+    },
+    "name": {
+      "@id": "firma:name",
+      "@type": "xsd:string"
+    },
+    "language": {
+      "@id": "firma:language",
+      "@type": "xsd:string"
+    },
+    "account_owner": {
+      "@id": "firma:account_owner",
+      "@type": "xsd:string"
+    },
+    "account_owner_email": {
+      "@id": "firma:account_owner_email",
+      "@type": "xsd:string"
+    },
+    "website": {
+      "@id": "firma:website",
+      "@type": "@id"
+    },
+    "icon_url": {
+      "@id": "firma:icon_url",
+      "@type": "@id"
+    },
+    "credits": {
+      "@id": "firma:credits",
+      "@type": "xsd:integer"
+    },
+    "created_date": {
+      "@id": "firma:created_date",
+      "@type": "xsd:dateTime"
+    },
+    "updated_date": {
+      "@id": "firma:updated_date",
+      "@type": "xsd:dateTime"
+    },
+    "Workspace": "firma:Workspace",
+    "protected": {
+      "@id": "firma:protected",
+      "@type": "xsd:boolean"
+    },
+    "api_key": {
+      "@id": "firma:api_key",
+      "@type": "xsd:string"
+    },
+    "test_api_key": {
+      "@id": "firma:test_api_key",
+      "@type": "xsd:string"
+    },
+    "webhook_enabled": {
+      "@id": "firma:webhook_enabled",
+      "@type": "xsd:boolean"
+    },
+    "webhook_secret": {
+      "@id": "firma:webhook_secret",
+      "@type": "xsd:string"
+    },
+    "webhook_secret_rotated_at": {
+      "@id": "firma:webhook_secret_rotated_at",
+      "@type": "xsd:dateTime"
+    },
+    "webhook_secret_created_at": {
+      "@id": "firma:webhook_secret_created_at",
+      "@type": "xsd:dateTime"
+    },
+    "ignore_company_webhooks": {
+      "@id": "firma:ignore_company_webhooks",
+      "@type": "xsd:boolean"
+    },
+    "Template": "firma:Template",
+    "description": {
+      "@id": "firma:description",
+      "@type": "xsd:string"
+    },
+    "document_url": {
+      "@id": "firma:document_url",
+      "@type": "@id"
+    },
+    "document_url_expires_at": {
+      "@id": "firma:document_url_expires_at",
+      "@type": "xsd:dateTime"
+    },
+    "page_count": {
+      "@id": "firma:page_count",
+      "@type": "xsd:integer"
+    },
+    "expiration_hours": {
+      "@id": "firma:expiration_hours",
+      "@type": "xsd:integer"
+    },
+    "credit_cost": {
+      "@id": "firma:credit_cost",
+      "@type": "xsd:integer"
+    },
+    "settings": {
+      "@id": "firma:settings",
+      "@type": "@id"
+    },
+    "recipients": {
+      "@id": "firma:recipients",
+      "@container": "@list"
+    },
+    "fields": {
+      "@id": "firma:fields",
+      "@container": "@list"
+    },
+    "TemplateUser": "firma:TemplateUser",
+    "email": {
+      "@id": "firma:email",
+      "@type": "xsd:string"
+    },
+    "first_name": {
+      "@id": "firma:first_name",
+      "@type": "xsd:string"
+    },
+    "last_name": {
+      "@id": "firma:last_name",
+      "@type": "xsd:string"
+    },
+    "designation": {
+      "@id": "firma:designation",
+      "@type": "xsd:string"
+    },
+    "order": {
+      "@id": "firma:order",
+      "@type": "xsd:integer"
+    },
+    "phone_number": {
+      "@id": "firma:phone_number",
+      "@type": "xsd:string"
+    },
+    "street_address": {
+      "@id": "firma:street_address",
+      "@type": "xsd:string"
+    },
+    "city": {
+      "@id": "firma:city",
+      "@type": "xsd:string"
+    },
+    "state_province": {
+      "@id": "firma:state_province",
+      "@type": "xsd:string"
+    },
+    "postal_code": {
+      "@id": "firma:postal_code",
+      "@type": "xsd:string"
+    },
+    "country": {
+      "@id": "firma:country",
+      "@type": "xsd:string"
+    },
+    "title": {
+      "@id": "firma:title",
+      "@type": "xsd:string"
+    },
+    "company": {
+      "@id": "firma:company",
+      "@type": "xsd:string"
+    },
+    "required_fields": {
+      "@id": "firma:required_fields",
+      "@container": "@list"
+    },
+    "missing_fields": {
+      "@id": "firma:missing_fields",
+      "@container": "@list"
+    },
+    "required_read_only_fields": {
+      "@id": "firma:required_read_only_fields",
+      "@container": "@list"
+    },
+    "ready_to_send": {
+      "@id": "firma:ready_to_send",
+      "@type": "xsd:boolean"
+    },
+    "DateFormatRules": "firma:DateFormatRules",
+    "dateFormat": {
+      "@id": "firma:dateFormat",
+      "@type": "xsd:string"
+    },
+    "fontSize": {
+      "@id": "firma:fontSize",
+      "@type": "xsd:integer"
+    },
+    "TextFormatRules": "firma:TextFormatRules",
+    "FileFormatRules": "firma:FileFormatRules",
+    "acceptedFileTypes": {
+      "@id": "firma:acceptedFileTypes",
+      "@type": "xsd:string"
+    },
+    "TemplateField": "firma:TemplateField",
+    "type": {
+      "@id": "firma:type",
+      "@type": "xsd:string"
+    },
+    "required": {
+      "@id": "firma:required",
+      "@type": "xsd:boolean"
+    },
+    "recipient_id": {
+      "@id": "firma:recipient_id",
+      "@type": "xsd:string"
+    },
+    "variable_name": {
+      "@id": "firma:variable_name",
+      "@type": "xsd:string"
+    },
+    "variable_defined_name": {
+      "@id": "firma:variable_defined_name",
+      "@type": "xsd:string"
+    },
+    "position": {
+      "@id": "firma:position"
+    },
+    "page_number": {
+      "@id": "firma:page_number",
+      "@type": "xsd:integer"
+    },
+    "dropdown_options": {
+      "@id": "firma:dropdown_options"
+    },
+    "multi_group_id": {
+      "@id": "firma:multi_group_id",
+      "@type": "xsd:string"
+    },
+    "date_default": {
+      "@id": "firma:date_default",
+      "@type": "xsd:date"
+    },
+    "date_signing_default": {
+      "@id": "firma:date_signing_default",
+      "@type": "xsd:boolean"
+    },
+    "format_rules": {
+      "@id": "firma:format_rules",
+      "@type": "@id"
+    },
+    "validation_rules": {
+      "@id": "firma:validation_rules",
+      "@type": "@id"
+    },
+    "read_only": {
+      "@id": "firma:read_only",
+      "@type": "xsd:boolean"
+    },
+    "read_only_value": {
+      "@id": "firma:read_only_value",
+      "@type": "xsd:string"
+    },
+    "Reminder": "firma:Reminder",
+    "hours": {
+      "@id": "firma:hours",
+      "@type": "xsd:integer"
+    },
+    "subject": {
+      "@id": "firma:subject",
+      "@type": "xsd:string"
+    },
+    "message": {
+      "@id": "firma:message",
+      "@type": "xsd:string"
+    },
+    "all_users": {
+      "@id": "firma:all_users",
+      "@type": "xsd:boolean"
+    },
+    "template_user_id": {
+      "@id": "firma:template_user_id",
+      "@type": "xsd:string"
+    },
+    "sent_on": {
+      "@id": "firma:sent_on",
+      "@type": "xsd:dateTime"
+    },
+    "created_at": {
+      "@id": "firma:created_at",
+      "@type": "xsd:dateTime"
+    },
+    "updated_at": {
+      "@id": "firma:updated_at",
+      "@type": "xsd:dateTime"
+    },
+    "SigningRequestListItem": "firma:SigningRequestListItem",
+    "status": {
+      "@id": "firma:status",
+      "@type": "xsd:string"
+    },
+    "expires_at": {
+      "@id": "firma:expires_at",
+      "@type": "xsd:dateTime"
+    },
+    "template_id": {
+      "@id": "firma:template_id",
+      "@type": "xsd:string"
+    },
+    "sent_date": {
+      "@id": "firma:sent_date",
+      "@type": "xsd:dateTime"
+    },
+    "finished_date": {
+      "@id": "firma:finished_date",
+      "@type": "xsd:dateTime"
+    },
+    "cancelled_date": {
+      "@id": "firma:cancelled_date",
+      "@type": "xsd:dateTime"
+    },
+    "declined_date": {
+      "@id": "firma:declined_date",
+      "@type": "xsd:dateTime"
+    },
+    "seal_participants": {
+      "@id": "firma:seal_participants",
+      "@container": "@list"
+    },
+    "SigningRequestListRecipient": "firma:SigningRequestListRecipient",
+    "signature_details": {
+      "@id": "firma:signature_details"
+    },
+    "SigningRequestCreateResponse": "firma:SigningRequestCreateResponse",
+    "warnings": {
+      "@id": "firma:warnings",
+      "@container": "@list"
+    },
+    "SigningRequestCreateRecipient": "firma:SigningRequestCreateRecipient",
+    "custom_fields": {
+      "@id": "firma:custom_fields"
+    },
+    "SigningRequestCreateField": "firma:SigningRequestCreateField",
+    "x_position": {
+      "@id": "firma:x_position",
+      "@type": "xsd:decimal"
+    },
+    "y_position": {
+      "@id": "firma:y_position",
+      "@type": "xsd:decimal"
+    },
+    "width": {
+      "@id": "firma:width",
+      "@type": "xsd:decimal"
+    },
+    "height": {
+      "@id": "firma:height",
+      "@type": "xsd:decimal"
+    },
+    "final_value": {
+      "@id": "firma:final_value",
+      "@type": "xsd:string"
+    },
+    "SigningRequestDetail": "firma:SigningRequestDetail",
+    "template_description": {
+      "@id": "firma:template_description",
+      "@type": "xsd:string"
+    },
+    "companies_workspaces_id": {
+      "@id": "firma:companies_workspaces_id",
+      "@type": "xsd:string"
+    },
+    "document_page_count": {
+      "@id": "firma:document_page_count",
+      "@type": "xsd:integer"
+    },
+    "timestamps": {
+      "@id": "firma:timestamps"
+    },
+    "use_signing_order": {
+      "@id": "firma:use_signing_order",
+      "@type": "xsd:integer"
+    },
+    "allow_download": {
+      "@id": "firma:allow_download",
+      "@type": "xsd:integer"
+    },
+    "allow_editing_before_sending": {
+      "@id": "firma:allow_editing_before_sending",
+      "@type": "xsd:integer"
+    },
+    "hand_drawn_only": {
+      "@id": "firma:hand_drawn_only",
+      "@type": "xsd:integer"
+    },
+    "attach_pdf_on_finish": {
+      "@id": "firma:attach_pdf_on_finish",
+      "@type": "xsd:integer"
+    },
+    "certificate": {
+      "@id": "firma:certificate"
+    },
+    "final_document_download_url": {
+      "@id": "firma:final_document_download_url",
+      "@type": "@id"
+    },
+    "final_document_download_error": {
+      "@id": "firma:final_document_download_error",
+      "@type": "xsd:string"
+    },
+    "document_only_download_url": {
+      "@id": "firma:document_only_download_url",
+      "@type": "@id"
+    },
+    "document_only_download_error": {
+      "@id": "firma:document_only_download_error",
+      "@type": "xsd:string"
+    },
+    "certificate_only_download_url": {
+      "@id": "firma:certificate_only_download_url",
+      "@type": "@id"
+    },
+    "certificate_only_download_error": {
+      "@id": "firma:certificate_only_download_error",
+      "@type": "xsd:string"
+    },
+    "SigningRequestSettings": "firma:SigningRequestSettings",
+    "send_signing_email": {
+      "@id": "firma:send_signing_email",
+      "@type": "xsd:boolean"
+    },
+    "send_finish_email": {
+      "@id": "firma:send_finish_email",
+      "@type": "xsd:boolean"
+    },
+    "send_expiration_email": {
+      "@id": "firma:send_expiration_email",
+      "@type": "xsd:boolean"
+    },
+    "send_cancellation_email": {
+      "@id": "firma:send_cancellation_email",
+      "@type": "xsd:boolean"
+    },
+    "require_otp_verification": {
+      "@id": "firma:require_otp_verification",
+      "@type": "xsd:boolean"
+    },
+    "disable_guided_navigation": {
+      "@id": "firma:disable_guided_navigation",
+      "@type": "xsd:boolean"
+    },
+    "allow_presigning_download": {
+      "@id": "firma:allow_presigning_download",
+      "@type": "xsd:boolean"
+    },
+    "show_qr_code": {
+      "@id": "firma:show_qr_code",
+      "@type": "xsd:boolean"
+    },
+    "identity_editable_fields": {
+      "@id": "firma:identity_editable_fields",
+      "@container": "@list"
+    },
+    "notify_identity_change_email": {
+      "@id": "firma:notify_identity_change_email",
+      "@type": "xsd:boolean"
+    },
+    "TemplateSettings": "firma:TemplateSettings",
+    "LegacyDocumentSettings": "firma:LegacyDocumentSettings",
+    "Recipient": "firma:Recipient",
+    "_temp_id": {
+      "@id": "firma:_temp_id",
+      "@type": "xsd:string"
+    },
+    "Field": "firma:Field",
+    "template_field_id": {
+      "@id": "firma:template_field_id",
+      "@type": "xsd:string"
+    },
+    "prefilled_data": {
+      "@id": "firma:prefilled_data",
+      "@type": "xsd:string"
+    },
+    "required_conditions": {
+      "@id": "firma:required_conditions",
+      "@type": "@id"
+    },
+    "visibility_conditions": {
+      "@id": "firma:visibility_conditions",
+      "@type": "@id"
+    },
+    "background_color": {
+      "@id": "firma:background_color",
+      "@type": "xsd:string"
+    },
+    "seal_participant_temp_id": {
+      "@id": "firma:seal_participant_temp_id",
+      "@type": "xsd:string"
+    },
+    "AnchorTag": "firma:AnchorTag",
+    "anchor_string": {
+      "@id": "firma:anchor_string",
+      "@type": "xsd:string"
+    },
+    "x_offset": {
+      "@id": "firma:x_offset",
+      "@type": "xsd:decimal"
+    },
+    "y_offset": {
+      "@id": "firma:y_offset",
+      "@type": "xsd:decimal"
+    },
+    "offset_units": {
+      "@id": "firma:offset_units",
+      "@type": "xsd:string"
+    },
+    "case_sensitive": {
+      "@id": "firma:case_sensitive",
+      "@type": "xsd:boolean"
+    },
+    "match_whole_word": {
+      "@id": "firma:match_whole_word",
+      "@type": "xsd:boolean"
+    },
+    "ignore_if_not_present": {
+      "@id": "firma:ignore_if_not_present",
+      "@type": "xsd:boolean"
+    },
+    "occurrence": {
+      "@id": "firma:occurrence",
+      "@type": "xsd:integer"
+    },
+    "remove_anchor_text": {
+      "@id": "firma:remove_anchor_text",
+      "@type": "xsd:boolean"
+    },
+    "add_white_background": {
+      "@id": "firma:add_white_background",
+      "@type": "xsd:boolean"
+    },
+    "font_size": {
+      "@id": "firma:font_size",
+      "@type": "xsd:integer"
+    },
+    "ConditionSet": "firma:ConditionSet",
+    "logic": {
+      "@id": "firma:logic",
+      "@type": "xsd:string"
+    },
+    "groups": {
+      "@id": "firma:groups",
+      "@container": "@list"
+    },
+    "ConditionGroup": "firma:ConditionGroup",
+    "conditions": {
+      "@id": "firma:conditions",
+      "@container": "@list"
+    },
+    "Condition": "firma:Condition",
+    "field_id": {
+      "@id": "firma:field_id",
+      "@type": "xsd:string"
+    },
+    "operator": {
+      "@id": "firma:operator",
+      "@type": "xsd:string"
+    },
+    "value": {
+      "@id": "firma:value"
+    },
+    "SigningRequestReminder": "firma:SigningRequestReminder",
+    "DeletedRecipient": "firma:DeletedRecipient",
+    "field_action": {
+      "@id": "firma:field_action",
+      "@type": "xsd:string"
+    },
+    "reassign_to_recipient_id": {
+      "@id": "firma:reassign_to_recipient_id",
+      "@type": "xsd:string"
+    },
+    "SigningRequestUser": "firma:SigningRequestUser",
+    "finished_on": {
+      "@id": "firma:finished_on",
+      "@type": "xsd:dateTime"
+    },
+    "declined_on": {
+      "@id": "firma:declined_on",
+      "@type": "xsd:dateTime"
+    },
+    "decline_reason": {
+      "@id": "firma:decline_reason",
+      "@type": "xsd:string"
+    },
+    "SigningRequestField": "firma:SigningRequestField",
+    "companies_workspaces_signing_requests_id": {
+      "@id": "firma:companies_workspaces_signing_requests_id",
+      "@type": "xsd:string"
+    },
+    "companies_workspaces_signing_requests_users_id": {
+      "@id": "firma:companies_workspaces_signing_requests_users_id",
+      "@type": "xsd:string"
+    },
+    "field_type": {
+      "@id": "firma:field_type",
+      "@type": "xsd:string"
+    },
+    "x_postion": {
+      "@id": "firma:x_postion",
+      "@type": "xsd:decimal"
+    },
+    "heigh": {
+      "@id": "firma:heigh",
+      "@type": "xsd:decimal"
+    },
+    "tl_position": {
+      "@id": "firma:tl_position",
+      "@type": "xsd:decimal"
+    },
+    "tr_position": {
+      "@id": "firma:tr_position",
+      "@type": "xsd:decimal"
+    },
+    "bl_position": {
+      "@id": "firma:bl_position",
+      "@type": "xsd:decimal"
+    },
+    "br_position": {
+      "@id": "firma:br_position",
+      "@type": "xsd:decimal"
+    },
+    "calculated_font_size": {
+      "@id": "firma:calculated_font_size",
+      "@type": "xsd:decimal"
+    },
+    "deleted": {
+      "@id": "firma:deleted",
+      "@type": "xsd:integer"
+    },
+    "SendSigningRequestResponse": "firma:SendSigningRequestResponse",
+    "success": {
+      "@id": "firma:success",
+      "@type": "xsd:boolean"
+    },
+    "sentTo": {
+      "@id": "firma:sentTo",
+      "@type": "xsd:string"
+    },
+    "sentAt": {
+      "@id": "firma:sentAt",
+      "@type": "xsd:dateTime"
+    },
+    "Webhook": "firma:Webhook",
+    "url": {
+      "@id": "firma:url",
+      "@type": "@id"
+    },
+    "events": {
+      "@id": "firma:events",
+      "@container": "@list"
+    },
+    "enabled": {
+      "@id": "firma:enabled",
+      "@type": "xsd:boolean"
+    },
+    "consecutive_failures": {
+      "@id": "firma:consecutive_failures",
+      "@type": "xsd:integer"
+    },
+    "auto_disabled_at": {
+      "@id": "firma:auto_disabled_at",
+      "@type": "xsd:dateTime"
+    },
+    "UpdateSigningRequestBodySchema": "firma:UpdateSigningRequestBodySchema",
+    "signing_request_properties": {
+      "@id": "firma:signing_request_properties"
+    },
+    "deleted_recipients": {
+      "@id": "firma:deleted_recipients",
+      "@container": "@list"
+    },
+    "force_remove_conditions": {
+      "@id": "firma:force_remove_conditions",
+      "@type": "xsd:boolean"
+    },
+    "reminders": {
+      "@id": "firma:reminders",
+      "@container": "@list"
+    },
+    "GenerateJWTRequest": "firma:GenerateJWTRequest",
+    "companies_workspaces_templates_id": {
+      "@id": "firma:companies_workspaces_templates_id",
+      "@type": "xsd:string"
+    },
+    "GenerateJWTResponse": "firma:GenerateJWTResponse",
+    "token": {
+      "@id": "firma:token",
+      "@type": "xsd:string"
+    },
+    "jwt_record_id": {
+      "@id": "firma:jwt_record_id",
+      "@type": "xsd:string"
+    },
+    "RevokeJWTRequest": "firma:RevokeJWTRequest",
+    "jwt_id": {
+      "@id": "firma:jwt_id",
+      "@type": "xsd:string"
+    },
+    "RevokeJWTResponse": "firma:RevokeJWTResponse",
+    "revoked": {
+      "@id": "firma:revoked",
+      "@type": "xsd:boolean"
+    },
+    "GenerateSigningRequestJWTRequest": "firma:GenerateSigningRequestJWTRequest",
+    "GenerateSigningRequestJWTResponse": "firma:GenerateSigningRequestJWTResponse",
+    "jwt": {
+      "@id": "firma:jwt",
+      "@type": "xsd:string"
+    },
+    "signing_request_id": {
+      "@id": "firma:signing_request_id",
+      "@type": "xsd:string"
+    },
+    "RevokeSigningRequestJWTRequest": "firma:RevokeSigningRequestJWTRequest",
+    "RevokeSigningRequestJWTResponse": "firma:RevokeSigningRequestJWTResponse",
+    "ColorPalette": "firma:ColorPalette",
+    "primary": {
+      "@id": "firma:primary",
+      "@type": "xsd:string"
+    },
+    "primary_fg": {
+      "@id": "firma:primary_fg",
+      "@type": "xsd:string"
+    },
+    "background": {
+      "@id": "firma:background",
+      "@type": "xsd:string"
+    },
+    "foreground": {
+      "@id": "firma:foreground",
+      "@type": "xsd:string"
+    },
+    "card": {
+      "@id": "firma:card",
+      "@type": "xsd:string"
+    },
+    "border": {
+      "@id": "firma:border",
+      "@type": "xsd:string"
+    },
+    "accent": {
+      "@id": "firma:accent",
+      "@type": "xsd:string"
+    },
+    "accent_fg": {
+      "@id": "firma:accent_fg",
+      "@type": "xsd:string"
+    },
+    "canvas": {
+      "@id": "firma:canvas",
+      "@type": "xsd:string"
+    },
+    "muted": {
+      "@id": "firma:muted",
+      "@type": "xsd:string"
+    },
+    "muted_fg": {
+      "@id": "firma:muted_fg",
+      "@type": "xsd:string"
+    },
+    "CompanySettings": "firma:CompanySettings",
+    "default_expiration_hours": {
+      "@id": "firma:default_expiration_hours",
+      "@type": "xsd:integer"
+    },
+    "require_terms_acceptance": {
+      "@id": "firma:require_terms_acceptance",
+      "@type": "xsd:boolean"
+    },
+    "show_custom_branding_only": {
+      "@id": "firma:show_custom_branding_only",
+      "@type": "xsd:boolean"
+    },
+    "show_signature_frame": {
+      "@id": "firma:show_signature_frame",
+      "@type": "xsd:boolean"
+    },
+    "show_partial_watermark": {
+      "@id": "firma:show_partial_watermark",
+      "@type": "xsd:boolean"
+    },
+    "email_local_part": {
+      "@id": "firma:email_local_part",
+      "@type": "xsd:string"
+    },
+    "color_primary": {
+      "@id": "firma:color_primary",
+      "@type": "xsd:string"
+    },
+    "color_primary_fg": {
+      "@id": "firma:color_primary_fg",
+      "@type": "xsd:string"
+    },
+    "color_background": {
+      "@id": "firma:color_background",
+      "@type": "xsd:string"
+    },
+    "color_foreground": {
+      "@id": "firma:color_foreground",
+      "@type": "xsd:string"
+    },
+    "color_card": {
+      "@id": "firma:color_card",
+      "@type": "xsd:string"
+    },
+    "color_border": {
+      "@id": "firma:color_border",
+      "@type": "xsd:string"
+    },
+    "color_accent": {
+      "@id": "firma:color_accent",
+      "@type": "xsd:string"
+    },
+    "color_accent_fg": {
+      "@id": "firma:color_accent_fg",
+      "@type": "xsd:string"
+    },
+    "color_canvas": {
+      "@id": "firma:color_canvas",
+      "@type": "xsd:string"
+    },
+    "color_muted": {
+      "@id": "firma:color_muted",
+      "@type": "xsd:string"
+    },
+    "color_muted_fg": {
+      "@id": "firma:color_muted_fg",
+      "@type": "xsd:string"
+    },
+    "completion_title": {
+      "@id": "firma:completion_title",
+      "@type": "xsd:string"
+    },
+    "completion_message": {
+      "@id": "firma:completion_message",
+      "@type": "xsd:string"
+    },
+    "completion_redirect_url": {
+      "@id": "firma:completion_redirect_url",
+      "@type": "@id"
+    },
+    "completion_redirect_delay": {
+      "@id": "firma:completion_redirect_delay",
+      "@type": "xsd:integer"
+    },
+    "default_timezone": {
+      "@id": "firma:default_timezone",
+      "@type": "xsd:string"
+    },
+    "WorkspaceSettings": "firma:WorkspaceSettings",
+    "workspace_id": {
+      "@id": "firma:workspace_id",
+      "@type": "xsd:string"
+    },
+    "team_email": {
+      "@id": "firma:team_email",
+      "@type": "xsd:string"
+    },
+    "timezone": {
+      "@id": "firma:timezone",
+      "@type": "xsd:string"
+    },
+    "signing_request_email_header": {
+      "@id": "firma:signing_request_email_header",
+      "@type": "xsd:string"
+    },
+    "signing_request_email_body": {
+      "@id": "firma:signing_request_email_body",
+      "@type": "xsd:string"
+    },
+    "show_credit_cost_in_editor": {
+      "@id": "firma:show_credit_cost_in_editor",
+      "@type": "xsd:boolean"
+    },
+    "signing_button_label_overrides": {
+      "@id": "firma:signing_button_label_overrides"
+    },
+    "WorkspaceCustomField": "firma:WorkspaceCustomField",
+    "field_name": {
+      "@id": "firma:field_name",
+      "@type": "xsd:string"
+    },
+    "field_label": {
+      "@id": "firma:field_label",
+      "@type": "xsd:string"
+    },
+    "is_preset": {
+      "@id": "firma:is_preset",
+      "@type": "xsd:boolean"
+    },
+    "preset_value": {
+      "@id": "firma:preset_value",
+      "@type": "xsd:string"
+    },
+    "TemplateCustomField": "firma:TemplateCustomField",
+    "SigningRequestCustomField": "firma:SigningRequestCustomField",
+    "copied_from_template": {
+      "@id": "firma:copied_from_template",
+      "@type": "xsd:boolean"
+    },
+    "Domain": "firma:Domain",
+    "domain": {
+      "@id": "firma:domain",
+      "@type": "xsd:string"
+    },
+    "verification_status": {
+      "@id": "firma:verification_status",
+      "@type": "xsd:integer"
+    },
+    "domain_status": {
+      "@id": "firma:domain_status",
+      "@type": "xsd:integer"
+    },
+    "is_primary": {
+      "@id": "firma:is_primary",
+      "@type": "xsd:boolean"
+    },
+    "verification_token": {
+      "@id": "firma:verification_token",
+      "@type": "xsd:string"
+    },
+    "resend_domain_id": {
+      "@id": "firma:resend_domain_id",
+      "@type": "xsd:string"
+    },
+    "dns_records": {
+      "@id": "firma:dns_records",
+      "@container": "@list"
+    },
+    "date_created": {
+      "@id": "firma:date_created",
+      "@type": "xsd:dateTime"
+    },
+    "date_changed": {
+      "@id": "firma:date_changed",
+      "@type": "xsd:dateTime"
+    },
+    "DomainDnsRecord": "firma:DomainDnsRecord",
+    "ttl": {
+      "@id": "firma:ttl",
+      "@type": "xsd:string"
+    },
+    "priority": {
+      "@id": "firma:priority",
+      "@type": "xsd:integer"
+    },
+    "EmailTemplate": "firma:EmailTemplate",
+    "email_type": {
+      "@id": "firma:email_type",
+      "@type": "xsd:string"
+    },
+    "body": {
+      "@id": "firma:body",
+      "@type": "xsd:string"
+    },
+    "SignerTerms": "firma:SignerTerms",
+    "statement_text": {
+      "@id": "firma:statement_text",
+      "@type": "xsd:string"
+    },
+    "terms_url": {
+      "@id": "firma:terms_url",
+      "@type": "@id"
+    },
+    "Error": "firma:Error",
+    "error": {
+      "@id": "firma:error",
+      "@type": "xsd:string"
+    },
+    "code": {
+      "@id": "firma:code",
+      "@type": "xsd:string"
+    },
+    "errors": {
+      "@id": "firma:errors",
+      "@container": "@list"
+    },
+    "details": {
+      "@id": "firma:details"
+    },
+    "SigningRequestDownloadResponse": "firma:SigningRequestDownloadResponse",
+    "is_partial": {
+      "@id": "firma:is_partial",
+      "@type": "xsd:boolean"
+    },
+    "download_url": {
+      "@id": "firma:download_url",
+      "@type": "@id"
+    },
+    "generated_at": {
+      "@id": "firma:generated_at",
+      "@type": "xsd:dateTime"
+    },
+    "Pagination": "firma:Pagination",
+    "current_page": {
+      "@id": "firma:current_page",
+      "@type": "xsd:integer"
+    },
+    "page_size": {
+      "@id": "firma:page_size",
+      "@type": "xsd:integer"
+    },
+    "total_count": {
+      "@id": "firma:total_count",
+      "@type": "xsd:integer"
+    },
+    "total_pages": {
+      "@id": "firma:total_pages",
+      "@type": "xsd:integer"
+    },
+    "WorkspaceListResponse": "firma:WorkspaceListResponse",
+    "results": {
+      "@id": "firma:results",
+      "@container": "@list"
+    },
+    "pagination": {
+      "@id": "firma:pagination",
+      "@type": "@id"
+    },
+    "TemplateListResponse": "firma:TemplateListResponse",
+    "SigningRequestListResponse": "firma:SigningRequestListResponse",
+    "WebhookListResponse": "firma:WebhookListResponse",
+    "MessageResponse": "firma:MessageResponse",
+    "TemplateUserListResponse": "firma:TemplateUserListResponse",
+    "TemplateFieldListResponse": "firma:TemplateFieldListResponse",
+    "SigningRequestUserListResponse": "firma:SigningRequestUserListResponse",
+    "SigningRequestFieldListResponse": "firma:SigningRequestFieldListResponse",
+    "AuditTrailListResponse": "firma:AuditTrailListResponse",
+    "CompanyEmailTemplateListResponse": "firma:CompanyEmailTemplateListResponse",
+    "DomainListResponse": "firma:DomainListResponse",
+    "DomainCreateResponse": "firma:DomainCreateResponse",
+    "verification_instructions": {
+      "@id": "firma:verification_instructions"
+    },
+    "DomainDeleteResponse": "firma:DomainDeleteResponse",
+    "domain_id": {
+      "@id": "firma:domain_id",
+      "@type": "xsd:string"
+    },
+    "DomainVerifyOwnershipResponse": "firma:DomainVerifyOwnershipResponse",
+    "next_step": {
+      "@id": "firma:next_step",
+      "@type": "xsd:string"
+    },
+    "DomainFinalizeResponse": "firma:DomainFinalizeResponse",
+    "DomainVerifyDnsResponse": "firma:DomainVerifyDnsResponse",
+    "verified": {
+      "@id": "firma:verified",
+      "@type": "xsd:boolean"
+    },
+    "DomainSetPrimaryResponse": "firma:DomainSetPrimaryResponse",
+    "RotateSecretResponse": "firma:RotateSecretResponse",
+    "new_secret": {
+      "@id": "firma:new_secret",
+      "@type": "xsd:string"
+    },
+    "grace_period_hours": {
+      "@id": "firma:grace_period_hours",
+      "@type": "xsd:integer"
+    },
+    "warning": {
+      "@id": "firma:warning",
+      "@type": "xsd:string"
+    },
+    "SecretStatusResponse": "firma:SecretStatusResponse",
+    "last_rotated_at": {
+      "@id": "firma:last_rotated_at",
+      "@type": "xsd:dateTime"
+    },
+    "grace_period_active": {
+      "@id": "firma:grace_period_active",
+      "@type": "xsd:boolean"
+    },
+    "grace_period_ends_at": {
+      "@id": "firma:grace_period_ends_at",
+      "@type": "xsd:dateTime"
+    },
+    "EmailTemplateDeleteResponse": "firma:EmailTemplateDeleteResponse",
+    "SignerTermsListResponse": "firma:SignerTermsListResponse",
+    "terms": {
+      "@id": "firma:terms",
+      "@container": "@list"
+    },
+    "SignerTermsUpdateResponse": "firma:SignerTermsUpdateResponse",
+    "ok": {
+      "@id": "firma:ok",
+      "@type": "xsd:boolean"
+    },
+    "storedHtml": {
+      "@id": "firma:storedHtml",
+      "@type": "xsd:string"
+    },
+    "changed": {
+      "@id": "firma:changed",
+      "@type": "xsd:boolean"
+    },
+    "SignerTermsDeleteResponse": "firma:SignerTermsDeleteResponse",
+    "CustomFieldListResponse": "firma:CustomFieldListResponse",
+    "LogoUploadResponse": "firma:LogoUploadResponse",
+    "LogoDeleteResponse": "firma:LogoDeleteResponse",
+    "ApiKeyRegenerateResponse": "firma:ApiKeyRegenerateResponse",
+    "new_key": {
+      "@id": "firma:new_key"
+    },
+    "key_type": {
+      "@id": "firma:key_type",
+      "@type": "xsd:string"
+    },
+    "expiring_keys": {
+      "@id": "firma:expiring_keys",
+      "@container": "@list"
+    },
+    "ApiKeyExpireResponse": "firma:ApiKeyExpireResponse",
+    "expired_keys": {
+      "@id": "firma:expired_keys",
+      "@container": "@list"
+    },
+    "TemplatePatchResponse": "firma:TemplatePatchResponse",
+    "updated_fields": {
+      "@id": "firma:updated_fields",
+      "@container": "@list"
+    },
+    "user": {
+      "@id": "firma:user"
+    },
+    "TemplateDuplicateResponse": "firma:TemplateDuplicateResponse",
+    "CreateAndSendResponse": "firma:CreateAndSendResponse",
+    "first_signer": {
+      "@id": "firma:first_signer"
+    },
+    "credits_remaining": {
+      "@id": "firma:credits_remaining",
+      "@type": "xsd:integer"
+    },
+    "CreateAndSendValidationError": "firma:CreateAndSendValidationError",
+    "phase": {
+      "@id": "firma:phase",
+      "@type": "xsd:string"
+    },
+    "validation_errors": {
+      "@id": "firma:validation_errors",
+      "@container": "@list"
+    },
+    "InsufficientCreditsError": "firma:InsufficientCreditsError",
+    "current_credits": {
+      "@id": "firma:current_credits",
+      "@type": "xsd:integer"
+    },
+    "UnprocessableEntityError": "firma:UnprocessableEntityError",
+    "SigningRequestUpdateResponse": "firma:SigningRequestUpdateResponse",
+    "signing_request": {
+      "@id": "firma:signing_request"
+    },
+    "summary": {
+      "@id": "firma:summary"
+    },
+    "SigningRequestUpdateError": "firma:SigningRequestUpdateError",
+    "SigningRequestDeleteResponse": "firma:SigningRequestDeleteResponse",
+    "deleted_on": {
+      "@id": "firma:deleted_on",
+      "@type": "xsd:dateTime"
+    },
+    "CancelSigningRequestResponse": "firma:CancelSigningRequestResponse",
+    "cancelled_on": {
+      "@id": "firma:cancelled_on",
+      "@type": "xsd:dateTime"
+    },
+    "notify_signers": {
+      "@id": "firma:notify_signers",
+      "@type": "xsd:boolean"
+    },
+    "emails_sent": {
+      "@id": "firma:emails_sent",
+      "@type": "xsd:integer"
+    },
+    "ResendSigningRequestResponse": "firma:ResendSigningRequestResponse",
+    "recipients_notified": {
+      "@id": "firma:recipients_notified",
+      "@type": "xsd:integer"
+    },
+    "recipients_failed": {
+      "@id": "firma:recipients_failed",
+      "@type": "xsd:integer"
+    },
+    "ResendConflictError": "firma:ResendConflictError",
+    "TestWebhookResponse": "firma:TestWebhookResponse",
+    "status_code": {
+      "@id": "firma:status_code",
+      "@type": "xsd:integer"
+    },
+    "webhook_event_id": {
+      "@id": "firma:webhook_event_id",
+      "@type": "xsd:string"
+    },
+    "headers_sent": {
+      "@id": "firma:headers_sent"
+    },
+    "GenerateTemplateTokenResponse": "firma:GenerateTemplateTokenResponse",
+    "EmailTemplateDefaultsResponse": "firma:EmailTemplateDefaultsResponse",
+    "templates": {
+      "@id": "firma:templates"
+    },
+    "EmailTemplatePlaceholdersResponse": "firma:EmailTemplatePlaceholdersResponse",
+    "placeholders": {
+      "@id": "firma:placeholders",
+      "@container": "@list"
+    },
+    "WorkspaceEmailTemplateListResponse": "firma:WorkspaceEmailTemplateListResponse",
+    "TemplateCopyResponse": "firma:TemplateCopyResponse",
+    "OrganizationSeal": "firma:OrganizationSeal",
+    "lineage_id": {
+      "@id": "firma:lineage_id",
+      "@type": "xsd:string"
+    },
+    "version": {
+      "@id": "firma:version",
+      "@type": "xsd:integer"
+    },
+    "companies_id": {
+      "@id": "firma:companies_id",
+      "@type": "xsd:string"
+    },
+    "authority_name": {
+      "@id": "firma:authority_name",
+      "@type": "xsd:string"
+    },
+    "display_name": {
+      "@id": "firma:display_name",
+      "@type": "xsd:string"
+    },
+    "signatory_title": {
+      "@id": "firma:signatory_title",
+      "@type": "xsd:string"
+    },
+    "kind": {
+      "@id": "firma:kind",
+      "@type": "xsd:string"
+    },
+    "is_default": {
+      "@id": "firma:is_default",
+      "@type": "xsd:integer"
+    },
+    "statement_language": {
+      "@id": "firma:statement_language",
+      "@type": "xsd:string"
+    },
+    "statement_version": {
+      "@id": "firma:statement_version",
+      "@type": "xsd:integer"
+    },
+    "signatory_name": {
+      "@id": "firma:signatory_name",
+      "@type": "xsd:string"
+    },
+    "signatory_title_attested": {
+      "@id": "firma:signatory_title_attested",
+      "@type": "xsd:string"
+    },
+    "attested_at": {
+      "@id": "firma:attested_at",
+      "@type": "xsd:dateTime"
+    },
+    "revoked_on": {
+      "@id": "firma:revoked_on",
+      "@type": "xsd:dateTime"
+    },
+    "OrganizationSealCreate": "firma:OrganizationSealCreate",
+    "scope": {
+      "@id": "firma:scope",
+      "@type": "xsd:string"
+    },
+    "image": {
+      "@id": "firma:image",
+      "@type": "xsd:string"
+    },
+    "typed": {
+      "@id": "firma:typed"
+    },
+    "statement": {
+      "@id": "firma:statement",
+      "@type": "@id"
+    },
+    "SealStatement": "firma:SealStatement",
+    "text": {
+      "@id": "firma:text",
+      "@type": "xsd:string"
+    },
+    "accepted": {
+      "@id": "firma:accepted",
+      "@type": "xsd:boolean"
+    },
+    "SealImage": "firma:SealImage",
+    "content_type": {
+      "@id": "firma:content_type",
+      "@type": "xsd:string"
+    },
+    "data_url": {
+      "@id": "firma:data_url",
+      "@type": "xsd:string"
+    },
+    "SealParticipantInput": "firma:SealParticipantInput",
+    "seal_id": {
+      "@id": "firma:seal_id",
+      "@type": "xsd:string"
+    },
+    "temp_id": {
+      "@id": "firma:temp_id",
+      "@type": "xsd:string"
+    },
+    "SealParticipant": "firma:SealParticipant",
+    "organization_seals_id": {
+      "@id": "firma:organization_seals_id",
+      "@type": "xsd:string"
+    },
+    "SealApplication": "firma:SealApplication",
+    "signing_request_name": {
+      "@id": "firma:signing_request_name",
+      "@type": "xsd:string"
+    },
+    "seal_name": {
+      "@id": "firma:seal_name",
+      "@type": "xsd:string"
+    },
+    "applied_at": {
+      "@id": "firma:applied_at",
+      "@type": "xsd:dateTime"
+    },
+    "SealAccessLogEntry": "firma:SealAccessLogEntry",
+    "action": {
+      "@id": "firma:action",
+      "@type": "xsd:string"
+    },
+    "actor_kind": {
+      "@id": "firma:actor_kind",
+      "@type": "xsd:string"
+    },
+    "SealErrorCode": "firma:SealErrorCode"
+  },
+  "@type": "schema:Dataset",
+  "schema:name": "Firma.dev API JSON-LD context",
+  "schema:description": "A JSON-LD @context for the objects Firma.dev's own API contract declares: one class per component schema, one property per declared field, typed from the contract. Derived by script (derive-json-ld.py, 2026-09-25) from openapi/app_firma_dev_openapi.json.",
+  "dcterms:created": "2026-09-25",
+  "dcterms:source": [
+    "openapi/app_firma_dev_openapi.json"
+  ]
+}

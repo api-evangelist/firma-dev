@@ -1,0 +1,201 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/firma-dev/main/json-schema/firma-dev-anchor-tag-schema.json",
+  "title": "AnchorTag",
+  "description": "Anchor tag definition for automatic field placement. Anchor tags are text markers embedded in a PDF document (e.g., '{{SIGN_HERE}}') that are automatically located and converted into positioned fields. The anchor text is removed from the PDF after processing by default.",
+  "x-generated": "2026-09-25",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/firma-dev-signing-requests-api-openapi.yml#/components/schemas/AnchorTag",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "anchor_string",
+    "type",
+    "recipient_id"
+  ],
+  "properties": {
+    "anchor_string": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "Text string to search for in the PDF document. Common patterns include '{{SIGN_HERE}}', '{{DATE}}', etc."
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "signature",
+        "initial",
+        "initials",
+        "text",
+        "date",
+        "checkbox",
+        "radio_buttons",
+        "radio",
+        "dropdown",
+        "textarea",
+        "text_area",
+        "url",
+        "approval_signature",
+        "approval_checkmark",
+        "approval_date"
+      ],
+      "description": "Type of field to place at the anchor location"
+    },
+    "recipient_id": {
+      "oneOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "description": "ID of the recipient assigned to this field. Use temporary ID (e.g., 'temp_1') for document-based creation or integer order for template-based."
+    },
+    "x_offset": {
+      "type": "number",
+      "description": "Horizontal offset from anchor position. Units determined by offset_units (default: percent of page width).",
+      "default": 0
+    },
+    "y_offset": {
+      "type": "number",
+      "description": "Vertical offset from anchor position. Units determined by offset_units (default: percent of page height).",
+      "default": 0
+    },
+    "offset_units": {
+      "type": "string",
+      "enum": [
+        "percent",
+        "pixels"
+      ],
+      "default": "percent",
+      "description": "Unit type for x_offset and y_offset. 'percent' = percentage of page dimensions, 'pixels' = PDF points (72 DPI)."
+    },
+    "width": {
+      "type": "number",
+      "description": "Field width as percentage of page width. Defaults vary by field type (e.g., signature=25, text=20, checkbox=3).",
+      "exclusiveMinimum": 0
+    },
+    "height": {
+      "type": "number",
+      "description": "Field height as percentage of page height. Defaults vary by field type (e.g., signature=5, text=3, checkbox=3).",
+      "exclusiveMinimum": 0
+    },
+    "case_sensitive": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether anchor string matching is case-sensitive"
+    },
+    "match_whole_word": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether to match whole words only (bounded by non-word characters)"
+    },
+    "ignore_if_not_present": {
+      "type": "boolean",
+      "default": false,
+      "description": "If true, skip this anchor without error when not found in the document. If false (default), a missing anchor causes a validation error."
+    },
+    "occurrence": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000,
+      "default": 0,
+      "description": "Which occurrence to place a field on. 0 = all occurrences (default), 1 = first only, 2 = second only, etc."
+    },
+    "remove_anchor_text": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether to remove the anchor text using corrected glyph geometry and sub-pixel text removal. Defaults to true."
+    },
+    "add_white_background": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether to draw a white background across the full resolved field rectangle. This is independent of anchor-text removal."
+    },
+    "required": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether the field must be completed by the signer"
+    },
+    "read_only": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the field is read-only (pre-filled)"
+    },
+    "read_only_value": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 10000,
+      "description": "Static value for read-only fields"
+    },
+    "variable_name": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 255,
+      "description": "Variable name for the field"
+    },
+    "variable_defined_name": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 100,
+      "description": "Human-readable custom field definition name. Can be used as an alternative to variable_name for targeting fields in template-based creation."
+    },
+    "background_color": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+      "description": "Background color as hex (e.g., '#FFFDE7')"
+    },
+    "font_size": {
+      "type": "integer",
+      "minimum": 8,
+      "maximum": 48,
+      "description": "Optional starting/maximum font size in pixels for text-bearing field types, stored on the resolved field as format_rules.fontSize (see TextFormatRules). Text still auto-shrinks to fit the field box. Omit for automatic sizing. Values outside 8-48 are clamped; non-numeric values are ignored."
+    },
+    "dropdown_options": {
+      "description": "Options for dropdown fields",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        {
+          "type": "object"
+        }
+      ]
+    },
+    "date_default": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 50,
+      "description": "Default date value"
+    },
+    "date_signing_default": {
+      "type": "boolean",
+      "default": false,
+      "description": "Use signing date as default"
+    },
+    "multi_group_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 255,
+      "description": "Group ID for linking checkbox/radio fields"
+    }
+  }
+}

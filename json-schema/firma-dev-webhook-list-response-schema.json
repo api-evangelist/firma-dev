@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/firma-dev/main/json-schema/firma-dev-webhook-list-response-schema.json",
+  "title": "WebhookListResponse",
+  "description": "Paginated list of webhooks",
+  "x-generated": "2026-09-25",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/firma-dev-webhooks-api-openapi.yml#/components/schemas/WebhookListResponse",
+  "type": "object",
+  "properties": {
+    "results": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Webhook"
+      }
+    },
+    "pagination": {
+      "$ref": "#/$defs/Pagination"
+    }
+  },
+  "required": [
+    "results",
+    "pagination"
+  ],
+  "$defs": {
+    "Pagination": {
+      "type": "object",
+      "properties": {
+        "current_page": {
+          "type": "integer"
+        },
+        "page_size": {
+          "type": "integer"
+        },
+        "total_count": {
+          "type": "integer"
+        },
+        "total_pages": {
+          "type": "integer"
+        }
+      },
+      "description": "Pagination metadata for list responses",
+      "required": [
+        "current_page",
+        "page_size",
+        "total_count",
+        "total_pages"
+      ]
+    },
+    "Webhook": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Unique identifier for the webhook"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Webhook URL"
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Webhook description"
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Events that trigger this webhook"
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether the webhook is enabled"
+        },
+        "consecutive_failures": {
+          "type": "integer",
+          "description": "Number of consecutive delivery failures"
+        },
+        "auto_disabled_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "description": "Timestamp when the webhook was auto-disabled due to failures"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Webhook creation timestamp"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Webhook last update timestamp"
+        }
+      },
+      "required": [
+        "id",
+        "url",
+        "events",
+        "enabled",
+        "created_at"
+      ]
+    }
+  }
+}

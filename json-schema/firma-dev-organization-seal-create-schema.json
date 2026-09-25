@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/firma-dev/main/json-schema/firma-dev-organization-seal-create-schema.json",
+  "title": "OrganizationSealCreate",
+  "description": "Request body to create an organization seal.",
+  "x-generated": "2026-09-25",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/firma-dev-organization-seals-api-openapi.yml#/components/schemas/OrganizationSealCreate",
+  "type": "object",
+  "required": [
+    "name",
+    "display_name",
+    "kind",
+    "scope",
+    "statement"
+  ],
+  "properties": {
+    "name": {
+      "type": "string",
+      "maxLength": 120,
+      "description": "Internal name for the seal"
+    },
+    "display_name": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "Display name rendered on the seal image"
+    },
+    "signatory_title": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 200,
+      "description": "Signatory title rendered on the seal image"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "uploaded",
+        "typed",
+        "drawn"
+      ],
+      "description": "How the seal image was created"
+    },
+    "scope": {
+      "type": "string",
+      "enum": [
+        "company",
+        "workspace"
+      ],
+      "description": "Scope of the seal. Company-scope requires a protected API key."
+    },
+    "workspace_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Required when scope is 'workspace'"
+    },
+    "image": {
+      "type": "string",
+      "description": "Base64-encoded PNG data URI (data:image/png;base64,...). Required for 'uploaded' and 'drawn' kinds."
+    },
+    "typed": {
+      "type": "object",
+      "description": "Typed seal parameters. Required for 'typed' kind.",
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "Text to render on the seal"
+        },
+        "style": {
+          "type": "string",
+          "description": "Style variant for the typed seal"
+        }
+      }
+    },
+    "statement": {
+      "$ref": "#/$defs/SealStatement"
+    },
+    "is_default": {
+      "type": "boolean",
+      "default": false,
+      "description": "Set as default seal for this scope"
+    }
+  },
+  "$defs": {
+    "SealStatement": {
+      "type": "object",
+      "required": [
+        "language",
+        "signatory_name",
+        "text",
+        "accepted"
+      ],
+      "description": "Attestation statement affirming authority to apply the seal.",
+      "properties": {
+        "language": {
+          "type": "string",
+          "description": "Language code of the statement"
+        },
+        "signatory_name": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Name of the person attesting"
+        },
+        "signatory_title": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 200,
+          "description": "Title of the person attesting"
+        },
+        "text": {
+          "type": "string",
+          "description": "On create, the statement rendered with the authority name (the stored workspace or company name exactly as returned by the API, including HTML escaping). On replace, it must equal the seal's stored statement text."
+        },
+        "accepted": {
+          "type": "boolean",
+          "description": "Must be true to confirm acceptance"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Statement version number"
+        }
+      }
+    }
+  }
+}

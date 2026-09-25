@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/firma-dev/main/json-schema/firma-dev-seal-statement-schema.json",
+  "title": "SealStatement",
+  "description": "Attestation statement affirming authority to apply the seal.",
+  "x-generated": "2026-09-25",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/firma-dev-organization-seals-api-openapi.yml#/components/schemas/SealStatement",
+  "type": "object",
+  "required": [
+    "language",
+    "signatory_name",
+    "text",
+    "accepted"
+  ],
+  "properties": {
+    "language": {
+      "type": "string",
+      "description": "Language code of the statement"
+    },
+    "signatory_name": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "Name of the person attesting"
+    },
+    "signatory_title": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 200,
+      "description": "Title of the person attesting"
+    },
+    "text": {
+      "type": "string",
+      "description": "On create, the statement rendered with the authority name (the stored workspace or company name exactly as returned by the API, including HTML escaping). On replace, it must equal the seal's stored statement text."
+    },
+    "accepted": {
+      "type": "boolean",
+      "description": "Must be true to confirm acceptance"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Statement version number"
+    }
+  }
+}

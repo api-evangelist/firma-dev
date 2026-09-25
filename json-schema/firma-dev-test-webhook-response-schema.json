@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/firma-dev/main/json-schema/firma-dev-test-webhook-response-schema.json",
+  "title": "TestWebhookResponse",
+  "description": "Webhook test execution result",
+  "x-generated": "2026-09-25",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/firma-dev-webhooks-api-openapi.yml#/components/schemas/TestWebhookResponse",
+  "type": "object",
+  "properties": {
+    "success": {
+      "type": "boolean",
+      "description": "Whether the test webhook was delivered successfully"
+    },
+    "status_code": {
+      "type": "integer",
+      "description": "HTTP status code returned by the webhook endpoint"
+    },
+    "webhook_event_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "ID of the webhook event record"
+    },
+    "message": {
+      "type": "string"
+    },
+    "headers_sent": {
+      "type": "object",
+      "description": "Headers sent with the test webhook request",
+      "properties": {
+        "X-Firma-Event": {
+          "type": "string"
+        },
+        "X-Firma-Signature": {
+          "type": "string"
+        },
+        "X-Firma-Delivery": {
+          "type": "string"
+        },
+        "X-Firma-Signature-Old": {
+          "type": "string",
+          "description": "Only present during grace period after secret rotation"
+        }
+      }
+    }
+  },
+  "required": [
+    "success",
+    "status_code"
+  ]
+}

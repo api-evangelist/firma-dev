@@ -1,0 +1,470 @@
+openapi: 3.2.0
+info:
+  title: Firma Partner JWT Management API
+  description: RESTful API for document signing and template management.
+  version: 01.38.00
+  contact:
+    name: API Support
+    url: https://firma.com/support
+servers:
+- url: https://api.firma.dev/functions/v1/signing-request-api
+  description: Production API - Recommended (Current)
+- url: https://api.firma.dev/api/v1
+  description: Production API - Planned
+security:
+- ApiKeyAuth: []
+tags:
+- name: JWT Management
+  description: JWT token generation and revocation for embedded templates
+paths:
+  /generate-template-token:
+    post:
+      summary: Generate JWT token for embedding templates
+      description: 'Creates a JWT token for embedding a template with 24-hour expiration. This is the standard endpoint for JWT generation.
+
+
+        **Note**: The standalone `generate-embedded-template-token` function is deprecated in favor of this router-based endpoint.'
+      tags:
+      - JWT Management
+      security:
+      - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateJWTRequest'
+            example:
+              companies_workspaces_templates_id: 123e4567-e89b-12d3-a456-426614174000
+      responses:
+        '201':
+          description: JWT generated successfully
+          headers:
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+              description: 'Rate limit: 120 requests per minute'
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+              description: Remaining requests in current window
+            X-RateLimit-Reset:
+              schema:
+                type: integer
+              description: Unix timestamp when rate limit resets
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateTemplateTokenResponse'
+              example:
+                token: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...
+                expires_at: '2024-04-20T10:00:00Z'
+                jwt_record_id: jwt123-e89b-12d3-a456-426614174000
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: generateTemplateToken
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.jwtManagement.generateTemplateToken({\n    companies_workspaces_templates_id: \"123e4567-e89b-12d3-a456-426614174000\"\n});\nconsole.log(response);"
+  /revoke-template-token:
+    post:
+      summary: Revoke Template JWT Token
+      description: Revoke a previously generated JWT token, preventing it from being used for template embedding. This is the standard endpoint for revoking template JWTs.
+      tags:
+      - JWT Management
+      security:
+      - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RevokeJWTRequest'
+            example:
+              jwt_id: 123e4567-e89b-12d3-a456-426614174000
+      responses:
+        '200':
+          description: JWT revoked successfully
+          headers:
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+              description: 'Rate limit: 120 requests per minute'
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+              description: Remaining requests in current window
+            X-RateLimit-Reset:
+              schema:
+                type: integer
+              description: Unix timestamp when rate limit resets
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RevokeJWTResponse'
+              example:
+                message: JWT revoked successfully
+                jwt_id: 123e4567-e89b-12d3-a456-426614174000
+                revoked_at: '2024-03-20T16:45:00Z'
+        '400':
+          description: Bad Request - JWT already revoked or invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                alreadyRevoked:
+                  value:
+                    error: Bad Request
+                    message: JWT has already been revoked
+                invalidJwt:
+                  value:
+                    error: Bad Request
+                    message: Invalid JWT ID
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: revokeTemplateToken
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.jwtManagement.revokeTemplateToken({\n    jwt_id: \"123e4567-e89b-12d3-a456-426614174000\"\n});\nconsole.log(response);"
+  /jwt/generate-signing-request:
+    post:
+      summary: Generate JWT token for signing request
+      description: Generate a JWT token for embedding a signing request editor. JWT expires after 7 days.
+      tags:
+      - JWT Management
+      security:
+      - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateSigningRequestJWTRequest'
+            example:
+              companies_workspaces_signing_requests_id: 123e4567-e89b-12d3-a456-426614174000
+      responses:
+        '200':
+          description: JWT generated successfully
+          headers:
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+              description: 'Rate limit: 120 requests per minute'
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+              description: Remaining requests in current window
+            X-RateLimit-Reset:
+              schema:
+                type: integer
+              description: Unix timestamp when rate limit resets
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateSigningRequestJWTResponse'
+              example:
+                jwt: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...
+                jwt_id: jwt123-e89b-12d3-a456-426614174000
+                expires_at: '2024-03-27T10:00:00Z'
+                signing_request_id: 123e4567-e89b-12d3-a456-426614174000
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: generateSigningRequestToken
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.jwtManagement.generateSigningRequestToken({\n    companies_workspaces_signing_requests_id: \"123e4567-e89b-12d3-a456-426614174000\"\n});\nconsole.log(response);"
+  /jwt/revoke-signing-request:
+    post:
+      summary: Revoke a signing request JWT token
+      description: Revoke a previously generated JWT token for a signing request, preventing it from being used for embedded editing
+      tags:
+      - JWT Management
+      security:
+      - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RevokeSigningRequestJWTRequest'
+            example:
+              jwt_id: 123e4567-e89b-12d3-a456-426614174000
+      responses:
+        '200':
+          description: JWT revoked successfully
+          headers:
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+              description: 'Rate limit: 120 requests per minute'
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+              description: Remaining requests in current window
+            X-RateLimit-Reset:
+              schema:
+                type: integer
+              description: Unix timestamp when rate limit resets
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RevokeSigningRequestJWTResponse'
+              example:
+                message: JWT revoked successfully
+                jwt_id: 123e4567-e89b-12d3-a456-426614174000
+                revoked_at: '2024-03-20T16:45:00Z'
+        '400':
+          description: Bad Request - JWT already revoked or invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                alreadyRevoked:
+                  value:
+                    error: Bad Request
+                    message: JWT has already been revoked
+                invalidJwt:
+                  value:
+                    error: Bad Request
+                    message: Invalid JWT ID
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: revokeSigningRequestToken
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.jwtManagement.revokeSigningRequestToken({\n    jwt_id: \"123e4567-e89b-12d3-a456-426614174000\"\n});\nconsole.log(response);"
+components:
+  schemas:
+    RevokeSigningRequestJWTRequest:
+      type: object
+      required:
+      - jwt_id
+      properties:
+        jwt_id:
+          type: string
+          format: uuid
+          description: ID of the JWT token to revoke
+    RevokeJWTResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Confirmation message
+        jwt_id:
+          type: string
+          format: uuid
+          description: ID of the revoked JWT
+        revoked:
+          type: boolean
+          description: Whether the JWT was successfully revoked
+      required:
+      - message
+    GenerateJWTRequest:
+      type: object
+      required:
+      - companies_workspaces_templates_id
+      properties:
+        companies_workspaces_templates_id:
+          type: string
+          format: uuid
+          description: ID of the template to generate JWT for
+    RevokeSigningRequestJWTResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Confirmation message
+        jwt_id:
+          type: string
+          format: uuid
+          description: ID of the revoked JWT
+        revoked:
+          type: boolean
+          description: Whether the JWT was successfully revoked
+      required:
+      - message
+    GenerateSigningRequestJWTRequest:
+      type: object
+      required:
+      - companies_workspaces_signing_requests_id
+      properties:
+        companies_workspaces_signing_requests_id:
+          type: string
+          format: uuid
+          description: ID of the signing request to generate JWT for
+    GenerateSigningRequestJWTResponse:
+      type: object
+      properties:
+        jwt:
+          type: string
+          description: The generated JWT token
+        jwt_id:
+          type: string
+          format: uuid
+          description: Unique identifier for this JWT
+        expires_at:
+          type: string
+          format: date-time
+          description: JWT expiration timestamp (7 days from creation)
+        signing_request_id:
+          type: string
+          format: uuid
+          description: ID of the signing request this JWT is for
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the JWT was created
+      required:
+      - jwt
+      - expires_at
+      - signing_request_id
+    RevokeJWTRequest:
+      type: object
+      required:
+      - jwt_id
+      properties:
+        jwt_id:
+          type: string
+          format: uuid
+          description: ID of the JWT token to revoke
+    GenerateTemplateTokenResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: The JWT token
+        expires_at:
+          type: string
+          format: date-time
+          description: Token expiration timestamp
+        jwt_record_id:
+          type: string
+          format: uuid
+          description: Database record ID for the JWT
+      description: Generated JWT token for template
+      required:
+      - token
+      - expires_at
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Human-readable error message
+        code:
+          type: string
+          description: 'Machine-readable error code Seal-related codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
+        errors:
+          type: array
+          description: All validation errors when multiple failures are reported together. The top-level error repeats the first item for backward compatibility.
+          items:
+            type: object
+            required:
+            - message
+            properties:
+              message:
+                type: string
+        message:
+          type: string
+          description: Detailed error description
+        details:
+          type: object
+          description: Additional error details
+          additionalProperties: true
+      required:
+      - error
+      description: '
+
+
+        Organization Seal error codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
+  responses:
+    NotFoundError:
+      description: Not Found - Resource does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Not Found
+            message: The requested resource was not found
+    RateLimitError:
+      description: Too Many Requests - Rate limit exceeded
+      headers:
+        X-RateLimit-Limit:
+          schema:
+            type: integer
+          description: Maximum requests per minute
+        X-RateLimit-Remaining:
+          schema:
+            type: integer
+          description: Requests remaining
+        X-RateLimit-Reset:
+          schema:
+            type: integer
+          description: Unix timestamp of reset
+        Retry-After:
+          schema:
+            type: integer
+          description: Seconds until retry allowed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Rate Limit Exceeded
+            message: Too many requests. Please wait before retrying.
+            details:
+              retry_after: 45
+    ValidationError:
+      description: Bad Request - Validation failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Validation Error
+            message: Invalid input data
+            details:
+              name: Name is required
+              email: Invalid email format
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Unauthorized
+            message: Invalid API key
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: API key for authentication. Use your API key directly without any prefix (e.g., 'your-api-key'). Bearer prefix is optional but not required.

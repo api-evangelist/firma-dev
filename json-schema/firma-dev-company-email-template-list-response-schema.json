@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/firma-dev/main/json-schema/firma-dev-company-email-template-list-response-schema.json",
+  "title": "CompanyEmailTemplateListResponse",
+  "description": "List of company email templates",
+  "x-generated": "2026-09-25",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/firma-dev-email-templates-api-openapi.yml#/components/schemas/CompanyEmailTemplateListResponse",
+  "type": "object",
+  "properties": {
+    "results": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/EmailTemplate"
+      }
+    }
+  },
+  "required": [
+    "results"
+  ],
+  "$defs": {
+    "EmailTemplate": {
+      "type": "object",
+      "description": "Custom email template for signing request notifications",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Unique identifier for the email template"
+        },
+        "email_type": {
+          "type": "string",
+          "enum": [
+            "signing_invite",
+            "next_signer",
+            "signing_expired",
+            "signing_cancelled",
+            "signing_declined"
+          ],
+          "description": "Type of email this template is for"
+        },
+        "subject": {
+          "type": "string",
+          "description": "Email subject line"
+        },
+        "body": {
+          "type": "string",
+          "description": "Email body (HTML). Supports placeholders like {{signing_link}}, {{signer_name}}, etc."
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Template creation timestamp"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Template last update timestamp"
+        }
+      },
+      "required": [
+        "email_type",
+        "subject",
+        "body"
+      ]
+    }
+  }
+}

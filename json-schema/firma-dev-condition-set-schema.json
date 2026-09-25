@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/firma-dev/main/json-schema/firma-dev-condition-set-schema.json",
+  "title": "ConditionSet",
+  "description": "A set of condition groups with nested logic. The outer 'logic' operator combines groups, while each group's conditions use the opposite operator. Example: logic='and' means all groups must match, and within each group any condition can match (OR).",
+  "x-generated": "2026-09-25",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/firma-dev-templates-api-openapi.yml#/components/schemas/ConditionSet",
+  "type": "object",
+  "required": [
+    "logic",
+    "groups"
+  ],
+  "properties": {
+    "logic": {
+      "type": "string",
+      "enum": [
+        "and",
+        "or"
+      ],
+      "description": "Logical operator to combine groups. 'and' = all groups must match, 'or' = any group can match."
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ConditionGroup"
+      },
+      "description": "Array of condition groups"
+    }
+  },
+  "$defs": {
+    "Condition": {
+      "type": "object",
+      "required": [
+        "field_id",
+        "operator"
+      ],
+      "description": "A single condition that evaluates a field's value.",
+      "properties": {
+        "field_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "ID of the field to evaluate"
+        },
+        "operator": {
+          "type": "string",
+          "enum": [
+            "is_filled",
+            "is_empty",
+            "equals",
+            "not_equals",
+            "contains",
+            "not_contains",
+            "greater_than",
+            "less_than",
+            "greater_than_or_equal",
+            "less_than_or_equal"
+          ],
+          "description": "Comparison operator. 'is_filled'/'is_empty' don't require a value. Text operators: equals, not_equals, contains, not_contains. Numeric/date operators: greater_than, less_than, greater_than_or_equal, less_than_or_equal."
+        },
+        "value": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "description": "Value to compare against. Not required for is_filled/is_empty operators."
+        }
+      }
+    },
+    "ConditionGroup": {
+      "type": "object",
+      "required": [
+        "conditions"
+      ],
+      "properties": {
+        "conditions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Condition"
+          },
+          "description": "Array of conditions within this group. Combined using the opposite of the parent ConditionSet's logic operator."
+        }
+      }
+    }
+  }
+}

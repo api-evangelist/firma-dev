@@ -1,0 +1,153 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/firma-dev/main/json-schema/firma-dev-domain-finalize-response-schema.json",
+  "title": "DomainFinalizeResponse",
+  "description": "Domain finalization with DNS records",
+  "x-generated": "2026-09-25",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/firma-dev-email-domains-api-openapi.yml#/components/schemas/DomainFinalizeResponse",
+  "type": "object",
+  "properties": {
+    "message": {
+      "type": "string"
+    },
+    "domain": {
+      "$ref": "#/$defs/Domain"
+    },
+    "dns_records": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/DomainDnsRecord"
+      },
+      "description": "DNS records to add for email sending"
+    },
+    "next_step": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "message",
+    "domain",
+    "dns_records",
+    "next_step"
+  ],
+  "$defs": {
+    "Domain": {
+      "type": "object",
+      "description": "Email domain configuration for sending signing request emails",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Unique identifier for the domain"
+        },
+        "domain": {
+          "type": "string",
+          "description": "The domain name (e.g., 'example.com')"
+        },
+        "verification_status": {
+          "type": "integer",
+          "enum": [
+            0,
+            1,
+            2
+          ],
+          "description": "Domain ownership verification status: 0=pending, 1=ownership verified (TXT record confirmed), 2=finalized (registered with email provider)"
+        },
+        "domain_status": {
+          "type": "integer",
+          "enum": [
+            0,
+            1
+          ],
+          "description": "Email sending status: 0=DNS records pending verification, 1=fully verified and ready to send"
+        },
+        "is_primary": {
+          "type": "boolean",
+          "description": "Whether this is the primary domain for sending emails from this workspace"
+        },
+        "verification_token": {
+          "type": "string",
+          "description": "Token to add as TXT record for domain ownership verification. Only returned when verification_status=0."
+        },
+        "resend_domain_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "External email provider domain ID (internal use)"
+        },
+        "dns_records": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "description": "Required DNS records for email sending. Only returned after domain finalization (verification_status=2).",
+          "items": {
+            "$ref": "#/$defs/DomainDnsRecord"
+          }
+        },
+        "date_created": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Domain creation timestamp"
+        },
+        "date_changed": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Domain last update timestamp"
+        }
+      },
+      "required": [
+        "id",
+        "domain",
+        "domain_status",
+        "verification_status"
+      ]
+    },
+    "DomainDnsRecord": {
+      "type": "object",
+      "description": "DNS record required for email domain verification",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "TXT",
+            "CNAME",
+            "MX"
+          ],
+          "description": "DNS record type"
+        },
+        "name": {
+          "type": "string",
+          "description": "DNS record name/host (e.g., 'resend._domainkey' or '@')"
+        },
+        "value": {
+          "type": "string",
+          "description": "DNS record value"
+        },
+        "ttl": {
+          "type": "string",
+          "description": "Time to live (e.g., 'Auto' or seconds)"
+        },
+        "priority": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Priority for MX records"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "verified",
+            "failed"
+          ],
+          "description": "Verification status of this specific record"
+        }
+      }
+    }
+  }
+}

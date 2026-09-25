@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/firma-dev/main/json-schema/firma-dev-template-custom-field-schema.json",
+  "title": "TemplateCustomField",
+  "description": "A custom field definition for a template",
+  "x-generated": "2026-09-25",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/firma-dev-custom-fields-api-openapi.yml#/components/schemas/TemplateCustomField",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier"
+    },
+    "field_name": {
+      "type": "string",
+      "description": "Machine-readable field name"
+    },
+    "field_label": {
+      "type": "string",
+      "description": "Human-readable display label"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "id",
+    "field_name"
+  ]
+}

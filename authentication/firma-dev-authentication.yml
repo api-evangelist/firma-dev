@@ -1,0 +1,17 @@
+generated: '2026-09-25'
+method: derived
+source: openapi/app_firma_dev_openapi.json
+summary:
+  types:
+  - apiKey
+  api_key_in:
+  - header
+schemes:
+- name: ApiKeyAuth
+  type: apiKey
+  in: header
+  parameter: Authorization
+  description: API key for authentication. Use your API key directly without any prefix (e.g.,
+    'your-api-key'). Bearer prefix is optional but not required.
+  sources:
+  - openapi/app_firma_dev_openapi.json

@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/firma-dev/main/json-schema/firma-dev-organization-seal-schema.json",
+  "title": "OrganizationSeal",
+  "description": "Organization seal metadata (image and statement internals are stripped from list/get responses).",
+  "x-generated": "2026-09-25",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/firma-dev-organization-seals-api-openapi.yml#/components/schemas/OrganizationSeal",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "lineage_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Shared across versions of the same seal"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "companies_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "companies_workspaces_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid",
+      "description": "Null for company-scope seals"
+    },
+    "authority_name": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The name the seal was attested for: the company for company scope or the protected workspace, otherwise the workspace. Null for seals whose lineage was created before pinning; they certify in the company's current name."
+    },
+    "name": {
+      "type": "string",
+      "maxLength": 120
+    },
+    "display_name": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "signatory_title": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 200
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "uploaded",
+        "typed",
+        "drawn"
+      ]
+    },
+    "is_default": {
+      "type": "integer",
+      "enum": [
+        0,
+        1
+      ],
+      "description": "1 if this is the default seal for its scope"
+    },
+    "statement_language": {
+      "type": "string"
+    },
+    "statement_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "signatory_name": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "signatory_title_attested": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 200
+    },
+    "attested_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "revoked_on": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "deleted": {
+      "type": "integer",
+      "enum": [
+        0,
+        1
+      ]
+    }
+  }
+}

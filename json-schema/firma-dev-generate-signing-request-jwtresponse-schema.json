@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/firma-dev/main/json-schema/firma-dev-generate-signing-request-jwtresponse-schema.json",
+  "title": "GenerateSigningRequestJWTResponse",
+  "x-generated": "2026-09-25",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/firma-dev-jwt-management-api-openapi.yml#/components/schemas/GenerateSigningRequestJWTResponse",
+  "type": "object",
+  "properties": {
+    "jwt": {
+      "type": "string",
+      "description": "The generated JWT token"
+    },
+    "jwt_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier for this JWT"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "JWT expiration timestamp (7 days from creation)"
+    },
+    "signing_request_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "ID of the signing request this JWT is for"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when the JWT was created"
+    }
+  },
+  "required": [
+    "jwt",
+    "expires_at",
+    "signing_request_id"
+  ]
+}

@@ -1,0 +1,356 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/firma-dev/main/json-schema/firma-dev-field-schema.json",
+  "title": "Field",
+  "description": "Field definition for signing requests. **Read-only fields**: Set read_only=true to pre-fill a field value that signers cannot edit. Use read_only_value for static text, or prefilled_data to auto-populate from recipient attributes. **Template-based field merging**: When creating from a template with fields array, use template_field_id (preferred) or variable_name (fallback) to match template fields. Only provided properties override template defaults (partial update). Fields not matched are ignored.",
+  "x-generated": "2026-09-25",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/firma-dev-signing-requests-api-openapi.yml#/components/schemas/Field",
+  "type": "object",
+  "required": [
+    "type",
+    "position",
+    "page_number"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier (include for updates, omit for new fields)"
+    },
+    "template_field_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Template field ID to match for partial updates (template-based creation only). Use this to identify which template field to override. Takes precedence over variable_name for matching."
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "signature",
+        "text",
+        "date",
+        "checkbox",
+        "dropdown",
+        "initial",
+        "initials",
+        "text_area",
+        "textarea",
+        "image",
+        "stamp",
+        "approval_signature",
+        "approval_checkmark",
+        "approval_date"
+      ],
+      "description": "Type of field. Accepts 'initial' or 'initials' (normalized to 'initial'), 'textarea' or 'text_area' (normalized to 'text_area')."
+    },
+    "position": {
+      "type": "object",
+      "required": [
+        "x",
+        "y",
+        "width",
+        "height"
+      ],
+      "description": "Field must fit within page bounds: x + width <= 100 and y + height <= 100",
+      "properties": {
+        "x": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "X coordinate as percentage (0-100)"
+        },
+        "y": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Y coordinate as percentage (0-100)"
+        },
+        "width": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Width as percentage (0-100). x + width must be <= 100"
+        },
+        "height": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Height as percentage (0-100). y + height must be <= 100"
+        }
+      }
+    },
+    "page_number": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Page number where field is located (1-indexed). Must not exceed the document's total page count."
+    },
+    "required": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether field must be completed"
+    },
+    "recipient_id": {
+      "type": "string",
+      "description": "ID of recipient assigned to this field. Use real UUID for template-based creation or updates, or temporary ID (e.g., 'temp_1') for document-based creation to reference recipients defined in the same request."
+    },
+    "variable_name": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 100,
+      "description": "Variable name for field (used in templates). Also used as fallback for field matching in template-based creation when template_field_id is not provided."
+    },
+    "variable_defined_name": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 100,
+      "description": "Human-readable custom field definition name. Can be used as an alternative to variable_name for targeting fields in template-based creation."
+    },
+    "dropdown_options": {
+      "description": "Options for dropdown fields",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        {
+          "type": "object"
+        }
+      ]
+    },
+    "date_default": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date",
+      "description": "Default date value"
+    },
+    "date_signing_default": {
+      "type": "boolean",
+      "default": false,
+      "description": "Use signing date as default"
+    },
+    "multi_group_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid",
+      "description": "Group ID for linking multiple checkbox or radio button fields together. Fields sharing the same multi_group_id behave as a mutually exclusive group (like radio buttons) - selecting one automatically deselects the others in the group. Use the same UUID across multiple fields to create a group where only one option can be selected at a time."
+    },
+    "format_rules": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/DateFormatRules"
+        },
+        {
+          "$ref": "#/$defs/FileFormatRules"
+        },
+        {
+          "type": "object",
+          "additionalProperties": true
+        }
+      ],
+      "description": "Formatting rules for field value. For date fields, use DateFormatRules schema with dateFormat property. For file fields, use FileFormatRules schema with acceptedFileTypes property (image_and_pdf, image, or pdf). For url fields, use { urlDisplayText: string }. Text-bearing fields (text, textarea, email, name, phone, company, title, number, dropdown, url, date) additionally accept an optional fontSize property (integer px, 8-48, clamped) - see TextFormatRules."
+    },
+    "validation_rules": {
+      "$ref": "#/$defs/FieldValidationRules"
+    },
+    "read_only": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this field is read-only (pre-filled before signing). When true, the signer cannot edit the field value. Useful for displaying contract terms, recipient information, or other fixed data."
+    },
+    "read_only_value": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Static value for read-only fields. Takes precedence over prefilled_data if both are specified. Only applicable when read_only is true. Example: 'Contract #12345' or 'Acme Corporation'."
+    },
+    "prefilled_data": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "first_name",
+        "last_name",
+        "full_name",
+        "email",
+        "phone_number",
+        "company",
+        "title",
+        "street_address",
+        "city",
+        "state_province",
+        "postal_code",
+        "country"
+      ],
+      "description": "User attribute to auto-populate when read_only is true. Value is pulled from the assigned recipient's data at signing time. Can also reference custom_fields keys defined on the recipient (not limited to enum values). Only applicable when read_only is true and read_only_value is not set. Example: Set to 'email' to display the recipient's email address."
+    },
+    "required_conditions": {
+      "$ref": "#/$defs/ConditionSet",
+      "description": "Conditional rules for when this field is required. When set, overrides the static 'required' flag. The field is required only when the conditions evaluate to true based on other field values."
+    },
+    "visibility_conditions": {
+      "$ref": "#/$defs/ConditionSet",
+      "description": "Conditional rules for when this field is visible. When set, the field is hidden unless the conditions evaluate to true. Hidden fields are not validated on submission."
+    },
+    "background_color": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+      "description": "Background color for the field as a hex color string (e.g., '#FFFDE7', '#fff'). Useful for highlighting fields that need attention."
+    },
+    "seal_participant_temp_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Temporary ID of the seal participant this field is assigned to (matches temp_id in seal_participants array). Used during creation to link fields to seal participants defined in the same request."
+    }
+  },
+  "$defs": {
+    "Condition": {
+      "type": "object",
+      "required": [
+        "field_id",
+        "operator"
+      ],
+      "description": "A single condition that evaluates a field's value.",
+      "properties": {
+        "field_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "ID of the field to evaluate"
+        },
+        "operator": {
+          "type": "string",
+          "enum": [
+            "is_filled",
+            "is_empty",
+            "equals",
+            "not_equals",
+            "contains",
+            "not_contains",
+            "greater_than",
+            "less_than",
+            "greater_than_or_equal",
+            "less_than_or_equal"
+          ],
+          "description": "Comparison operator. 'is_filled'/'is_empty' don't require a value. Text operators: equals, not_equals, contains, not_contains. Numeric/date operators: greater_than, less_than, greater_than_or_equal, less_than_or_equal."
+        },
+        "value": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "description": "Value to compare against. Not required for is_filled/is_empty operators."
+        }
+      }
+    },
+    "ConditionGroup": {
+      "type": "object",
+      "required": [
+        "conditions"
+      ],
+      "properties": {
+        "conditions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Condition"
+          },
+          "description": "Array of conditions within this group. Combined using the opposite of the parent ConditionSet's logic operator."
+        }
+      }
+    },
+    "ConditionSet": {
+      "type": "object",
+      "required": [
+        "logic",
+        "groups"
+      ],
+      "description": "A set of condition groups with nested logic. The outer 'logic' operator combines groups, while each group's conditions use the opposite operator. Example: logic='and' means all groups must match, and within each group any condition can match (OR).",
+      "properties": {
+        "logic": {
+          "type": "string",
+          "enum": [
+            "and",
+            "or"
+          ],
+          "description": "Logical operator to combine groups. 'and' = all groups must match, 'or' = any group can match."
+        },
+        "groups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ConditionGroup"
+          },
+          "description": "Array of condition groups"
+        }
+      }
+    },
+    "DateFormatRules": {
+      "type": "object",
+      "description": "Formatting rules for date fields. Specifies how date values should be displayed and formatted.",
+      "properties": {
+        "dateFormat": {
+          "type": "string",
+          "description": "Date format pattern. Use predefined formats or custom patterns with: yyyy (4-digit year), MM (2-digit month), dd (2-digit day), MMMM (full month name), MMM (abbreviated month name), HH (24-hour), mm (minute), ss (second). Examples: 'MM/dd/yyyy' displays as 01/31/2024, 'MMMM dd, yyyy' displays as January 31, 2024.",
+          "enum": [
+            "MM/dd/yyyy",
+            "dd/MM/yyyy",
+            "yyyy-MM-dd",
+            "MMMM dd, yyyy",
+            "MMM dd, yyyy",
+            "dd MMMM yyyy"
+          ],
+          "default": "MM/dd/yyyy"
+        },
+        "fontSize": {
+          "type": "integer",
+          "minimum": 8,
+          "maximum": 48,
+          "description": "Optional starting/maximum font size in pixels for the rendered field value. Text still auto-shrinks to fit the field box. Omit for automatic sizing. Values outside 8-48 are clamped."
+        }
+      }
+    },
+    "FieldValidationRules": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "Validation rules for field values. Reserved for future use - currently not enforced for any field types.",
+      "additionalProperties": true
+    },
+    "FileFormatRules": {
+      "type": "object",
+      "description": "Formatting rules for file upload fields. Specifies which file types signers are allowed to upload.",
+      "properties": {
+        "acceptedFileTypes": {
+          "type": "string",
+          "enum": [
+            "image_and_pdf",
+            "image",
+            "pdf"
+          ],
+          "default": "image_and_pdf",
+          "description": "Accepted file types for upload. 'image_and_pdf' accepts JPG, PNG, and PDF. 'image' accepts JPG and PNG only. 'pdf' accepts PDF only. Files are validated by magic bytes, not just extension. Maximum file size is 10MB."
+        }
+      }
+    }
+  }
+}

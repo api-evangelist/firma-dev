@@ -1,0 +1,576 @@
+openapi: 3.2.0
+info:
+  title: Firma Partner Workspace Settings API
+  description: RESTful API for document signing and template management.
+  version: 01.38.00
+  contact:
+    name: API Support
+    url: https://firma.com/support
+servers:
+- url: https://api.firma.dev/functions/v1/signing-request-api
+  description: Production API - Recommended (Current)
+- url: https://api.firma.dev/api/v1
+  description: Production API - Planned
+security:
+- ApiKeyAuth: []
+tags:
+- name: Workspace Settings
+  description: Workspace configuration and settings
+paths:
+  /workspace/{workspace_id}/settings:
+    get:
+      summary: Get workspace settings
+      description: Retrieve workspace settings
+      tags:
+      - Workspace Settings
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: workspace_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Workspace settings retrieved successfully
+          headers:
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+              description: 'Rate limit: 200 requests per minute'
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+            X-RateLimit-Reset:
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceSettings'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: getWorkspaceSettings
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.workspaceSettings.getWorkspaceSettings({\n    workspace_id: \"workspace_id\"\n});\nconsole.log(response);"
+    put:
+      summary: Update workspace settings
+      tags:
+      - Workspace Settings
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: workspace_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                signing_request_email_header:
+                  type: string
+                signing_request_email_body:
+                  type: string
+                team_email:
+                  type: string
+                  format: email
+                timezone:
+                  type: string
+                language:
+                  type: string
+                  enum:
+                  - en
+                  - es
+                  - it
+                  - pt
+                  - fr
+                  - de
+                  - el
+                  - ru
+                  - pl
+                  - cs
+                  - sv
+                  - nl
+                  - ro
+                  - nb
+                  - ca
+                  description: Workspace language for email templates
+                show_credit_cost_in_editor:
+                  type: boolean
+                  description: Whether to display credit cost in embedded editors
+                require_otp_verification:
+                  type:
+                  - boolean
+                  - 'null'
+                  description: Whether signers must verify their email via OTP. null = inherit from company
+                require_terms_acceptance:
+                  type:
+                  - boolean
+                  - 'null'
+                  description: Whether signers must accept terms before signing. null inherits the company-level setting.
+                disable_guided_navigation:
+                  type:
+                  - boolean
+                  - 'null'
+                  description: Disable automatic scrolling to the next required field during signing. Inherits from workspace or company if not set.
+                show_signature_frame:
+                  type:
+                  - boolean
+                  - 'null'
+                  description: Whether to render signature frames in completed PDFs. null = inherit from company
+                color_primary:
+                  type:
+                  - string
+                  - 'null'
+                  description: Primary color override (#rrggbb hex). Null to inherit from company.
+                color_primary_fg:
+                  type:
+                  - string
+                  - 'null'
+                  description: Primary foreground color override. Null to inherit from company.
+                color_background:
+                  type:
+                  - string
+                  - 'null'
+                  description: Background color override. Null to inherit from company.
+                color_foreground:
+                  type:
+                  - string
+                  - 'null'
+                  description: Foreground/text color override. Null to inherit from company.
+                color_card:
+                  type:
+                  - string
+                  - 'null'
+                  description: Card background color override. Null to inherit from company.
+                color_border:
+                  type:
+                  - string
+                  - 'null'
+                  description: Border color override. Null to inherit from company.
+                color_accent:
+                  type:
+                  - string
+                  - 'null'
+                  description: Editor chrome accent color. Null to inherit from company.
+                color_accent_fg:
+                  type:
+                  - string
+                  - 'null'
+                  description: Foreground color on accent surfaces. Null to inherit from company.
+                color_canvas:
+                  type:
+                  - string
+                  - 'null'
+                  description: Editor document-canvas surround color. Null to inherit from company.
+                color_muted:
+                  type:
+                  - string
+                  - 'null'
+                  description: Muted surface color. Null to inherit from company.
+                color_muted_fg:
+                  type:
+                  - string
+                  - 'null'
+                  description: Muted text color. Null to inherit from company.
+                email_local_part:
+                  type:
+                  - string
+                  - 'null'
+                  description: The local-part (before the @) of the sender email address. Null to inherit from company setting.
+                  pattern: ^[a-z0-9]([a-z0-9._-]*[a-z0-9])?$
+                  minLength: 1
+                  maxLength: 64
+                allow_presigning_download:
+                  type:
+                  - boolean
+                  - 'null'
+                  description: Allow signers to download the original document before signing. Inherits from workspace or company setting when null.
+                show_partial_watermark:
+                  type:
+                  - boolean
+                  - 'null'
+                  description: Show an IN PROGRESS watermark on partial PDF downloads when not all signers have completed. null inherits the company-level setting.
+                show_qr_code:
+                  type:
+                  - boolean
+                  - 'null'
+                  description: Show a QR code on the signing page that lets signers continue on their phone. Inherits from workspace or company setting when null.
+                signing_button_label_overrides:
+                  type:
+                  - object
+                  - 'null'
+                  description: Per-language custom button labels for the signing view. Keys are language codes (en, de, etc.); values are objects mapping translation keys to custom text. Null to use defaults.
+                  additionalProperties:
+                    type: object
+                    additionalProperties:
+                      type: string
+                completion_title:
+                  type:
+                  - string
+                  - 'null'
+                  description: Heading shown on the completion page after signing. Null (or an empty string) clears the override and inherits from company.
+                  maxLength: 200
+                completion_message:
+                  type:
+                  - string
+                  - 'null'
+                  description: Body text shown on the completion page after signing. Null (or an empty string) clears the override and inherits from company.
+                  maxLength: 1000
+                completion_redirect_url:
+                  type:
+                  - string
+                  - 'null'
+                  format: uri
+                  description: URL the signer is redirected to from the completion page. Must use https://. Null (or an empty string) clears the override and inherits from company.
+                  pattern: ^https://
+                  maxLength: 2000
+                completion_redirect_delay:
+                  type:
+                  - integer
+                  - 'null'
+                  description: Seconds the completion page waits before redirecting (0 redirects immediately). Only applies when a redirect URL resolves. Null clears the override and inherits from company.
+                  minimum: 0
+                  maximum: 30
+      responses:
+        '200':
+          description: Workspace settings updated successfully
+          headers:
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+              description: 'Rate limit: 120 requests per minute'
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+            X-RateLimit-Reset:
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceSettings'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: updateWorkspaceSettings
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.workspaceSettings.updateWorkspaceSettings({\n    workspace_id: \"workspace_id\"\n});\nconsole.log(response);"
+components:
+  responses:
+    NotFoundError:
+      description: Not Found - Resource does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Not Found
+            message: The requested resource was not found
+    RateLimitError:
+      description: Too Many Requests - Rate limit exceeded
+      headers:
+        X-RateLimit-Limit:
+          schema:
+            type: integer
+          description: Maximum requests per minute
+        X-RateLimit-Remaining:
+          schema:
+            type: integer
+          description: Requests remaining
+        X-RateLimit-Reset:
+          schema:
+            type: integer
+          description: Unix timestamp of reset
+        Retry-After:
+          schema:
+            type: integer
+          description: Seconds until retry allowed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Rate Limit Exceeded
+            message: Too many requests. Please wait before retrying.
+            details:
+              retry_after: 45
+    ValidationError:
+      description: Bad Request - Validation failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Validation Error
+            message: Invalid input data
+            details:
+              name: Name is required
+              email: Invalid email format
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Unauthorized
+            message: Invalid API key
+  schemas:
+    WorkspaceSettings:
+      type: object
+      properties:
+        workspace_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          description: Workspace name
+        team_email:
+          type: string
+          format: email
+          description: Workspace contact email
+        timezone:
+          type: string
+          description: Workspace timezone
+        language:
+          type: string
+          description: Workspace language for email templates
+          enum:
+          - en
+          - es
+          - it
+          - pt
+          - fr
+          - de
+          - el
+          - ru
+          - pl
+          - cs
+          - sv
+          - nl
+          - ro
+          - nb
+          - ca
+          default: en
+        signing_request_email_header:
+          type: string
+          description: Custom email header text
+        signing_request_email_body:
+          type: string
+          description: Custom HTML email body
+        show_credit_cost_in_editor:
+          type: boolean
+          description: Whether to display credit cost in embedded template and signing request editors
+          default: true
+        require_otp_verification:
+          type:
+          - boolean
+          - 'null'
+          description: Whether signers must verify their email via OTP before accessing documents. null = inherit from company setting, true = require OTP, false = do not require OTP
+        require_terms_acceptance:
+          type:
+          - boolean
+          - 'null'
+          description: Whether signers must accept terms before signing. null inherits the company-level setting.
+        disable_guided_navigation:
+          type:
+          - boolean
+          - 'null'
+          description: Disable automatic scrolling to the next required field during signing. Inherits from workspace or company if not set.
+        show_signature_frame:
+          type:
+          - boolean
+          - 'null'
+          description: Whether to render a visual frame with Signature ID around signatures in completed PDFs. null = inherit from company setting (default enabled), true = show frame, false = hide frame
+        allow_presigning_download:
+          type:
+          - boolean
+          - 'null'
+          description: Allow signers to download the original document before signing. null inherits the company-level setting.
+        show_partial_watermark:
+          type:
+          - boolean
+          - 'null'
+          description: Show an IN PROGRESS watermark on partial PDF downloads when not all signers have completed. null inherits the company-level setting.
+        show_qr_code:
+          type:
+          - boolean
+          - 'null'
+          description: Show a QR code on the signing page that lets signers continue on their phone. null inherits the company-level setting.
+        color_primary:
+          type:
+          - string
+          - 'null'
+          description: Primary color override (#rrggbb hex). Null to inherit from company.
+          example: '#2563eb'
+        color_primary_fg:
+          type:
+          - string
+          - 'null'
+          description: Primary foreground color override. Null to inherit.
+          example: '#ffffff'
+        color_background:
+          type:
+          - string
+          - 'null'
+          description: Background color override. Null to inherit.
+          example: '#0f172a'
+        color_foreground:
+          type:
+          - string
+          - 'null'
+          description: Foreground/text color override. Null to inherit.
+          example: '#ffffff'
+        color_card:
+          type:
+          - string
+          - 'null'
+          description: Card background color override. Null to inherit.
+          example: '#22222a'
+        color_border:
+          type:
+          - string
+          - 'null'
+          description: Border color override. Null to inherit.
+          example: '#3b3b3b'
+        color_accent:
+          type:
+          - string
+          - 'null'
+          description: Editor chrome accent color. Null to inherit.
+          example: '#34eeff'
+        color_accent_fg:
+          type:
+          - string
+          - 'null'
+          description: Foreground color on accent surfaces. Null to inherit.
+          example: '#000000'
+        color_canvas:
+          type:
+          - string
+          - 'null'
+          description: Editor document-canvas surround color. Null to inherit.
+          example: '#0f1419'
+        color_muted:
+          type:
+          - string
+          - 'null'
+          description: Muted surface color. Null to inherit.
+          example: '#22222a'
+        color_muted_fg:
+          type:
+          - string
+          - 'null'
+          description: Muted text color. Null to inherit.
+          example: '#b8b8b8'
+        email_local_part:
+          type:
+          - string
+          - 'null'
+          description: The local-part (before the @) of the sender email address. Null to inherit from company setting. Only applies when a verified custom domain is configured.
+          example: signatures
+          pattern: ^[a-z0-9]([a-z0-9._-]*[a-z0-9])?$
+          minLength: 1
+          maxLength: 64
+        signing_button_label_overrides:
+          type:
+          - object
+          - 'null'
+          description: Per-language custom button labels for the signing view. Keys are language codes (en, de, etc.); values are objects mapping translation keys to custom text. Null to use defaults.
+          additionalProperties:
+            type: object
+            additionalProperties:
+              type: string
+        completion_title:
+          type:
+          - string
+          - 'null'
+          description: Heading shown on the completion page after signing. Null inherits the company-level setting; the built-in translated heading is used when unset at every level.
+          example: Thank you for signing
+          maxLength: 200
+        completion_message:
+          type:
+          - string
+          - 'null'
+          description: Body text shown on the completion page after signing. Null inherits the company-level setting; the built-in translated message is used when unset at every level.
+          example: Your signed copy is on its way to your inbox.
+          maxLength: 1000
+        completion_redirect_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: URL the signer is redirected to from the completion page. Must use https://. Null inherits the company-level setting; no redirect happens when unset at every level. The completion page only honors this server-resolved URL.
+          example: https://example.com/thank-you
+          pattern: ^https://
+          maxLength: 2000
+        completion_redirect_delay:
+          type:
+          - integer
+          - 'null'
+          description: Seconds the completion page waits before redirecting (0 redirects immediately). Only applies when a redirect URL resolves. Null inherits the company-level setting; the page falls back to 5 seconds when unset at every level.
+          example: 5
+          minimum: 0
+          maximum: 30
+      required:
+      - workspace_id
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Human-readable error message
+        code:
+          type: string
+          description: 'Machine-readable error code Seal-related codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
+        errors:
+          type: array
+          description: All validation errors when multiple failures are reported together. The top-level error repeats the first item for backward compatibility.
+          items:
+            type: object
+            required:
+            - message
+            properties:
+              message:
+                type: string
+        message:
+          type: string
+          description: Detailed error description
+        details:
+          type: object
+          description: Additional error details
+          additionalProperties: true
+      required:
+      - error
+      description: '
+
+
+        Organization Seal error codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: API key for authentication. Use your API key directly without any prefix (e.g., 'your-api-key'). Bearer prefix is optional but not required.

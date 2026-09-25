@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/firma-dev/main/json-schema/firma-dev-signing-request-settings-schema.json",
+  "title": "SigningRequestSettings",
+  "description": "Settings returned by the signing request list and detail endpoints. Templates use the TemplateSettings schema (no identity fields).",
+  "x-generated": "2026-09-25",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/firma-dev-signing-requests-api-openapi.yml#/components/schemas/SigningRequestSettings",
+  "type": "object",
+  "properties": {
+    "allow_download": {
+      "type": "boolean",
+      "description": "Whether recipients can download the document",
+      "default": true
+    },
+    "attach_pdf_on_finish": {
+      "type": "boolean",
+      "description": "Whether to attach PDF when signing is complete",
+      "default": true
+    },
+    "allow_editing_before_sending": {
+      "type": "boolean",
+      "description": "Whether the signing request can be edited before sending",
+      "default": false
+    },
+    "use_signing_order": {
+      "type": "boolean",
+      "description": "Whether signing order is enforced among recipients. When true, signers receive the document in sequence based on their order. When false, all signers receive the document simultaneously.",
+      "default": true
+    },
+    "hand_drawn_only": {
+      "type": "boolean",
+      "description": "When enabled, signers can only hand-draw their signatures and cannot use typed/font-based signatures",
+      "default": false
+    },
+    "send_signing_email": {
+      "type": "boolean",
+      "description": "Whether to send signing request notification emails to signers",
+      "default": true
+    },
+    "send_finish_email": {
+      "type": "boolean",
+      "description": "Whether to send completion email when all signers finish",
+      "default": true
+    },
+    "send_expiration_email": {
+      "type": "boolean",
+      "description": "Whether to send expiration notification email when request expires",
+      "default": true
+    },
+    "send_cancellation_email": {
+      "type": "boolean",
+      "description": "Whether to send cancellation notification email when request is cancelled",
+      "default": true
+    },
+    "require_otp_verification": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "Whether signers must verify their email with a one-time code before accessing the document. null = inherit from workspace/company setting.",
+      "default": null
+    },
+    "disable_guided_navigation": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "Disable automatic scrolling to the next required field during signing. Inherits from workspace or company if not set."
+    },
+    "allow_presigning_download": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "Allow signers to download the original document before signing. Inherits from workspace or company setting when null."
+    },
+    "show_qr_code": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "Show a QR code on the signing page that lets signers continue on their phone. Inherits from workspace or company setting when null."
+    },
+    "identity_editable_fields": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "description": "Identity fields signers may edit before signing (e.g. [\"name\", \"company\"]). null = disabled. When set, a confirmation dialog lets signers edit the specified fields."
+    },
+    "notify_identity_change_email": {
+      "type": "boolean",
+      "default": false,
+      "description": "Send an email notification when a signer changes their identity."
+    }
+  }
+}

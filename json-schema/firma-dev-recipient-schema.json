@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/firma-dev/main/json-schema/firma-dev-recipient-schema.json",
+  "title": "Recipient",
+  "description": "Recipient schema with auto-construction and mapping behaviors. **Name field**: Auto-constructed from first_name and last_name ('First Last' if both present, otherwise 'First'). Manual name values are overwritten. **Order assignment**: ALL recipients MUST have an explicit order value. Order determines the signing sequence, which is always enforced. Recipients must sign in order, with lower numbers signing first. **Custom fields**: Supports both flat structure (e.g., company_name at root) and nested structure (custom_fields object). Both formats are normalized internally. **Template field mapping**: When creating from a template with custom recipients, use template_user_id or order to match template users. Only user info (name, email, phone, etc.) can be updated - order and designation are inherited from template. A recipient with designation CC is never matched to a template user; it is added as a CC recipient, and the template's CC recipients are copied to the signing request, skipping any whose email (case-insensitive) is already on a CC recipient of the request. **Temporary IDs**: For document-based creation, use temporary IDs (format: 'temp_1', 'temp_2', etc.) to reference recipients in fields and reminders before they're created. **CC recipients**: CC recipients receive a completed copy but cannot sign or have fields assigned. At least one Signer is required. An existing recipient cannot be changed between CC and Signer/Approver (400); delete it and create it again.",
+  "x-generated": "2026-09-25",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/firma-dev-signing-requests-api-openapi.yml#/components/schemas/Recipient",
+  "type": "object",
+  "required": [
+    "first_name",
+    "email",
+    "designation"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier. For updates: use existing UUID. For document-based creation: optionally use temporary ID (format: 'temp_1', 'temp_2', etc.) to reference recipients in fields and reminders before creation. Temporary IDs are automatically resolved to real UUIDs in the response."
+    },
+    "_temp_id": {
+      "type": "string",
+      "description": "Temporary identifier for new recipients in PUT (comprehensive update) requests (e.g., 'temp_1'). Use this when creating new recipients alongside existing ones in comprehensive updates. Must start with 'temp_' and be unique within the request. Not used for POST (create) requests - use 'id' field instead."
+    },
+    "template_user_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "When creating from a template, the ID of the template user to update. If provided, this recipient's data will update the matching template user. If not provided, falls back to matching by order. Only user info (name, email, phone, address, title, company) can be updated - order and designation are always inherited from the template. Not used for CC recipients, which are never matched to a template user."
+    },
+    "first_name": {
+      "type": "string",
+      "maxLength": 100,
+      "description": "Recipient's first name"
+    },
+    "last_name": {
+      "type": "string",
+      "maxLength": 100,
+      "description": "Recipient's last name (optional, but required if using full_name or last_name prefilled variables)"
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "maxLength": 255,
+      "description": "Recipient's email address"
+    },
+    "designation": {
+      "type": "string",
+      "enum": [
+        "Signer",
+        "Approver",
+        "CC"
+      ],
+      "description": "Role of the recipient. Signer signs the document, Approver approves with approval fields, CC receives a copy when complete."
+    },
+    "order": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Signing sequence number. Recipients must sign in order, with lower numbers signing first. This field is required for all recipients."
+    },
+    "phone_number": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 50,
+      "description": "Recipient's phone number"
+    },
+    "street_address": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 255,
+      "description": "Street address"
+    },
+    "city": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 100,
+      "description": "City"
+    },
+    "state_province": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 100,
+      "description": "State or province"
+    },
+    "postal_code": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 20,
+      "description": "Postal/ZIP code"
+    },
+    "country": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 100,
+      "description": "Country"
+    },
+    "title": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 100,
+      "description": "Job title"
+    },
+    "company": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 255,
+      "description": "Company name"
+    },
+    "custom_fields": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Custom key-value pairs for additional recipient data"
+    }
+  }
+}

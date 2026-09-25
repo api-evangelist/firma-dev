@@ -1,0 +1,402 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/firma-dev/main/json-schema/firma-dev-signing-request-detail-schema.json",
+  "title": "SigningRequestDetail",
+  "description": "Detailed signing request as returned by GET /signing-requests/{id} (nested shape with status object and timestamps)",
+  "x-generated": "2026-09-25",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/firma-dev-signing-requests-api-openapi.yml#/components/schemas/SigningRequestDetail",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier for the signing request"
+    },
+    "name": {
+      "type": "string",
+      "description": "Signing request name"
+    },
+    "template_description": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Description from the template"
+    },
+    "companies_workspaces_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Workspace ID this signing request belongs to"
+    },
+    "document_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Pre-signed URL to the PDF document"
+    },
+    "document_url_expires_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "document_page_count": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Number of pages in the document"
+    },
+    "expiration_hours": {
+      "type": "integer",
+      "description": "Hours until signing request expires"
+    },
+    "expires_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when the signing request expires. Computed from sent_on + expiration_hours. Null if not sent yet or no expiration_hours set."
+    },
+    "credit_cost": {
+      "type": "integer",
+      "description": "Credits consumed when sent"
+    },
+    "status": {
+      "type": "object",
+      "description": "Status flags (multiple can be true for terminal states)",
+      "properties": {
+        "sent": {
+          "type": "boolean"
+        },
+        "finished": {
+          "type": "boolean"
+        },
+        "cancelled": {
+          "type": "boolean"
+        },
+        "declined": {
+          "type": "boolean"
+        },
+        "expired": {
+          "type": "boolean"
+        }
+      }
+    },
+    "timestamps": {
+      "type": "object",
+      "description": "All relevant timestamps for the signing request lifecycle",
+      "properties": {
+        "created_on": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "sent_on": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "finished_on": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "cancelled_on": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "declined_on": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "last_changed_on": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "last_signing_action_on": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      }
+    },
+    "settings": {
+      "$ref": "#/$defs/SigningRequestSettings"
+    },
+    "use_signing_order": {
+      "type": "integer",
+      "enum": [
+        0,
+        1
+      ],
+      "deprecated": true
+    },
+    "allow_download": {
+      "type": "integer",
+      "enum": [
+        0,
+        1
+      ],
+      "deprecated": true
+    },
+    "allow_editing_before_sending": {
+      "type": "integer",
+      "enum": [
+        0,
+        1
+      ],
+      "deprecated": true
+    },
+    "hand_drawn_only": {
+      "type": "integer",
+      "enum": [
+        0,
+        1
+      ],
+      "deprecated": true
+    },
+    "attach_pdf_on_finish": {
+      "type": "integer",
+      "enum": [
+        0,
+        1
+      ],
+      "deprecated": true
+    },
+    "certificate": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "Certificate generation status information",
+      "properties": {
+        "generated": {
+          "type": "boolean",
+          "description": "Whether the final certificate PDF has been generated"
+        },
+        "generated_on": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "description": "Timestamp when certificate was generated"
+        },
+        "has_error": {
+          "type": "boolean",
+          "description": "Whether there was an error generating the certificate"
+        }
+      }
+    },
+    "final_document_download_url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uri",
+      "description": "Signed URL to download the final signed document (PDF with certificate). URL expires after 1 hour."
+    },
+    "final_document_download_error": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "file_not_accessible",
+        null
+      ]
+    },
+    "document_only_download_url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uri",
+      "description": "Signed URL to download the document-only PDF. URL expires after 1 hour."
+    },
+    "document_only_download_error": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "file_not_accessible",
+        null
+      ]
+    },
+    "certificate_only_download_url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uri",
+      "description": "Signed URL to download the certificate-only PDF. URL expires after 1 hour."
+    },
+    "certificate_only_download_error": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "file_not_accessible",
+        null
+      ]
+    },
+    "seal_participants": {
+      "type": "array",
+      "description": "Organization seal participants in the signing order. Empty when the request has no seals.",
+      "items": {
+        "$ref": "#/$defs/SealParticipant"
+      }
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "status",
+    "companies_workspaces_id"
+  ],
+  "$defs": {
+    "SealParticipant": {
+      "type": "object",
+      "description": "Seal participant on a signing request or template.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "organization_seals_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "deleted": {
+          "type": "integer",
+          "enum": [
+            0,
+            1
+          ]
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "SigningRequestSettings": {
+      "type": "object",
+      "description": "Settings returned by the signing request list and detail endpoints. Templates use the TemplateSettings schema (no identity fields).",
+      "properties": {
+        "allow_download": {
+          "type": "boolean",
+          "description": "Whether recipients can download the document",
+          "default": true
+        },
+        "attach_pdf_on_finish": {
+          "type": "boolean",
+          "description": "Whether to attach PDF when signing is complete",
+          "default": true
+        },
+        "allow_editing_before_sending": {
+          "type": "boolean",
+          "description": "Whether the signing request can be edited before sending",
+          "default": false
+        },
+        "use_signing_order": {
+          "type": "boolean",
+          "description": "Whether signing order is enforced among recipients. When true, signers receive the document in sequence based on their order. When false, all signers receive the document simultaneously.",
+          "default": true
+        },
+        "hand_drawn_only": {
+          "type": "boolean",
+          "description": "When enabled, signers can only hand-draw their signatures and cannot use typed/font-based signatures",
+          "default": false
+        },
+        "send_signing_email": {
+          "type": "boolean",
+          "description": "Whether to send signing request notification emails to signers",
+          "default": true
+        },
+        "send_finish_email": {
+          "type": "boolean",
+          "description": "Whether to send completion email when all signers finish",
+          "default": true
+        },
+        "send_expiration_email": {
+          "type": "boolean",
+          "description": "Whether to send expiration notification email when request expires",
+          "default": true
+        },
+        "send_cancellation_email": {
+          "type": "boolean",
+          "description": "Whether to send cancellation notification email when request is cancelled",
+          "default": true
+        },
+        "require_otp_verification": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Whether signers must verify their email with a one-time code before accessing the document. null = inherit from workspace/company setting.",
+          "default": null
+        },
+        "disable_guided_navigation": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Disable automatic scrolling to the next required field during signing. Inherits from workspace or company if not set."
+        },
+        "allow_presigning_download": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Allow signers to download the original document before signing. Inherits from workspace or company setting when null."
+        },
+        "show_qr_code": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Show a QR code on the signing page that lets signers continue on their phone. Inherits from workspace or company setting when null."
+        },
+        "identity_editable_fields": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "Identity fields signers may edit before signing (e.g. [\"name\", \"company\"]). null = disabled. When set, a confirmation dialog lets signers edit the specified fields."
+        },
+        "notify_identity_change_email": {
+          "type": "boolean",
+          "default": false,
+          "description": "Send an email notification when a signer changes their identity."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/firma-dev/main/json-schema/firma-dev-template-patch-response-schema.json",
+  "title": "TemplatePatchResponse",
+  "description": "Template partial update result",
+  "x-generated": "2026-09-25",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/firma-dev-templates-api-openapi.yml#/components/schemas/TemplatePatchResponse",
+  "type": "object",
+  "properties": {
+    "message": {
+      "type": "string"
+    },
+    "updated_fields": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Returned when updating properties"
+    },
+    "user": {
+      "type": "object",
+      "description": "Returned when updating/creating a user"
+    }
+  },
+  "required": [
+    "message",
+    "updated_fields"
+  ]
+}

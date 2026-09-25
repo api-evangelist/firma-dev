@@ -1,0 +1,12 @@
+generated: '2026-09-25'
+method: searched
+probe: true
+source: https://firma.dev/trust
+url: https://firma.dev/trust
+certifications:
+- GDPR
+evidence:
+- source: https://firma.dev/trust
+  keywords:
+  - trust center
+  - gdpr

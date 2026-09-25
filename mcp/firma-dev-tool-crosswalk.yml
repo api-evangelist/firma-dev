@@ -1,0 +1,64 @@
+generated: 2026-09-25
+method: derived
+source: openapi/app.firma.dev/openapi.json
+crosswalk:
+  - tool: cancelSigningRequest
+    category: signing
+    rest:
+      - cancelSigningRequest
+    binding: direct
+    confidence: high
+  - tool: createAndSendSigningRequest
+    category: signing
+    rest:
+      - createAndSendSigningRequest
+    binding: direct
+    confidence: high
+  - tool: createCompanyDomain
+    category: domain
+    rest:
+      - createCompanyDomain
+    binding: direct
+    confidence: high
+  - tool: createOrganizationSeal
+    category: seal
+    rest:
+      - createOrganizationSeal
+    binding: direct
+    confidence: high
+  - tool: createSigningRequest
+    category: signing
+    rest:
+      - createSigningRequest
+    binding: direct
+    confidence: high
+  - tool: createSigningRequestCustomField
+    category: signing
+    rest:
+      - createSigningRequestCustomField
+    binding: direct
+    confidence: high
+  - tool: createTemplate
+    category: template
+    rest:
+      - createTemplate
+    binding: direct
+    confidence: high
+  - tool: createTemplateCustomField
+    category: template
+    rest:
+      - createTemplateCustomField
+    binding: direct
+    confidence: high
+  - tool: createWebhook
+    category: webhook
+    rest:
+      - createWebhook
+    binding: direct
+    confidence: high
+  - tool: createWorkspace
+    category: workspace
+    rest:
+      - createWorkspace
+    binding: direct
+    confidence: high

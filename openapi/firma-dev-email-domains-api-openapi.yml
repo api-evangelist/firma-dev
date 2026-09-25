@@ -1,0 +1,1332 @@
+openapi: 3.2.0
+info:
+  title: Firma Partner Email Domains API
+  description: RESTful API for document signing and template management.
+  version: 01.38.00
+  contact:
+    name: API Support
+    url: https://firma.com/support
+servers:
+- url: https://api.firma.dev/functions/v1/signing-request-api
+  description: Production API - Recommended (Current)
+- url: https://api.firma.dev/api/v1
+  description: Production API - Planned
+security:
+- ApiKeyAuth: []
+tags:
+- name: Email Domains
+  description: Email domain setup and verification for sending signing request emails from custom domains
+paths:
+  /company/domains:
+    get:
+      summary: List company domains
+      description: List all email domains configured for the company (domains on the protected/default workspace). These domains are used as the default sending domain for all workspaces.
+      tags:
+      - Email Domains
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          description: Company domains retrieved successfully
+          headers:
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+              description: 'Rate limit: 200 requests per minute'
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+            X-RateLimit-Reset:
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainListResponse'
+              example:
+                results:
+                - id: 123e4567-e89b-12d3-a456-426614174000
+                  domain: acme.com
+                  verification_status: 2
+                  domain_status: 1
+                  is_primary: true
+                  date_created: '2024-01-15T10:30:00Z'
+                  date_changed: '2024-01-16T14:00:00Z'
+                workspace_id: 456e4567-e89b-12d3-a456-426614174000
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: listCompanyDomains
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: 'import { FirmaClient } from "@firma-dev/sdk";
+
+
+          const firma = new FirmaClient({ apiKey: "YOUR_API_KEY" });
+
+
+          const response = await firma.emailDomains.listCompanyDomains();
+
+          console.log(response);'
+    post:
+      summary: Add company domain
+      description: 'Add a new email domain for the company. This initiates the domain verification process. After creation, you must:
+
+        1. Add a TXT record to your DNS with the verification token
+
+        2. Call POST /company/domains/{id}/verify-ownership to verify domain ownership
+
+        3. Call POST /company/domains/{id}/finalize to register with email provider
+
+        4. Add the returned DNS records (SPF, DKIM, etc.)
+
+        5. Call POST /company/domains/{id}/verify-dns to complete verification'
+      tags:
+      - Email Domains
+      security:
+      - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - domain
+              properties:
+                domain:
+                  type: string
+                  description: Domain name to add (e.g., 'example.com'). Must be a valid domain format.
+                  example: acme.com
+      responses:
+        '201':
+          description: Domain created successfully. Add the verification TXT record to your DNS.
+          headers:
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+              description: 'Rate limit: 120 requests per minute'
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+            X-RateLimit-Reset:
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainCreateResponse'
+              example:
+                domain:
+                  id: 123e4567-e89b-12d3-a456-426614174000
+                  domain: acme.com
+                  verification_status: 0
+                  domain_status: 0
+                  is_primary: false
+                  verification_token: firma-verify=abc123xyz
+                  date_created: '2024-01-15T10:30:00Z'
+                  date_changed: '2024-01-15T10:30:00Z'
+                verification_instructions:
+                  record_type: TXT
+                  record_name: _firma-verification.acme.com
+                  record_value: firma-verify=abc123xyz
+                  next_step: Add this TXT record to your DNS, then call POST /company/domains/{id}/verify-ownership
+        '400':
+          description: Invalid domain format or domain already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                invalidDomain:
+                  value:
+                    error: Invalid domain format
+                    message: Please provide a valid domain name (e.g., example.com)
+                domainExists:
+                  value:
+                    error: Domain already exists
+                    message: This domain is already configured for your company
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: createCompanyDomain
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.emailDomains.createCompanyDomain({\n    domain: \"acme.com\"\n});\nconsole.log(response);"
+  /company/domains/{id}:
+    get:
+      summary: Get company domain
+      description: Retrieve details of a specific company domain including verification status and DNS records
+      tags:
+      - Email Domains
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Domain ID
+      responses:
+        '200':
+          description: Domain retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Domain'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: getCompanyDomain
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.emailDomains.getCompanyDomain({\n    id: \"id\"\n});\nconsole.log(response);"
+    delete:
+      summary: Delete company domain
+      description: Remove a domain from the company. If the domain is the primary or only domain, sending reverts to the company or default sender.
+      tags:
+      - Email Domains
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Domain ID
+      responses:
+        '200':
+          description: Domain deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainDeleteResponse'
+              example:
+                message: Domain deleted successfully
+                domain_id: 123e4567-e89b-12d3-a456-426614174000
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: deleteCompanyDomain
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.emailDomains.deleteCompanyDomain({\n    id: \"id\"\n});\nconsole.log(response);"
+  /company/domains/{id}/verify-ownership:
+    post:
+      summary: Verify domain ownership
+      description: Verify domain ownership by checking the TXT record. Call this after adding the verification TXT record to your DNS. DNS propagation may take up to 48 hours, but typically completes within minutes.
+      tags:
+      - Email Domains
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Domain ID
+      responses:
+        '200':
+          description: Domain ownership verified successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainVerifyOwnershipResponse'
+              example:
+                message: Domain ownership verified
+                domain:
+                  id: 123e4567-e89b-12d3-a456-426614174000
+                  domain: acme.com
+                  verification_status: 1
+                  domain_status: 0
+                next_step: Call POST /company/domains/{id}/finalize to complete domain setup and receive DNS records for email sending
+        '400':
+          description: Verification failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                recordNotFound:
+                  value:
+                    error: Verification failed
+                    message: TXT record not found. Please ensure the record is added correctly and DNS has propagated.
+                    details:
+                      expected_record: _firma-verification.acme.com
+                      expected_value: firma-verify=abc123xyz
+                alreadyVerified:
+                  value:
+                    error: Already verified
+                    message: Domain ownership has already been verified
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: verifyCompanyDomainOwnership
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.emailDomains.verifyCompanyDomainOwnership({\n    id: \"id\"\n});\nconsole.log(response);"
+  /company/domains/{id}/finalize:
+    post:
+      summary: Finalize domain setup
+      description: Finalize domain setup by registering with the email provider. This returns the DNS records (SPF, DKIM, DMARC) that must be added to enable email sending. Can only be called after domain ownership is verified.
+      tags:
+      - Email Domains
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Domain ID
+      responses:
+        '200':
+          description: Domain finalized successfully. Add the returned DNS records.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainFinalizeResponse'
+              example:
+                message: Domain finalized. Add the following DNS records to enable email sending.
+                domain:
+                  id: 123e4567-e89b-12d3-a456-426614174000
+                  domain: acme.com
+                  verification_status: 2
+                  domain_status: 0
+                dns_records:
+                - type: TXT
+                  name: '@'
+                  value: v=spf1 include:amazonses.com ~all
+                  ttl: Auto
+                  status: pending
+                - type: CNAME
+                  name: resend._domainkey
+                  value: resend._domainkey.amazonses.com
+                  ttl: Auto
+                  status: pending
+                - type: TXT
+                  name: _dmarc
+                  value: v=DMARC1; p=none;
+                  ttl: Auto
+                  status: pending
+                next_step: Add these DNS records, then call POST /company/domains/{id}/verify-dns to complete verification
+        '400':
+          description: Cannot finalize
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                notVerified:
+                  value:
+                    error: Ownership not verified
+                    message: Please verify domain ownership first by calling POST /company/domains/{id}/verify-ownership
+                alreadyFinalized:
+                  value:
+                    error: Already finalized
+                    message: Domain has already been finalized
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: finalizeCompanyDomain
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.emailDomains.finalizeCompanyDomain({\n    id: \"id\"\n});\nconsole.log(response);"
+  /company/domains/{id}/verify-dns:
+    post:
+      summary: Verify DNS records
+      description: Verify that all required DNS records (SPF, DKIM, DMARC) are properly configured. Call this after adding all DNS records from the finalize step. Once verified, the domain is ready for sending emails.
+      tags:
+      - Email Domains
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Domain ID
+      responses:
+        '200':
+          description: DNS verification result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainVerifyDnsResponse'
+              examples:
+                verified:
+                  summary: All records verified
+                  value:
+                    verified: true
+                    message: Domain is fully verified and ready to send emails
+                    domain:
+                      id: 123e4567-e89b-12d3-a456-426614174000
+                      domain: acme.com
+                      verification_status: 2
+                      domain_status: 1
+                      is_primary: true
+                    dns_records:
+                    - type: TXT
+                      name: '@'
+                      value: v=spf1 include:amazonses.com ~all
+                      status: verified
+                    - type: CNAME
+                      name: resend._domainkey
+                      value: resend._domainkey.amazonses.com
+                      status: verified
+                    - type: TXT
+                      name: _dmarc
+                      value: v=DMARC1; p=none;
+                      status: verified
+                pending:
+                  summary: Some records pending
+                  value:
+                    verified: false
+                    message: Some DNS records are not yet verified. Please check your DNS configuration.
+                    domain:
+                      id: 123e4567-e89b-12d3-a456-426614174000
+                      domain: acme.com
+                      verification_status: 2
+                      domain_status: 0
+                    dns_records:
+                    - type: TXT
+                      name: '@'
+                      value: v=spf1 include:amazonses.com ~all
+                      status: verified
+                    - type: CNAME
+                      name: resend._domainkey
+                      value: resend._domainkey.amazonses.com
+                      status: pending
+                    - type: TXT
+                      name: _dmarc
+                      value: v=DMARC1; p=none;
+                      status: pending
+        '400':
+          description: Domain not finalized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: Domain not finalized
+                message: Please finalize domain setup first by calling POST /company/domains/{id}/finalize
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: verifyCompanyDomainDns
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.emailDomains.verifyCompanyDomainDns({\n    id: \"id\"\n});\nconsole.log(response);"
+  /company/domains/{id}/set-primary:
+    post:
+      summary: Set primary domain
+      description: Set a domain as the primary sending domain for the company. Only fully verified domains (domain_status=1) can be set as primary.
+      tags:
+      - Email Domains
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Domain ID
+      responses:
+        '200':
+          description: Primary domain updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainSetPrimaryResponse'
+              example:
+                message: Primary domain updated
+                domain:
+                  id: 123e4567-e89b-12d3-a456-426614174000
+                  domain: acme.com
+                  verification_status: 2
+                  domain_status: 1
+                  is_primary: true
+        '400':
+          description: Domain not verified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: Domain not verified
+                message: Only fully verified domains can be set as primary
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: setCompanyPrimaryDomain
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.emailDomains.setCompanyPrimaryDomain({\n    id: \"id\"\n});\nconsole.log(response);"
+  /workspace/{workspace_id}/domains:
+    get:
+      summary: List workspace domains
+      description: List all email domains configured for a specific workspace. These domains are used for sending signing request emails from this workspace.
+      tags:
+      - Email Domains
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: workspace_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Workspace ID
+      responses:
+        '200':
+          description: Workspace domains retrieved successfully
+          headers:
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+              description: 'Rate limit: 200 requests per minute'
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+            X-RateLimit-Reset:
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainListResponse'
+              example:
+                results:
+                - id: 123e4567-e89b-12d3-a456-426614174000
+                  domain: sales.acme.com
+                  verification_status: 2
+                  domain_status: 1
+                  is_primary: true
+                  date_created: '2024-01-15T10:30:00Z'
+                  date_changed: '2024-01-16T14:00:00Z'
+                workspace_id: 456e4567-e89b-12d3-a456-426614174000
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: listWorkspaceDomains
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.emailDomains.listWorkspaceDomains({\n    workspace_id: \"workspace_id\"\n});\nconsole.log(response);"
+    post:
+      summary: Add workspace domain
+      description: 'Add a new email domain for a specific workspace. This initiates the domain verification process. After creation, you must:
+
+        1. Add a TXT record to your DNS with the verification token
+
+        2. Call POST /workspace/{workspace_id}/domains/{id}/verify-ownership to verify domain ownership
+
+        3. Call POST /workspace/{workspace_id}/domains/{id}/finalize to register with email provider
+
+        4. Add the returned DNS records (SPF, DKIM, etc.)
+
+        5. Call POST /workspace/{workspace_id}/domains/{id}/verify-dns to complete verification'
+      tags:
+      - Email Domains
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: workspace_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Workspace ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - domain
+              properties:
+                domain:
+                  type: string
+                  description: Domain name to add (e.g., 'example.com'). Must be a valid domain format.
+                  example: sales.acme.com
+      responses:
+        '201':
+          description: Domain created successfully. Add the verification TXT record to your DNS.
+          headers:
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+              description: 'Rate limit: 120 requests per minute'
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+            X-RateLimit-Reset:
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainCreateResponse'
+              example:
+                domain:
+                  id: 123e4567-e89b-12d3-a456-426614174000
+                  domain: sales.acme.com
+                  verification_status: 0
+                  domain_status: 0
+                  is_primary: false
+                  verification_token: firma-verify=abc123xyz
+                  date_created: '2024-01-15T10:30:00Z'
+                  date_changed: '2024-01-15T10:30:00Z'
+                verification_instructions:
+                  record_type: TXT
+                  record_name: _firma-verification.sales.acme.com
+                  record_value: firma-verify=abc123xyz
+                  next_step: Add this TXT record to your DNS, then call POST /workspace/{workspace_id}/domains/{id}/verify-ownership
+        '400':
+          description: Invalid domain format or domain already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                invalidDomain:
+                  value:
+                    error: Invalid domain format
+                    message: Please provide a valid domain name (e.g., example.com)
+                domainExists:
+                  value:
+                    error: Domain already exists
+                    message: This domain is already configured for this workspace
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: createWorkspaceDomain
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.emailDomains.createWorkspaceDomain({\n    workspace_id: \"workspace_id\",\n    domain: \"sales.acme.com\"\n});\nconsole.log(response);"
+  /workspace/{workspace_id}/domains/{id}:
+    get:
+      summary: Get workspace domain
+      description: Retrieve details of a specific domain in a workspace including verification status and DNS records
+      tags:
+      - Email Domains
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: workspace_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Workspace ID
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Domain ID
+      responses:
+        '200':
+          description: Domain retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Domain'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: getWorkspaceDomain
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.emailDomains.getWorkspaceDomain({\n    workspace_id: \"workspace_id\",\n    id: \"id\"\n});\nconsole.log(response);"
+    delete:
+      summary: Delete workspace domain
+      description: Remove a domain from the workspace. If the domain is the primary or only domain, sending reverts to the company or default sender.
+      tags:
+      - Email Domains
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: workspace_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Workspace ID
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Domain ID
+      responses:
+        '200':
+          description: Domain deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainDeleteResponse'
+              example:
+                message: Domain deleted successfully
+                domain_id: 123e4567-e89b-12d3-a456-426614174000
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: deleteWorkspaceDomain
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.emailDomains.deleteWorkspaceDomain({\n    workspace_id: \"workspace_id\",\n    id: \"id\"\n});\nconsole.log(response);"
+  /workspace/{workspace_id}/domains/{id}/verify-ownership:
+    post:
+      summary: Verify workspace domain ownership
+      description: Verify domain ownership by checking the TXT record. Call this after adding the verification TXT record to your DNS. DNS propagation may take up to 48 hours, but typically completes within minutes.
+      tags:
+      - Email Domains
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: workspace_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Workspace ID
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Domain ID
+      responses:
+        '200':
+          description: Domain ownership verified successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainVerifyOwnershipResponse'
+              example:
+                message: Domain ownership verified
+                domain:
+                  id: 123e4567-e89b-12d3-a456-426614174000
+                  domain: sales.acme.com
+                  verification_status: 1
+                  domain_status: 0
+                next_step: Call POST /workspace/{workspace_id}/domains/{id}/finalize to complete domain setup and receive DNS records for email sending
+        '400':
+          description: Verification failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                recordNotFound:
+                  value:
+                    error: Verification failed
+                    message: TXT record not found. Please ensure the record is added correctly and DNS has propagated.
+                    details:
+                      expected_record: _firma-verification.sales.acme.com
+                      expected_value: firma-verify=abc123xyz
+                alreadyVerified:
+                  value:
+                    error: Already verified
+                    message: Domain ownership has already been verified
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: verifyWorkspaceDomainOwnership
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.emailDomains.verifyWorkspaceDomainOwnership({\n    workspace_id: \"workspace_id\",\n    id: \"id\"\n});\nconsole.log(response);"
+  /workspace/{workspace_id}/domains/{id}/finalize:
+    post:
+      summary: Finalize workspace domain setup
+      description: Finalize domain setup by registering with the email provider. This returns the DNS records (SPF, DKIM, DMARC) that must be added to enable email sending. Can only be called after domain ownership is verified.
+      tags:
+      - Email Domains
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: workspace_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Workspace ID
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Domain ID
+      responses:
+        '200':
+          description: Domain finalized successfully. Add the returned DNS records.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainFinalizeResponse'
+              example:
+                message: Domain finalized. Add the following DNS records to enable email sending.
+                domain:
+                  id: 123e4567-e89b-12d3-a456-426614174000
+                  domain: sales.acme.com
+                  verification_status: 2
+                  domain_status: 0
+                dns_records:
+                - type: TXT
+                  name: '@'
+                  value: v=spf1 include:amazonses.com ~all
+                  ttl: Auto
+                  status: pending
+                - type: CNAME
+                  name: resend._domainkey
+                  value: resend._domainkey.amazonses.com
+                  ttl: Auto
+                  status: pending
+                - type: TXT
+                  name: _dmarc
+                  value: v=DMARC1; p=none;
+                  ttl: Auto
+                  status: pending
+                next_step: Add these DNS records, then call POST /workspace/{workspace_id}/domains/{id}/verify-dns to complete verification
+        '400':
+          description: Cannot finalize
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                notVerified:
+                  value:
+                    error: Ownership not verified
+                    message: Please verify domain ownership first by calling POST /workspace/{workspace_id}/domains/{id}/verify-ownership
+                alreadyFinalized:
+                  value:
+                    error: Already finalized
+                    message: Domain has already been finalized
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: finalizeWorkspaceDomain
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.emailDomains.finalizeWorkspaceDomain({\n    workspace_id: \"workspace_id\",\n    id: \"id\"\n});\nconsole.log(response);"
+  /workspace/{workspace_id}/domains/{id}/verify-dns:
+    post:
+      summary: Verify workspace domain DNS records
+      description: Verify that all required DNS records (SPF, DKIM, DMARC) are properly configured. Call this after adding all DNS records from the finalize step. Once verified, the domain is ready for sending emails.
+      tags:
+      - Email Domains
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: workspace_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Workspace ID
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Domain ID
+      responses:
+        '200':
+          description: DNS verification result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainVerifyDnsResponse'
+              examples:
+                verified:
+                  summary: All records verified
+                  value:
+                    verified: true
+                    message: Domain is fully verified and ready to send emails
+                    domain:
+                      id: 123e4567-e89b-12d3-a456-426614174000
+                      domain: sales.acme.com
+                      verification_status: 2
+                      domain_status: 1
+                      is_primary: true
+                    dns_records:
+                    - type: TXT
+                      name: '@'
+                      value: v=spf1 include:amazonses.com ~all
+                      status: verified
+                    - type: CNAME
+                      name: resend._domainkey
+                      value: resend._domainkey.amazonses.com
+                      status: verified
+                    - type: TXT
+                      name: _dmarc
+                      value: v=DMARC1; p=none;
+                      status: verified
+                pending:
+                  summary: Some records pending
+                  value:
+                    verified: false
+                    message: Some DNS records are not yet verified. Please check your DNS configuration.
+                    domain:
+                      id: 123e4567-e89b-12d3-a456-426614174000
+                      domain: sales.acme.com
+                      verification_status: 2
+                      domain_status: 0
+                    dns_records:
+                    - type: TXT
+                      name: '@'
+                      value: v=spf1 include:amazonses.com ~all
+                      status: verified
+                    - type: CNAME
+                      name: resend._domainkey
+                      value: resend._domainkey.amazonses.com
+                      status: pending
+                    - type: TXT
+                      name: _dmarc
+                      value: v=DMARC1; p=none;
+                      status: pending
+        '400':
+          description: Domain not finalized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: Domain not finalized
+                message: Please finalize domain setup first by calling POST /workspace/{workspace_id}/domains/{id}/finalize
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: verifyWorkspaceDomainDns
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.emailDomains.verifyWorkspaceDomainDns({\n    workspace_id: \"workspace_id\",\n    id: \"id\"\n});\nconsole.log(response);"
+  /workspace/{workspace_id}/domains/{id}/set-primary:
+    post:
+      summary: Set primary workspace domain
+      description: Set a domain as the primary sending domain for the workspace. Only fully verified domains (domain_status=1) can be set as primary.
+      tags:
+      - Email Domains
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: workspace_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Workspace ID
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Domain ID
+      responses:
+        '200':
+          description: Primary domain updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainSetPrimaryResponse'
+              example:
+                message: Primary domain updated
+                domain:
+                  id: 123e4567-e89b-12d3-a456-426614174000
+                  domain: sales.acme.com
+                  verification_status: 2
+                  domain_status: 1
+                  is_primary: true
+        '400':
+          description: Domain not verified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: Domain not verified
+                message: Only fully verified domains can be set as primary
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: setWorkspacePrimaryDomain
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.emailDomains.setWorkspacePrimaryDomain({\n    workspace_id: \"workspace_id\",\n    id: \"id\"\n});\nconsole.log(response);"
+components:
+  responses:
+    NotFoundError:
+      description: Not Found - Resource does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Not Found
+            message: The requested resource was not found
+    RateLimitError:
+      description: Too Many Requests - Rate limit exceeded
+      headers:
+        X-RateLimit-Limit:
+          schema:
+            type: integer
+          description: Maximum requests per minute
+        X-RateLimit-Remaining:
+          schema:
+            type: integer
+          description: Requests remaining
+        X-RateLimit-Reset:
+          schema:
+            type: integer
+          description: Unix timestamp of reset
+        Retry-After:
+          schema:
+            type: integer
+          description: Seconds until retry allowed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Rate Limit Exceeded
+            message: Too many requests. Please wait before retrying.
+            details:
+              retry_after: 45
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Unauthorized
+            message: Invalid API key
+  schemas:
+    DomainDnsRecord:
+      type: object
+      description: DNS record required for email domain verification
+      properties:
+        type:
+          type: string
+          enum:
+          - TXT
+          - CNAME
+          - MX
+          description: DNS record type
+        name:
+          type: string
+          description: DNS record name/host (e.g., 'resend._domainkey' or '@')
+        value:
+          type: string
+          description: DNS record value
+        ttl:
+          type: string
+          description: Time to live (e.g., 'Auto' or seconds)
+        priority:
+          type:
+          - integer
+          - 'null'
+          description: Priority for MX records
+        status:
+          type: string
+          enum:
+          - pending
+          - verified
+          - failed
+          description: Verification status of this specific record
+    DomainVerifyDnsResponse:
+      type: object
+      properties:
+        verified:
+          type: boolean
+          description: Whether all DNS records are verified
+        message:
+          type: string
+        domain:
+          $ref: '#/components/schemas/Domain'
+        dns_records:
+          type: array
+          items:
+            $ref: '#/components/schemas/DomainDnsRecord'
+          description: Status of each DNS record
+      description: DNS verification result
+      required:
+      - verified
+      - message
+      - domain
+    DomainVerifyOwnershipResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        domain:
+          $ref: '#/components/schemas/Domain'
+        next_step:
+          type: string
+      description: Domain ownership verification result
+      required:
+      - message
+      - domain
+      - next_step
+    DomainCreateResponse:
+      type: object
+      properties:
+        domain:
+          $ref: '#/components/schemas/Domain'
+        verification_instructions:
+          type: object
+          properties:
+            record_type:
+              type: string
+              example: TXT
+            record_name:
+              type: string
+              example: _firma-verification.acme.com
+            record_value:
+              type: string
+              example: firma-verify=abc123xyz
+            next_step:
+              type: string
+              example: Add this TXT record to your DNS, then call POST /company/domains/{id}/verify-ownership
+      description: Domain created with verification instructions
+      required:
+      - domain
+      - verification_instructions
+    DomainFinalizeResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        domain:
+          $ref: '#/components/schemas/Domain'
+        dns_records:
+          type: array
+          items:
+            $ref: '#/components/schemas/DomainDnsRecord'
+          description: DNS records to add for email sending
+        next_step:
+          type: string
+      description: Domain finalization with DNS records
+      required:
+      - message
+      - domain
+      - dns_records
+      - next_step
+    DomainDeleteResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        domain_id:
+          type: string
+          format: uuid
+      description: Domain deletion confirmation
+      required:
+      - message
+      - domain_id
+    DomainListResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Domain'
+        workspace_id:
+          type: string
+          format: uuid
+          description: Workspace ID for scoped results
+      description: List of domains with workspace context
+      required:
+      - results
+    Domain:
+      type: object
+      description: Email domain configuration for sending signing request emails
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the domain
+        domain:
+          type: string
+          description: The domain name (e.g., 'example.com')
+        verification_status:
+          type: integer
+          enum:
+          - 0
+          - 1
+          - 2
+          description: 'Domain ownership verification status: 0=pending, 1=ownership verified (TXT record confirmed), 2=finalized (registered with email provider)'
+        domain_status:
+          type: integer
+          enum:
+          - 0
+          - 1
+          description: 'Email sending status: 0=DNS records pending verification, 1=fully verified and ready to send'
+        is_primary:
+          type: boolean
+          description: Whether this is the primary domain for sending emails from this workspace
+        verification_token:
+          type: string
+          description: Token to add as TXT record for domain ownership verification. Only returned when verification_status=0.
+        resend_domain_id:
+          type:
+          - string
+          - 'null'
+          description: External email provider domain ID (internal use)
+        dns_records:
+          type:
+          - array
+          - 'null'
+          description: Required DNS records for email sending. Only returned after domain finalization (verification_status=2).
+          items:
+            $ref: '#/components/schemas/DomainDnsRecord'
+        date_created:
+          type: string
+          format: date-time
+          description: Domain creation timestamp
+        date_changed:
+          type: string
+          format: date-time
+          description: Domain last update timestamp
+      required:
+      - id
+      - domain
+      - domain_status
+      - verification_status
+    DomainSetPrimaryResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        domain:
+          $ref: '#/components/schemas/Domain'
+      description: Primary domain update confirmation
+      required:
+      - message
+      - domain
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Human-readable error message
+        code:
+          type: string
+          description: 'Machine-readable error code Seal-related codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
+        errors:
+          type: array
+          description: All validation errors when multiple failures are reported together. The top-level error repeats the first item for backward compatibility.
+          items:
+            type: object
+            required:
+            - message
+            properties:
+              message:
+                type: string
+        message:
+          type: string
+          description: Detailed error description
+        details:
+          type: object
+          description: Additional error details
+          additionalProperties: true
+      required:
+      - error
+      description: '
+
+
+        Organization Seal error codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: API key for authentication. Use your API key directly without any prefix (e.g., 'your-api-key'). Bearer prefix is optional but not required.

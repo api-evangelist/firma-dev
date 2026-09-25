@@ -1,0 +1,679 @@
+openapi: 3.2.0
+info:
+  title: Firma Partner Email Templates API
+  description: RESTful API for document signing and template management.
+  version: 01.38.00
+  contact:
+    name: API Support
+    url: https://firma.com/support
+servers:
+- url: https://api.firma.dev/functions/v1/signing-request-api
+  description: Production API - Recommended (Current)
+- url: https://api.firma.dev/api/v1
+  description: Production API - Planned
+security:
+- ApiKeyAuth: []
+tags:
+- name: Email Templates
+  description: Email template management for workspace and company-level customization of signing request notifications
+paths:
+  /workspace/{workspace_id}/email-templates:
+    get:
+      summary: List workspace email templates
+      description: Retrieve all custom email templates for a workspace
+      tags:
+      - Email Templates
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: workspace_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Workspace ID
+      responses:
+        '200':
+          description: Email templates retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceEmailTemplateListResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: listWorkspaceEmailTemplates
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.emailTemplates.listWorkspaceEmailTemplates({\n    workspace_id: \"workspace_id\"\n});\nconsole.log(response);"
+  /workspace/{workspace_id}/email-templates/{email_type}:
+    get:
+      summary: Get workspace email template
+      description: Retrieve a specific email template by type for a workspace
+      tags:
+      - Email Templates
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: workspace_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Workspace ID
+      - name: email_type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - signing_invite
+          - next_signer
+          - resend_notification
+          - signing_expired
+          - signing_cancelled
+          - signing_declined
+          - signing_declined_admin
+          - signing_completed
+          - signer_identity_changed
+        description: Email template type
+      responses:
+        '200':
+          description: Email template retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailTemplate'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: getWorkspaceEmailTemplate
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.emailTemplates.getWorkspaceEmailTemplate({\n    workspace_id: \"workspace_id\",\n    email_type: \"signing_invite\"\n});\nconsole.log(response);"
+    put:
+      summary: Create or update workspace email template
+      description: Create or update a custom email template for a specific type. If a template already exists for this type, it will be updated. A warning is returned if the template body does not contain {{signing_link}}.
+      tags:
+      - Email Templates
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: workspace_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Workspace ID
+      - name: email_type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - signing_invite
+          - next_signer
+          - resend_notification
+          - signing_expired
+          - signing_cancelled
+          - signing_declined
+          - signing_declined_admin
+          - signing_completed
+          - signer_identity_changed
+        description: Email template type
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - subject
+              - body
+              properties:
+                subject:
+                  type: string
+                  maxLength: 500
+                  description: Email subject line
+                body:
+                  type: string
+                  maxLength: 50000
+                  description: Email body (HTML). Use {{signing_link}} placeholder for the signing URL.
+      responses:
+        '200':
+          description: Email template updated successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/EmailTemplate'
+                - type: object
+                  properties:
+                    warnings:
+                      type: array
+                      items:
+                        type: string
+        '201':
+          description: Email template created successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/EmailTemplate'
+                - type: object
+                  properties:
+                    warnings:
+                      type: array
+                      items:
+                        type: string
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: updateWorkspaceEmailTemplate
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.emailTemplates.updateWorkspaceEmailTemplate({\n    workspace_id: \"workspace_id\",\n    email_type: \"signing_invite\",\n    subject: \"subject\",\n    body: \"body\"\n});\nconsole.log(response);"
+    delete:
+      summary: Delete workspace email template
+      description: Delete a custom email template. The workspace will revert to using the company-level or default template for this type.
+      tags:
+      - Email Templates
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: workspace_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Workspace ID
+      - name: email_type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - signing_invite
+          - next_signer
+          - resend_notification
+          - signing_expired
+          - signing_cancelled
+          - signing_declined
+          - signing_declined_admin
+          - signing_completed
+          - signer_identity_changed
+        description: Email template type
+      responses:
+        '200':
+          description: Email template deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailTemplateDeleteResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: deleteWorkspaceEmailTemplate
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.emailTemplates.deleteWorkspaceEmailTemplate({\n    workspace_id: \"workspace_id\",\n    email_type: \"signing_invite\"\n});\nconsole.log(response);"
+  /company/email-templates:
+    get:
+      summary: List company email templates
+      description: Retrieve all custom email templates at the company level. Company templates serve as defaults for all workspaces that don't have workspace-specific templates.
+      tags:
+      - Email Templates
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          description: Company email templates retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyEmailTemplateListResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: listCompanyEmailTemplates
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: 'import { FirmaClient } from "@firma-dev/sdk";
+
+
+          const firma = new FirmaClient({ apiKey: "YOUR_API_KEY" });
+
+
+          const response = await firma.emailTemplates.listCompanyEmailTemplates();
+
+          console.log(response);'
+  /company/email-templates/{email_type}:
+    put:
+      summary: Create or update company email template
+      description: Create or update a company-level email template for a specific type. Company templates are used as defaults for workspaces without workspace-specific templates.
+      tags:
+      - Email Templates
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: email_type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - signing_invite
+          - next_signer
+          - resend_notification
+          - signing_expired
+          - signing_cancelled
+          - signing_declined
+          - signing_declined_admin
+          - signing_completed
+          - signer_identity_changed
+        description: Email template type
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - subject
+              - body
+              properties:
+                subject:
+                  type: string
+                  maxLength: 500
+                  description: Email subject line
+                body:
+                  type: string
+                  maxLength: 50000
+                  description: Email body (HTML). Use {{signing_link}} placeholder for the signing URL.
+      responses:
+        '200':
+          description: Company email template updated successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/EmailTemplate'
+                - type: object
+                  properties:
+                    warnings:
+                      type: array
+                      items:
+                        type: string
+        '201':
+          description: Company email template created successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/EmailTemplate'
+                - type: object
+                  properties:
+                    warnings:
+                      type: array
+                      items:
+                        type: string
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: updateCompanyEmailTemplate
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.emailTemplates.updateCompanyEmailTemplate({\n    email_type: \"signing_invite\",\n    subject: \"subject\",\n    body: \"body\"\n});\nconsole.log(response);"
+    delete:
+      summary: Delete company email template
+      description: Delete a company-level email template. Workspaces will fall back to the built-in default template for this type.
+      tags:
+      - Email Templates
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: email_type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - signing_invite
+          - next_signer
+          - resend_notification
+          - signing_expired
+          - signing_cancelled
+          - signing_declined
+          - signing_declined_admin
+          - signing_completed
+          - signer_identity_changed
+        description: Email template type
+      responses:
+        '200':
+          description: Company email template deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailTemplateDeleteResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: deleteCompanyEmailTemplate
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.emailTemplates.deleteCompanyEmailTemplate({\n    email_type: \"signing_invite\"\n});\nconsole.log(response);"
+  /email-templates/defaults/{language}:
+    get:
+      summary: Get default email templates
+      description: Retrieve the built-in default email templates for a specific language. These are the templates used when no custom company or workspace templates are configured.
+      tags:
+      - Email Templates
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: language
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - en
+          - es
+          - it
+          - pt
+          - fr
+          - de
+          - el
+          - ru
+          - pl
+          - cs
+          - sv
+          - nl
+          - ro
+          - nb
+          - ca
+        description: Language code
+      responses:
+        '200':
+          description: Default templates retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailTemplateDefaultsResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: getEmailTemplateDefaults
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.emailTemplates.getEmailTemplateDefaults({\n    language: \"en\"\n});\nconsole.log(response);"
+  /email-templates/placeholders:
+    get:
+      summary: Get email template placeholders
+      description: Retrieve the list of available placeholders that can be used in email templates. Placeholders are replaced with actual values when emails are sent.
+      tags:
+      - Email Templates
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          description: Placeholders retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailTemplatePlaceholdersResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: listEmailTemplatePlaceholders
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: 'import { FirmaClient } from "@firma-dev/sdk";
+
+
+          const firma = new FirmaClient({ apiKey: "YOUR_API_KEY" });
+
+
+          const response = await firma.emailTemplates.listEmailTemplatePlaceholders();
+
+          console.log(response);'
+components:
+  schemas:
+    WorkspaceEmailTemplateListResponse:
+      type: object
+      description: List of workspace email templates
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmailTemplate'
+        workspace_id:
+          type: string
+          format: uuid
+          description: Workspace ID
+      required:
+      - results
+      - workspace_id
+    CompanyEmailTemplateListResponse:
+      type: object
+      description: List of company email templates
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmailTemplate'
+      required:
+      - results
+    EmailTemplateDeleteResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        email_type:
+          type: string
+      description: Email template deletion confirmation
+      required:
+      - message
+      - email_type
+    EmailTemplatePlaceholdersResponse:
+      type: object
+      properties:
+        placeholders:
+          type: array
+          items:
+            type: object
+            properties:
+              key:
+                type: string
+                description: Placeholder key (e.g., 'signing_link')
+              description:
+                type: string
+                description: What this placeholder resolves to
+      description: Available email template placeholders
+      required:
+      - placeholders
+    EmailTemplate:
+      type: object
+      description: Custom email template for signing request notifications
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the email template
+        email_type:
+          type: string
+          enum:
+          - signing_invite
+          - next_signer
+          - signing_expired
+          - signing_cancelled
+          - signing_declined
+          description: Type of email this template is for
+        subject:
+          type: string
+          description: Email subject line
+        body:
+          type: string
+          description: Email body (HTML). Supports placeholders like {{signing_link}}, {{signer_name}}, etc.
+        created_at:
+          type: string
+          format: date-time
+          description: Template creation timestamp
+        updated_at:
+          type: string
+          format: date-time
+          description: Template last update timestamp
+      required:
+      - email_type
+      - subject
+      - body
+    EmailTemplateDefaultsResponse:
+      type: object
+      properties:
+        language:
+          type: string
+        templates:
+          type: object
+          description: Map of email_type to default template {subject, body}
+          additionalProperties:
+            type: object
+            properties:
+              subject:
+                type: string
+              body:
+                type: string
+      description: Default email templates for a language
+      required:
+      - language
+      - templates
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Human-readable error message
+        code:
+          type: string
+          description: 'Machine-readable error code Seal-related codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
+        errors:
+          type: array
+          description: All validation errors when multiple failures are reported together. The top-level error repeats the first item for backward compatibility.
+          items:
+            type: object
+            required:
+            - message
+            properties:
+              message:
+                type: string
+        message:
+          type: string
+          description: Detailed error description
+        details:
+          type: object
+          description: Additional error details
+          additionalProperties: true
+      required:
+      - error
+      description: '
+
+
+        Organization Seal error codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
+  responses:
+    RateLimitError:
+      description: Too Many Requests - Rate limit exceeded
+      headers:
+        X-RateLimit-Limit:
+          schema:
+            type: integer
+          description: Maximum requests per minute
+        X-RateLimit-Remaining:
+          schema:
+            type: integer
+          description: Requests remaining
+        X-RateLimit-Reset:
+          schema:
+            type: integer
+          description: Unix timestamp of reset
+        Retry-After:
+          schema:
+            type: integer
+          description: Seconds until retry allowed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Rate Limit Exceeded
+            message: Too many requests. Please wait before retrying.
+            details:
+              retry_after: 45
+    NotFoundError:
+      description: Not Found - Resource does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Not Found
+            message: The requested resource was not found
+    ValidationError:
+      description: Bad Request - Validation failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Validation Error
+            message: Invalid input data
+            details:
+              name: Name is required
+              email: Invalid email format
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Unauthorized
+            message: Invalid API key
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: API key for authentication. Use your API key directly without any prefix (e.g., 'your-api-key'). Bearer prefix is optional but not required.

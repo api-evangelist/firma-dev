@@ -1,0 +1,622 @@
+openapi: 3.2.0
+info:
+  title: Firma Partner Custom Fields API
+  description: RESTful API for document signing and template management.
+  version: 01.38.00
+  contact:
+    name: API Support
+    url: https://firma.com/support
+servers:
+- url: https://api.firma.dev/functions/v1/signing-request-api
+  description: Production API - Recommended (Current)
+- url: https://api.firma.dev/api/v1
+  description: Production API - Planned
+security:
+- ApiKeyAuth: []
+tags:
+- name: Custom Fields
+  description: Custom field definition management for workspaces, templates, and signing requests
+paths:
+  /workspace/{workspace_id}/custom-fields:
+    get:
+      summary: List workspace custom fields
+      description: Get all custom field definitions for a workspace
+      tags:
+      - Custom Fields
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: workspace_id
+        in: path
+        required: true
+        description: Workspace ID
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Custom fields retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomFieldListResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+      operationId: listWorkspaceCustomFields
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.customFields.listWorkspaceCustomFields({\n    workspace_id: \"workspace_id\"\n});\nconsole.log(response);"
+    post:
+      summary: Create workspace custom field
+      description: Create a new custom field definition for a workspace
+      tags:
+      - Custom Fields
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: workspace_id
+        in: path
+        required: true
+        description: Workspace ID
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - field_label
+              properties:
+                field_label:
+                  type: string
+                  description: Display label (1-100 characters)
+                  maxLength: 100
+                field_name:
+                  type: string
+                  description: Optional machine-readable name (auto-generated from label if not provided)
+                  maxLength: 50
+                is_preset:
+                  type: boolean
+                  description: If true, field has a preset value for all users
+                  default: false
+                preset_value:
+                  type: string
+                  description: Preset value (max 500 characters, only used when is_preset=true)
+                  maxLength: 500
+      responses:
+        '201':
+          description: Custom field created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceCustomField'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '409':
+          description: Conflict - A custom field with this name already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: createWorkspaceCustomField
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.customFields.createWorkspaceCustomField({\n    workspace_id: \"workspace_id\",\n    field_label: \"field_label\"\n});\nconsole.log(response);"
+  /workspace/{workspace_id}/custom-fields/{field_id}:
+    put:
+      summary: Update workspace custom field
+      description: Update an existing custom field definition
+      tags:
+      - Custom Fields
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: workspace_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: field_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                field_label:
+                  type: string
+                  maxLength: 100
+                is_preset:
+                  type: boolean
+                preset_value:
+                  type: string
+                  maxLength: 500
+      responses:
+        '200':
+          description: Custom field updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceCustomField'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '409':
+          description: Conflict - A custom field with this name already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: updateWorkspaceCustomField
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.customFields.updateWorkspaceCustomField({\n    workspace_id: \"workspace_id\",\n    field_id: \"field_id\"\n});\nconsole.log(response);"
+    delete:
+      summary: Delete workspace custom field
+      description: Soft-delete a custom field definition
+      tags:
+      - Custom Fields
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: workspace_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: field_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Custom field deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+      operationId: deleteWorkspaceCustomField
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.customFields.deleteWorkspaceCustomField({\n    workspace_id: \"workspace_id\",\n    field_id: \"field_id\"\n});\nconsole.log(response);"
+  /templates/{template_id}/custom-fields:
+    get:
+      summary: List template custom fields
+      description: Get all custom field definitions for a template
+      tags:
+      - Custom Fields
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: template_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Custom fields retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomFieldListResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+      operationId: listTemplateCustomFields
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.customFields.listTemplateCustomFields({\n    template_id: \"template_id\"\n});\nconsole.log(response);"
+    post:
+      summary: Create template custom field
+      description: Create a new custom field definition for a template
+      tags:
+      - Custom Fields
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: template_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - field_label
+              properties:
+                field_label:
+                  type: string
+                  maxLength: 100
+                field_name:
+                  type: string
+                  maxLength: 50
+      responses:
+        '201':
+          description: Custom field created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemplateCustomField'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '409':
+          description: Conflict - A custom field with this name already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: createTemplateCustomField
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.customFields.createTemplateCustomField({\n    template_id: \"template_id\",\n    field_label: \"field_label\"\n});\nconsole.log(response);"
+  /templates/{template_id}/custom-fields/{field_id}:
+    delete:
+      summary: Delete template custom field
+      description: Soft-delete a custom field definition from a template
+      tags:
+      - Custom Fields
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: template_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: field_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Custom field deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+      operationId: deleteTemplateCustomField
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.customFields.deleteTemplateCustomField({\n    template_id: \"template_id\",\n    field_id: \"field_id\"\n});\nconsole.log(response);"
+  /signing-requests/{request_id}/custom-fields:
+    get:
+      summary: List signing request custom fields
+      description: Get all custom field definitions for a signing request
+      tags:
+      - Custom Fields
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: request_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Custom fields retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomFieldListResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+      operationId: listSigningRequestCustomFields
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.customFields.listSigningRequestCustomFields({\n    request_id: \"request_id\"\n});\nconsole.log(response);"
+    post:
+      summary: Create signing request custom field
+      description: Create a new custom field definition for a signing request
+      tags:
+      - Custom Fields
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: request_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - field_label
+              properties:
+                field_label:
+                  type: string
+                  maxLength: 100
+                field_name:
+                  type: string
+                  maxLength: 50
+      responses:
+        '201':
+          description: Custom field created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SigningRequestCustomField'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '409':
+          description: Conflict - A custom field with this name already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: createSigningRequestCustomField
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.customFields.createSigningRequestCustomField({\n    request_id: \"request_id\",\n    field_label: \"field_label\"\n});\nconsole.log(response);"
+  /signing-requests/{request_id}/custom-fields/{field_id}:
+    delete:
+      summary: Delete signing request custom field
+      description: Soft-delete a custom field definition from a signing request
+      tags:
+      - Custom Fields
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: request_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: field_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Custom field deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+      operationId: deleteSigningRequestCustomField
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.customFields.deleteSigningRequestCustomField({\n    request_id: \"request_id\",\n    field_id: \"field_id\"\n});\nconsole.log(response);"
+components:
+  responses:
+    NotFoundError:
+      description: Not Found - Resource does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Not Found
+            message: The requested resource was not found
+    ValidationError:
+      description: Bad Request - Validation failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Validation Error
+            message: Invalid input data
+            details:
+              name: Name is required
+              email: Invalid email format
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Unauthorized
+            message: Invalid API key
+  schemas:
+    MessageResponse:
+      type: object
+      description: Simple success response with a message
+      properties:
+        message:
+          type: string
+          description: Success message
+      required:
+      - message
+    TemplateCustomField:
+      type: object
+      description: A custom field definition for a template
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier
+        field_name:
+          type: string
+          description: Machine-readable field name
+        field_label:
+          type: string
+          description: Human-readable display label
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+      - id
+      - field_name
+    WorkspaceCustomField:
+      type: object
+      description: A custom field definition for a workspace
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier
+        field_name:
+          type: string
+          description: Machine-readable field name (auto-generated from label)
+        field_label:
+          type: string
+          description: Human-readable display label
+        is_preset:
+          type: boolean
+          description: If true, this field has a preset value for all users
+        preset_value:
+          type:
+          - string
+          - 'null'
+          description: Preset value (only used when is_preset=true)
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+      - id
+      - field_name
+      - field_label
+    CustomFieldListResponse:
+      type: object
+      properties:
+        custom_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkspaceCustomField'
+      description: List of custom fields
+      required:
+      - custom_fields
+    SigningRequestCustomField:
+      type: object
+      description: A custom field definition for a signing request
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier
+        field_name:
+          type: string
+          description: Machine-readable field name
+        field_label:
+          type: string
+          description: Human-readable display label
+        copied_from_template:
+          type: boolean
+          description: True if this field was copied from a template
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+      - id
+      - field_name
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Human-readable error message
+        code:
+          type: string
+          description: 'Machine-readable error code Seal-related codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
+        errors:
+          type: array
+          description: All validation errors when multiple failures are reported together. The top-level error repeats the first item for backward compatibility.
+          items:
+            type: object
+            required:
+            - message
+            properties:
+              message:
+                type: string
+        message:
+          type: string
+          description: Detailed error description
+        details:
+          type: object
+          description: Additional error details
+          additionalProperties: true
+      required:
+      - error
+      description: '
+
+
+        Organization Seal error codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: API key for authentication. Use your API key directly without any prefix (e.g., 'your-api-key'). Bearer prefix is optional but not required.

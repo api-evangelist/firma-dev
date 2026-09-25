@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/firma-dev/main/json-schema/firma-dev-generate-template-token-response-schema.json",
+  "title": "GenerateTemplateTokenResponse",
+  "description": "Generated JWT token for template",
+  "x-generated": "2026-09-25",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/firma-dev-jwt-management-api-openapi.yml#/components/schemas/GenerateTemplateTokenResponse",
+  "type": "object",
+  "properties": {
+    "token": {
+      "type": "string",
+      "description": "The JWT token"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Token expiration timestamp"
+    },
+    "jwt_record_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Database record ID for the JWT"
+    }
+  },
+  "required": [
+    "token",
+    "expires_at"
+  ]
+}

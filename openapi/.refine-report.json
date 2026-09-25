@@ -1,0 +1,42 @@
+{
+  "provider": "firma-dev",
+  "sources": [
+    "_original/app_firma_dev_openapi.json"
+  ],
+  "outputs": [
+    "firma-dev-company-api-openapi.yml",
+    "firma-dev-custom-fields-api-openapi.yml",
+    "firma-dev-email-domains-api-openapi.yml",
+    "firma-dev-email-templates-api-openapi.yml",
+    "firma-dev-jwt-management-api-openapi.yml",
+    "firma-dev-organization-seals-api-openapi.yml",
+    "firma-dev-signer-terms-api-openapi.yml",
+    "firma-dev-signing-requests-api-openapi.yml",
+    "firma-dev-templates-api-openapi.yml",
+    "firma-dev-webhooks-api-openapi.yml",
+    "firma-dev-workspace-settings-api-openapi.yml",
+    "firma-dev-workspaces-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "app_firma_dev_openapi.json: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "firma-dev-company-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "firma-dev-custom-fields-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "firma-dev-email-domains-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "firma-dev-email-templates-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "firma-dev-jwt-management-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "firma-dev-organization-seals-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "firma-dev-signer-terms-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "firma-dev-signing-requests-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "firma-dev-templates-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "firma-dev-webhooks-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "firma-dev-workspace-settings-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "firma-dev-workspaces-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/firma-dev/main/json-schema/firma-dev-message-response-schema.json",
+  "title": "MessageResponse",
+  "description": "Simple success response with a message",
+  "x-generated": "2026-09-25",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/firma-dev-custom-fields-api-openapi.yml#/components/schemas/MessageResponse",
+  "type": "object",
+  "properties": {
+    "message": {
+      "type": "string",
+      "description": "Success message"
+    }
+  },
+  "required": [
+    "message"
+  ]
+}

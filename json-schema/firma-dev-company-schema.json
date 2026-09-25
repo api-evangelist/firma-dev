@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/firma-dev/main/json-schema/firma-dev-company-schema.json",
+  "title": "Company",
+  "x-generated": "2026-09-25",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/firma-dev-company-api-openapi.yml#/components/schemas/Company",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier for the company"
+    },
+    "name": {
+      "type": "string",
+      "description": "Company name",
+      "maxLength": 255
+    },
+    "language": {
+      "type": "string",
+      "description": "Default language for the company",
+      "enum": [
+        "en",
+        "es",
+        "it",
+        "pt",
+        "fr",
+        "de",
+        "el",
+        "ru",
+        "pl",
+        "cs",
+        "sv",
+        "nl",
+        "ro",
+        "nb",
+        "ca"
+      ],
+      "default": "en"
+    },
+    "account_owner": {
+      "type": "string",
+      "description": "Name of the account owner",
+      "maxLength": 255
+    },
+    "account_owner_email": {
+      "type": "string",
+      "format": "email",
+      "description": "Email address of the account owner"
+    },
+    "website": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uri",
+      "description": "Company website URL"
+    },
+    "icon_url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uri",
+      "description": "Publicly accessible URL to the company logo image. Returns null if no logo is set."
+    },
+    "credits": {
+      "type": "integer",
+      "description": "Available credits for the company (read-only, managed internally)",
+      "minimum": 0,
+      "readOnly": true
+    },
+    "created_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Company account creation timestamp"
+    },
+    "updated_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Company account last update timestamp"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "account_owner",
+    "account_owner_email",
+    "created_date"
+  ]
+}

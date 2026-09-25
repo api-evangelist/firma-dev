@@ -1,23 +1,320 @@
 aid: firma-dev
 name: Firma.dev
-description: 'Firma.dev is a company surfaced via the API Evangelist harvest backlog (source: new-submission)
-  and added to the network as a stub for full-pipeline profiling.'
+image: https://framerusercontent.com/assets/6BZ6uZhXFZ37plllWJaDRaNVyoo.png
+description: Firma.dev provides a low‑cost electronic signature API aimed at developers, offering pay‑as‑you‑go pricing starting at €0.049 per
+  envelope with no minimums or contracts. The platform is fully white‑labeled, compliant with ESIGN, UETA, eIDAS, and includes audit trails, SOC 2,
+  GDPR, ISO 27001 certifications. It offers a simple REST API, Swagger/OpenAPI docs, webhook events, and sample apps, targeting quick integration
+  for any language. Firma.dev also supplies a developer portal, pricing page, and extensive documentation for embedding e‑signatures directly
+  into applications.
 url: https://raw.githubusercontent.com/api-evangelist/firma-dev/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:new-submission
-x-tier: stub
-x-tier-reason: harvest
+x-tier: profiled
+x-tier-reason: enrichment pass 2026-09-25 (modular-v1; was harvest)
 specificationVersion: '0.20'
 created: '2026-09-25'
 modified: '2026-09-25'
 tags:
 - Company
-apis: []
+- eSignature
+- API
+- DeveloperTools
+- LowCost
+- WhiteLabel
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: ToolCrosswalk
+  url: mcp/firma-dev-tool-crosswalk.yml
+- type: AgenticAccess
+  url: agentic-access/firma-dev-agentic-access.yml
+- type: Plans
+  url: plans/firma-dev-plans-pricing.yml
+- type: Spectral
+  url: rules/firma-dev-rules.yml
+- type: JSONLD
+  url: json-ld/firma-dev-context.jsonld
+- type: Vocabulary
+  url: vocabulary/firma-dev-vocabulary.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: DataModel
+  url: data-model/firma-dev-data-model.yml
+- type: Compliance
+  url: https://firma.dev/trust
+- type: ErrorCatalog
+  url: errors/firma-dev-problem-types.yml
+- type: Conformance
+  url: conformance/firma-dev-conformance.yml
+- type: LLMsTxt
+  url: llms/firma-dev-llms.txt
+- type: AgentCard
+  url: a2a/firma-dev-a2a.yml
+- type: MCPServer
+  url: mcp/firma-dev-mcp.yml
+- type: Hosts
+  url: hosts/firma-dev-hosts.yml
+- type: Vendors
+  url: vendors/firma-dev-vendors.yml
+- type: TermsOfService
+  url: https://firma.dev/legal/terms-conditions
+- type: StatusPage
+  url: https://status.firma.dev/
+- type: Security
+  url: https://firma.dev/security
+- type: PrivacyPolicy
+  url: https://firma.dev/legal/privacy-policy
+- type: Newsroom
+  url: https://firma.dev/media
+- type: Authentication
+  url: authentication/firma-dev-authentication.yml
+- type: TrustCenter
+  url: security/firma-dev-trust-center.yml
+- type: DomainSecurity
+  url: security/firma-dev-domain-security.yml
 - type: Website
   url: https://firma.dev/
+- type: Documentation
+  url: https://docs.firma.dev/
+- type: APIReference
+  url: https://docs.firma.dev/api-reference/v01.38.00/
+- type: GettingStarted
+  url: https://docs.firma.dev/guides/complete-setup-guide
+- type: Pricing
+  url: https://firma.dev/pricing
+- type: SignUp
+  url: https://app.firma.dev/signup
+- type: Support
+  url: https://firma.dev/contact
+- type: Blog
+  url: https://firma.dev/insights
+- type: Postman
+  url: https://www.postman.com/firma-dev/workspace
+apis:
+- aid: firma-dev:firma-dev-company-api
+  name: Firma.dev Company API
+  description: Company information and settings
+  tags:
+  - Company
+  properties:
+  - type: OpenAPI
+    url: openapi/firma-dev-company-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/firma-dev-company-settings-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-company-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-logo-upload-response-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-logo-delete-response-schema.json
+- aid: firma-dev:firma-dev-custom-fields-api
+  name: Firma.dev Custom Fields API
+  description: Custom field definition management for workspaces, templates, and signing requests
+  tags:
+  - Custom Fields
+  properties:
+  - type: OpenAPI
+    url: openapi/firma-dev-custom-fields-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/firma-dev-workspace-custom-field-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-signing-request-custom-field-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-template-custom-field-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-custom-field-list-response-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-message-response-schema.json
+- aid: firma-dev:firma-dev-email-domains-api
+  name: Firma.dev Email Domains API
+  description: Email domain setup and verification for sending signing request emails from custom domains
+  tags:
+  - Email Domains
+  properties:
+  - type: OpenAPI
+    url: openapi/firma-dev-email-domains-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/firma-dev-domain-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-domain-create-response-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-domain-verify-dns-response-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-domain-finalize-response-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-domain-list-response-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-domain-verify-ownership-response-schema.json
+- aid: firma-dev:firma-dev-email-templates-api
+  name: Firma.dev Email Templates API
+  description: Email template management for workspace and company-level customization of signing request notifications
+  tags:
+  - Email Templates
+  properties:
+  - type: OpenAPI
+    url: openapi/firma-dev-email-templates-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/firma-dev-email-template-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-email-template-defaults-response-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-email-template-placeholders-response-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-workspace-email-template-list-response-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-company-email-template-list-response-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-email-template-delete-response-schema.json
+- aid: firma-dev:firma-dev-jwt-management-api
+  name: Firma.dev JWT Management API
+  description: JWT token generation and revocation for embedded templates
+  tags:
+  - JWT Management
+  properties:
+  - type: OpenAPI
+    url: openapi/firma-dev-jwt-management-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/firma-dev-generate-signing-request-jwtresponse-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-generate-template-token-response-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-revoke-jwtresponse-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-revoke-signing-request-jwtresponse-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-generate-signing-request-jwtrequest-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-generate-jwtrequest-schema.json
+- aid: firma-dev:firma-dev-organization-seals-api
+  name: Firma.dev Organization Seals API
+  description: 'Organization seal management: create, update, revoke, and erase seals applied to signing requests'
+  tags:
+  - Organization Seals
+  properties:
+  - type: OpenAPI
+    url: openapi/firma-dev-organization-seals-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/firma-dev-organization-seal-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-organization-seal-create-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-seal-statement-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-seal-access-log-entry-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-seal-application-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-seal-image-schema.json
+- aid: firma-dev:firma-dev-signer-terms-api
+  name: Firma.dev Signer Terms API
+  description: Custom signer terms-of-service / consent statements, company-level with per-language workspace overrides
+  tags:
+  - Signer Terms
+  properties:
+  - type: OpenAPI
+    url: openapi/firma-dev-signer-terms-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/firma-dev-signer-terms-update-response-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-signer-terms-list-response-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-signer-terms-delete-response-schema.json
+- aid: firma-dev:firma-dev-signing-requests-api
+  name: Firma.dev Signing Requests API
+  description: Document signing request operations
+  tags:
+  - Signing Requests
+  properties:
+  - type: OpenAPI
+    url: openapi/firma-dev-signing-requests-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/firma-dev-field-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-anchor-tag-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-recipient-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-signing-request-detail-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-signing-request-update-response-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-signing-request-settings-schema.json
+- aid: firma-dev:firma-dev-templates-api
+  name: Firma.dev Templates API
+  description: Template management operations
+  tags:
+  - Templates
+  properties:
+  - type: OpenAPI
+    url: openapi/firma-dev-templates-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/firma-dev-template-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-reminder-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-template-duplicate-response-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-condition-set-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-template-copy-response-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-template-patch-response-schema.json
+- aid: firma-dev:firma-dev-webhooks-api
+  name: Firma.dev Webhooks API
+  description: Webhook configuration and management
+  tags:
+  - Webhooks
+  properties:
+  - type: OpenAPI
+    url: openapi/firma-dev-webhooks-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/firma-dev-webhook-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-test-webhook-response-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-secret-status-response-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-rotate-secret-response-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-webhook-list-response-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-message-response-schema.json
+- aid: firma-dev:firma-dev-workspace-settings-api
+  name: Firma.dev Workspace Settings API
+  description: Workspace configuration and settings
+  tags:
+  - Workspace Settings
+  properties:
+  - type: OpenAPI
+    url: openapi/firma-dev-workspace-settings-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/firma-dev-workspace-settings-schema.json
+- aid: firma-dev:firma-dev-workspaces-api
+  name: Firma.dev Workspaces API
+  description: Workspace management operations
+  tags:
+  - Workspaces
+  properties:
+  - type: OpenAPI
+    url: openapi/firma-dev-workspaces-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/firma-dev-workspace-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-api-key-regenerate-response-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-api-key-expire-response-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-workspace-list-response-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-logo-upload-response-schema.json
+  - type: JSONSchema
+    url: json-schema/firma-dev-logo-delete-response-schema.json
+x-enrichment:
+  date: '2026-09-25'
+  status: enriched
+  artifacts_added: 99
+  pass: modular-v1
+  engine: identity=local,contract=local,surfaces=local,docs=local

@@ -1,0 +1,907 @@
+openapi: 3.2.0
+info:
+  title: Firma Partner Webhooks API
+  description: RESTful API for document signing and template management.
+  version: 01.38.00
+  contact:
+    name: API Support
+    url: https://firma.com/support
+servers:
+- url: https://api.firma.dev/functions/v1/signing-request-api
+  description: Production API - Recommended (Current)
+- url: https://api.firma.dev/api/v1
+  description: Production API - Planned
+security:
+- ApiKeyAuth: []
+tags:
+- name: Webhooks
+  description: Webhook configuration and management
+paths:
+  /webhooks:
+    get:
+      summary: List Webhooks
+      description: Retrieve a paginated list of webhooks
+      tags:
+      - Webhooks
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: page
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+        description: Page number
+      - name: page_size
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 200
+          default: 50
+        description: Items per page
+      - name: enabled
+        in: query
+        schema:
+          type: string
+          enum:
+          - '0'
+          - '1'
+        description: Filter by enabled status (0=disabled, 1=enabled)
+      - name: url
+        in: query
+        schema:
+          type: string
+        description: Filter by webhook URL (partial match, case-insensitive)
+      - name: event
+        in: query
+        schema:
+          type: string
+        description: Filter by event type (e.g., 'signing_request.completed')
+      - name: created_after
+        in: query
+        schema:
+          type: string
+          format: date-time
+        description: Filter webhooks created after this date (ISO 8601 format)
+      - name: created_before
+        in: query
+        schema:
+          type: string
+          format: date-time
+        description: Filter webhooks created before this date (ISO 8601 format)
+      - name: sort_by
+        in: query
+        schema:
+          type: string
+          enum:
+          - url
+          - enabled
+          - created_on
+          - last_changed_on
+          - consecutive_failures
+          default: created_on
+        description: Field to sort by
+      - name: sort_order
+        in: query
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: desc
+        description: Sort order
+      - name: workspace_id
+        in: query
+        description: Filter webhooks by workspace. When provided, returns only webhooks scoped to that workspace. When omitted, returns only company-level webhooks.
+        required: false
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Webhooks retrieved successfully
+          headers:
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+              description: 'Rate limit: 200 requests per minute'
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+            X-RateLimit-Reset:
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookListResponse'
+        '400':
+          description: Validation error - invalid date format or sort parameters
+          content:
+            application/json:
+              examples:
+                invalidDate:
+                  summary: Invalid date format
+                  value:
+                    error: Validation failed
+                    code: VALIDATION_ERROR
+                    details:
+                    - path:
+                      - created_before
+                      message: created_before must be a valid ISO 8601 date
+                invalidSort:
+                  summary: Invalid sort parameter
+                  value:
+                    error: Validation failed
+                    code: VALIDATION_ERROR
+                    details:
+                    - path:
+                      - sort_by
+                      message: Invalid sort field
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: listWebhooks
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: 'import { FirmaClient } from "@firma-dev/sdk";
+
+
+          const firma = new FirmaClient({ apiKey: "YOUR_API_KEY" });
+
+
+          const response = await firma.webhooks.listWebhooks();
+
+          console.log(response);'
+    post:
+      summary: Create Webhook
+      description: Create a new webhook
+      tags:
+      - Webhooks
+      security:
+      - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - url
+              - events
+              properties:
+                url:
+                  type: string
+                  format: uri
+                events:
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                    - signing_request.created
+                    - signing_request.sent
+                    - signing_request.viewed
+                    - signing_request.completed
+                    - signing_request.declined
+                    - signing_request.cancelled
+                    - signing_request.expired
+                    - signing_request.voided
+                    - signing_request.field.completed
+                    - signing_request.deleted
+                    - signing_request.resent
+                    - signing_request.credits.purchased
+                    - template.created
+                    - template.updated
+                    - template.deleted
+                    - template.field.added
+                    - template.used
+                    - workspace.created
+                    - workspace.updated
+                    - workspace.deleted
+                    - domain.verified
+                    - domain.verification.failed
+                    - organization_seal.created
+                    - organization_seal.updated
+                    - organization_seal.deleted
+                    - organization_seal.erased
+                    - signing_request.seal.applied
+                    - signing_request.seal.paused
+                    - signing_request.seal.swapped
+                  description: Array of event types to subscribe to. See the full list for available events including organization seal and signing request seal events.
+                workspace_id:
+                  type: string
+                  format: uuid
+                  description: Optional workspace ID. When provided, creates a workspace-scoped webhook. When omitted, creates a company-level webhook.
+      responses:
+        '201':
+          description: Webhook created successfully
+          headers:
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+              description: 'Rate limit: 60 requests per minute'
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+            X-RateLimit-Reset:
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: createWebhook
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.webhooks.createWebhook({\n    url: \"url\",\n    events: [\"events\"]\n});\nconsole.log(response);"
+  /webhooks/{id}:
+    get:
+      summary: Get Webhook
+      description: Retrieve a specific webhook by ID
+      tags:
+      - Webhooks
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Webhook retrieved successfully
+          headers:
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+              description: 'Rate limit: 200 requests per minute'
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+            X-RateLimit-Reset:
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: getWebhook
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.webhooks.getWebhook({\n    id: \"id\"\n});\nconsole.log(response);"
+    put:
+      summary: Update Webhook
+      description: Update an existing webhook
+      tags:
+      - Webhooks
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  type: string
+                  format: uri
+                events:
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                    - signing_request.created
+                    - signing_request.sent
+                    - signing_request.viewed
+                    - signing_request.completed
+                    - signing_request.declined
+                    - signing_request.cancelled
+                    - signing_request.expired
+                    - signing_request.voided
+                    - signing_request.field.completed
+                    - signing_request.deleted
+                    - signing_request.resent
+                    - signing_request.credits.purchased
+                    - template.created
+                    - template.updated
+                    - template.deleted
+                    - template.field.added
+                    - template.used
+                    - workspace.created
+                    - workspace.updated
+                    - workspace.deleted
+                    - domain.verified
+                    - domain.verification.failed
+                    - organization_seal.created
+                    - organization_seal.updated
+                    - organization_seal.deleted
+                    - organization_seal.erased
+                    - signing_request.seal.applied
+                    - signing_request.seal.paused
+                    - signing_request.seal.swapped
+      responses:
+        '200':
+          description: Webhook updated successfully
+          headers:
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+              description: 'Rate limit: 60 requests per minute'
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+            X-RateLimit-Reset:
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: updateWebhook
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.webhooks.updateWebhook({\n    id: \"id\"\n});\nconsole.log(response);"
+    delete:
+      summary: Delete a webhook
+      description: Soft delete a webhook by ID. This marks the webhook as deleted but retains the data.
+      tags:
+      - Webhooks
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Webhook ID
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Webhook deleted successfully
+          headers:
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+              description: 'Rate limit: 60 requests per minute'
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+              description: Remaining requests in current window
+            X-RateLimit-Reset:
+              schema:
+                type: integer
+              description: Unix timestamp when rate limit resets
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+              example:
+                message: Webhook deleted successfully
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: deleteWebhook
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.webhooks.deleteWebhook({\n    id: \"id\"\n});\nconsole.log(response);"
+  /webhooks/{id}/test:
+    post:
+      summary: Test a webhook
+      description: Send a test payload to the webhook URL to verify it's working correctly
+      tags:
+      - Webhooks
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Webhook ID
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Test webhook sent successfully
+          headers:
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+              description: 'Rate limit: 10 requests per minute'
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+              description: Remaining requests in current window
+            X-RateLimit-Reset:
+              schema:
+                type: integer
+              description: Unix timestamp when rate limit resets
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TestWebhookResponse'
+              example:
+                success: true
+                status_code: 200
+                webhook_event_id: 123e4567-e89b-12d3-a456-426614174000
+                message: Test webhook delivered successfully
+                headers_sent:
+                  X-Firma-Event: webhook.test
+                  X-Firma-Signature: Generated HMAC-SHA256 signature
+                  X-Firma-Delivery: 123e4567-e89b-12d3-a456-426614174000
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: testWebhook
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.webhooks.testWebhook({\n    id: \"id\"\n});\nconsole.log(response);"
+  /webhooks/rotate-secret:
+    post:
+      summary: Rotate webhook signing secret
+      description: Generates a new webhook signing secret for the company. The old secret remains valid for 7 days to allow graceful migration. Rate limited to 1 request per minute.
+      tags:
+      - Webhooks
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          description: Secret rotated successfully
+          headers:
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+              description: 'Rate limit: 1 request per minute'
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+            X-RateLimit-Reset:
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RotateSecretResponse'
+              example:
+                message: Webhook secret rotated successfully
+                new_secret: a1b2c3d4e5f6...
+                grace_period_hours: 168
+                warning: Update your webhook signature verification to use the new secret. The old secret will remain valid for 7 days.
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '429':
+          description: Rate limit exceeded (1 rotation per minute)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: rotateWebhookSecret
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: 'import { FirmaClient } from "@firma-dev/sdk";
+
+
+          const firma = new FirmaClient({ apiKey: "YOUR_API_KEY" });
+
+
+          const response = await firma.webhooks.rotateWebhookSecret();
+
+          console.log(response);'
+  /webhooks/secret-status:
+    get:
+      summary: Get webhook secret rotation status
+      description: Returns information about the current webhook secret including rotation status and expiry of old secret if applicable.
+      tags:
+      - Webhooks
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          description: Secret status retrieved successfully
+          headers:
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+              description: 'Rate limit: 200 requests per minute'
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+            X-RateLimit-Reset:
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecretStatusResponse'
+              example:
+                created_at: '2025-09-01T10:00:00Z'
+                last_rotated_at: '2025-10-16T12:00:00Z'
+                grace_period_active: true
+                grace_period_ends_at: '2025-10-23T12:00:00Z'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: No webhook configuration found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+      operationId: getWebhookSecretStatus
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: 'import { FirmaClient } from "@firma-dev/sdk";
+
+
+          const firma = new FirmaClient({ apiKey: "YOUR_API_KEY" });
+
+
+          const response = await firma.webhooks.getWebhookSecretStatus();
+
+          console.log(response);'
+  /workspaces/{id}/webhooks/rotate-secret:
+    post:
+      summary: Rotate workspace webhook secret
+      description: Generates a new webhook signing secret for the workspace. The old secret remains valid for 7 days.
+      operationId: rotateWorkspaceWebhookSecret
+      tags:
+      - Webhooks
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Workspace ID
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Secret rotated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RotateSecretResponse'
+        '429':
+          description: Cooldown active — secret was recently rotated
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.webhooks.rotateWorkspaceWebhookSecret({\n    id: \"id\"\n});\nconsole.log(response);"
+  /workspaces/{id}/webhooks/secret-status:
+    get:
+      summary: Get workspace webhook secret status
+      description: Returns the status of the workspace webhook secret including creation date, rotation date, and grace period status.
+      operationId: getWorkspaceWebhookSecretStatus
+      tags:
+      - Webhooks
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Workspace ID
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Secret status retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecretStatusResponse'
+      x-codeSamples:
+      - lang: TypeScript
+        label: '@firma-dev/sdk'
+        source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.webhooks.getWorkspaceWebhookSecretStatus({\n    id: \"id\"\n});\nconsole.log(response);"
+components:
+  responses:
+    NotFoundError:
+      description: Not Found - Resource does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Not Found
+            message: The requested resource was not found
+    RateLimitError:
+      description: Too Many Requests - Rate limit exceeded
+      headers:
+        X-RateLimit-Limit:
+          schema:
+            type: integer
+          description: Maximum requests per minute
+        X-RateLimit-Remaining:
+          schema:
+            type: integer
+          description: Requests remaining
+        X-RateLimit-Reset:
+          schema:
+            type: integer
+          description: Unix timestamp of reset
+        Retry-After:
+          schema:
+            type: integer
+          description: Seconds until retry allowed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Rate Limit Exceeded
+            message: Too many requests. Please wait before retrying.
+            details:
+              retry_after: 45
+    ValidationError:
+      description: Bad Request - Validation failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Validation Error
+            message: Invalid input data
+            details:
+              name: Name is required
+              email: Invalid email format
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Unauthorized
+            message: Invalid API key
+  schemas:
+    Pagination:
+      type: object
+      properties:
+        current_page:
+          type: integer
+        page_size:
+          type: integer
+        total_count:
+          type: integer
+        total_pages:
+          type: integer
+      description: Pagination metadata for list responses
+      required:
+      - current_page
+      - page_size
+      - total_count
+      - total_pages
+    SecretStatusResponse:
+      type: object
+      properties:
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: When the webhook secret was created
+        last_rotated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: When the webhook secret was last rotated
+        grace_period_active:
+          type: boolean
+          description: Whether the old secret is still valid alongside the new one
+        grace_period_ends_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: When the old secret grace period expires
+      description: Webhook secret status and rotation info
+      required:
+      - created_at
+    TestWebhookResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Whether the test webhook was delivered successfully
+        status_code:
+          type: integer
+          description: HTTP status code returned by the webhook endpoint
+        webhook_event_id:
+          type: string
+          format: uuid
+          description: ID of the webhook event record
+        message:
+          type: string
+        headers_sent:
+          type: object
+          description: Headers sent with the test webhook request
+          properties:
+            X-Firma-Event:
+              type: string
+            X-Firma-Signature:
+              type: string
+            X-Firma-Delivery:
+              type: string
+            X-Firma-Signature-Old:
+              type: string
+              description: Only present during grace period after secret rotation
+      description: Webhook test execution result
+      required:
+      - success
+      - status_code
+    MessageResponse:
+      type: object
+      description: Simple success response with a message
+      properties:
+        message:
+          type: string
+          description: Success message
+      required:
+      - message
+    Webhook:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the webhook
+        url:
+          type: string
+          format: uri
+          description: Webhook URL
+        description:
+          type:
+          - string
+          - 'null'
+          description: Webhook description
+        events:
+          type: array
+          items:
+            type: string
+          description: Events that trigger this webhook
+        enabled:
+          type: boolean
+          description: Whether the webhook is enabled
+        consecutive_failures:
+          type: integer
+          description: Number of consecutive delivery failures
+        auto_disabled_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Timestamp when the webhook was auto-disabled due to failures
+        created_at:
+          type: string
+          format: date-time
+          description: Webhook creation timestamp
+        updated_at:
+          type: string
+          format: date-time
+          description: Webhook last update timestamp
+      required:
+      - id
+      - url
+      - events
+      - enabled
+      - created_at
+    RotateSecretResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        new_secret:
+          type: string
+          description: The new webhook signing secret (64 character hex string)
+        grace_period_hours:
+          type: integer
+          description: Hours the old secret remains valid alongside the new one
+        warning:
+          type: string
+          description: Reminder to update webhook signature verification
+      description: Secret rotation result with grace period
+      required:
+      - message
+      - new_secret
+      - grace_period_hours
+    WebhookListResponse:
+      type: object
+      description: Paginated list of webhooks
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Webhook'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - results
+      - pagination
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Human-readable error message
+        code:
+          type: string
+          description: 'Machine-readable error code Seal-related codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
+        errors:
+          type: array
+          description: All validation errors when multiple failures are reported together. The top-level error repeats the first item for backward compatibility.
+          items:
+            type: object
+            required:
+            - message
+            properties:
+              message:
+                type: string
+        message:
+          type: string
+          description: Detailed error description
+        details:
+          type: object
+          description: Additional error details
+          additionalProperties: true
+      required:
+      - error
+      description: '
+
+
+        Organization Seal error codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: API key for authentication. Use your API key directly without any prefix (e.g., 'your-api-key'). Bearer prefix is optional but not required.

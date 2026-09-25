@@ -1,0 +1,19 @@
+generated: '2026-09-25'
+method: searched
+generator: extract-docs-artifacts.py (local)
+source: https://firma.dev/pricing
+sources:
+- https://firma.dev/pricing
+name: Firma.dev pricing
+audience: developer-api
+pricing_basis: per-call
+plans:
+- name: Pay per envelope
+  price_text: €0.049 per envelope
+  price: 0.049
+  description: Flat fee per envelope, no minimums, no contracts.
+- name: Priority Support
+  price_text: €100/Month
+  price: 100
+  description: 'Priority Support: €100/Month guaranteed 1 business day response times via email.'
+docs: https://firma.dev/pricing

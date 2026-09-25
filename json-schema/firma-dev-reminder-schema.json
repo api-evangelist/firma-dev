@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/firma-dev/main/json-schema/firma-dev-reminder-schema.json",
+  "title": "Reminder",
+  "x-generated": "2026-09-25",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/firma-dev-templates-api-openapi.yml#/components/schemas/Reminder",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier for the reminder"
+    },
+    "hours": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Hours after sending before reminder is sent"
+    },
+    "subject": {
+      "type": "string",
+      "description": "Email subject for the reminder",
+      "maxLength": 255
+    },
+    "message": {
+      "type": "string",
+      "description": "Email message body for the reminder",
+      "maxLength": 5000
+    },
+    "all_users": {
+      "type": "boolean",
+      "description": "Whether reminder applies to all users"
+    },
+    "template_user_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid",
+      "description": "Specific user to send reminder to (used in template context)"
+    },
+    "recipient_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid",
+      "description": "Specific recipient to send reminder to (used in signing request context, same as template_user_id)"
+    },
+    "sent_on": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "description": "Timestamp when the reminder was actually sent"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Reminder creation timestamp"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Reminder last update timestamp"
+    }
+  },
+  "required": [
+    "id",
+    "hours",
+    "subject",
+    "message"
+  ]
+}

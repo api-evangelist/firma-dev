@@ -1,0 +1,8 @@
+generated: 2026-09-25
+method: derived
+source: server-card.json
+deployment:
+  mode: remote
+  endpoint: https://docs.firma.dev/mcp
+  auth: none
+  verified: derived

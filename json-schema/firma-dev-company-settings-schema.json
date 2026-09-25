@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/firma-dev/main/json-schema/firma-dev-company-settings-schema.json",
+  "title": "CompanySettings",
+  "x-generated": "2026-09-25",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/firma-dev-company-api-openapi.yml#/components/schemas/CompanySettings",
+  "type": "object",
+  "properties": {
+    "default_expiration_hours": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "require_terms_acceptance": {
+      "type": "boolean"
+    },
+    "show_custom_branding_only": {
+      "type": "boolean"
+    },
+    "require_otp_verification": {
+      "type": "boolean"
+    },
+    "allow_presigning_download": {
+      "type": "boolean"
+    },
+    "disable_guided_navigation": {
+      "type": "boolean"
+    },
+    "show_signature_frame": {
+      "type": "boolean"
+    },
+    "show_partial_watermark": {
+      "type": "boolean"
+    },
+    "email_local_part": {
+      "type": "string"
+    },
+    "color_primary": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "color_primary_fg": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "color_background": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "color_foreground": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "color_card": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "color_border": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "color_accent": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "color_accent_fg": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "color_canvas": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "color_muted": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "color_muted_fg": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "show_qr_code": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "Show a QR code on the signing page that lets signers continue on their phone. This is the company-level default; workspaces, templates, and signing requests can override it."
+    },
+    "completion_title": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Company-level default heading for the completion page shown after signing. Workspaces, templates, and signing requests can override it. Null means no company default, so the built-in translated heading is used.",
+      "maxLength": 200
+    },
+    "completion_message": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Company-level default body text for the completion page shown after signing. Workspaces, templates, and signing requests can override it. Null means no company default, so the built-in translated message is used.",
+      "maxLength": 1000
+    },
+    "completion_redirect_url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uri",
+      "description": "Company-level default URL the signer is redirected to from the completion page. Must use https://. Workspaces, templates, and signing requests can override it. Null means no redirect unless a lower level sets one.",
+      "pattern": "^https://",
+      "maxLength": 2000
+    },
+    "completion_redirect_delay": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "Company-level default number of seconds the completion page waits before redirecting (0 redirects immediately). Only applies when a redirect URL resolves; the page falls back to 5 seconds when no level sets a delay.",
+      "minimum": 0,
+      "maximum": 30
+    },
+    "default_timezone": {
+      "type": "string",
+      "description": "IANA timezone identifier used as the company-wide default for certificates and email timestamps."
+    },
+    "language": {
+      "type": "string",
+      "description": "Default language for company emails and certificates.",
+      "enum": [
+        "en",
+        "es",
+        "it",
+        "pt",
+        "fr",
+        "de",
+        "el",
+        "ru",
+        "pl",
+        "cs",
+        "sv",
+        "nl",
+        "ro",
+        "nb",
+        "ca"
+      ]
+    }
+  },
+  "required": [
+    "default_expiration_hours"
+  ]
+}
