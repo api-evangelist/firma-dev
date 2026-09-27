@@ -346,86 +346,7 @@ paths:
         label: '@firma-dev/sdk'
         source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.signerTerms.deleteWorkspaceSignerTerms({\n    workspace_id: \"workspace_id\",\n    language: \"en\"\n});\nconsole.log(response);"
 components:
-  responses:
-    NotFoundError:
-      description: Not Found - Resource does not exist
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: Not Found
-            message: The requested resource was not found
-    RateLimitError:
-      description: Too Many Requests - Rate limit exceeded
-      headers:
-        X-RateLimit-Limit:
-          schema:
-            type: integer
-          description: Maximum requests per minute
-        X-RateLimit-Remaining:
-          schema:
-            type: integer
-          description: Requests remaining
-        X-RateLimit-Reset:
-          schema:
-            type: integer
-          description: Unix timestamp of reset
-        Retry-After:
-          schema:
-            type: integer
-          description: Seconds until retry allowed
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: Rate Limit Exceeded
-            message: Too many requests. Please wait before retrying.
-            details:
-              retry_after: 45
-    ValidationError:
-      description: Bad Request - Validation failed
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: Validation Error
-            message: Invalid input data
-            details:
-              name: Name is required
-              email: Invalid email format
-    UnauthorizedError:
-      description: Unauthorized - Invalid or missing API key
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: Unauthorized
-            message: Invalid API key
-    ForbiddenError:
-      description: Forbidden - Insufficient permissions
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: Forbidden
-            message: You do not have permission to access this resource
   schemas:
-    SignerTermsDeleteResponse:
-      type: object
-      properties:
-        message:
-          type: string
-        language:
-          type: string
-      description: Signer terms deletion confirmation
-      required:
-      - message
-      - language
     SignerTerms:
       type: object
       properties:
@@ -462,30 +383,6 @@ components:
       required:
       - language
       - statement_text
-    SignerTermsListResponse:
-      type: object
-      properties:
-        terms:
-          type: array
-          items:
-            $ref: '#/components/schemas/SignerTerms'
-      description: List of signer terms by language
-      required:
-      - terms
-    SignerTermsUpdateResponse:
-      type: object
-      properties:
-        ok:
-          type: boolean
-        storedHtml:
-          type: string
-          description: The sanitized HTML actually stored
-        changed:
-          type: boolean
-          description: Whether sanitization altered the submitted statement
-      description: Signer terms update result
-      required:
-      - ok
     Error:
       type: object
       properties:
@@ -518,6 +415,109 @@ components:
 
 
         Organization Seal error codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
+    SignerTermsDeleteResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        language:
+          type: string
+      description: Signer terms deletion confirmation
+      required:
+      - message
+      - language
+    SignerTermsListResponse:
+      type: object
+      properties:
+        terms:
+          type: array
+          items:
+            $ref: '#/components/schemas/SignerTerms'
+      description: List of signer terms by language
+      required:
+      - terms
+    SignerTermsUpdateResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        storedHtml:
+          type: string
+          description: The sanitized HTML actually stored
+        changed:
+          type: boolean
+          description: Whether sanitization altered the submitted statement
+      description: Signer terms update result
+      required:
+      - ok
+  responses:
+    ValidationError:
+      description: Bad Request - Validation failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Validation Error
+            message: Invalid input data
+            details:
+              name: Name is required
+              email: Invalid email format
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Unauthorized
+            message: Invalid API key
+    ForbiddenError:
+      description: Forbidden - Insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Forbidden
+            message: You do not have permission to access this resource
+    RateLimitError:
+      description: Too Many Requests - Rate limit exceeded
+      headers:
+        X-RateLimit-Limit:
+          schema:
+            type: integer
+          description: Maximum requests per minute
+        X-RateLimit-Remaining:
+          schema:
+            type: integer
+          description: Requests remaining
+        X-RateLimit-Reset:
+          schema:
+            type: integer
+          description: Unix timestamp of reset
+        Retry-After:
+          schema:
+            type: integer
+          description: Seconds until retry allowed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Rate Limit Exceeded
+            message: Too many requests. Please wait before retrying.
+            details:
+              retry_after: 45
+    NotFoundError:
+      description: Not Found - Resource does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Not Found
+            message: The requested resource was not found
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

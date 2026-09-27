@@ -450,47 +450,7 @@ paths:
         label: '@firma-dev/sdk'
         source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.customFields.deleteSigningRequestCustomField({\n    request_id: \"request_id\",\n    field_id: \"field_id\"\n});\nconsole.log(response);"
 components:
-  responses:
-    NotFoundError:
-      description: Not Found - Resource does not exist
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: Not Found
-            message: The requested resource was not found
-    ValidationError:
-      description: Bad Request - Validation failed
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: Validation Error
-            message: Invalid input data
-            details:
-              name: Name is required
-              email: Invalid email format
-    UnauthorizedError:
-      description: Unauthorized - Invalid or missing API key
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: Unauthorized
-            message: Invalid API key
   schemas:
-    MessageResponse:
-      type: object
-      description: Simple success response with a message
-      properties:
-        message:
-          type: string
-          description: Success message
-      required:
-      - message
     TemplateCustomField:
       type: object
       description: A custom field definition for a template
@@ -505,74 +465,6 @@ components:
         field_label:
           type: string
           description: Human-readable display label
-        created_at:
-          type: string
-          format: date-time
-        updated_at:
-          type: string
-          format: date-time
-      required:
-      - id
-      - field_name
-    WorkspaceCustomField:
-      type: object
-      description: A custom field definition for a workspace
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Unique identifier
-        field_name:
-          type: string
-          description: Machine-readable field name (auto-generated from label)
-        field_label:
-          type: string
-          description: Human-readable display label
-        is_preset:
-          type: boolean
-          description: If true, this field has a preset value for all users
-        preset_value:
-          type:
-          - string
-          - 'null'
-          description: Preset value (only used when is_preset=true)
-        created_at:
-          type: string
-          format: date-time
-        updated_at:
-          type: string
-          format: date-time
-      required:
-      - id
-      - field_name
-      - field_label
-    CustomFieldListResponse:
-      type: object
-      properties:
-        custom_fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/WorkspaceCustomField'
-      description: List of custom fields
-      required:
-      - custom_fields
-    SigningRequestCustomField:
-      type: object
-      description: A custom field definition for a signing request
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Unique identifier
-        field_name:
-          type: string
-          description: Machine-readable field name
-        field_label:
-          type: string
-          description: Human-readable display label
-        copied_from_template:
-          type: boolean
-          description: True if this field was copied from a template
         created_at:
           type: string
           format: date-time
@@ -614,6 +506,114 @@ components:
 
 
         Organization Seal error codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
+    WorkspaceCustomField:
+      type: object
+      description: A custom field definition for a workspace
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier
+        field_name:
+          type: string
+          description: Machine-readable field name (auto-generated from label)
+        field_label:
+          type: string
+          description: Human-readable display label
+        is_preset:
+          type: boolean
+          description: If true, this field has a preset value for all users
+        preset_value:
+          type:
+          - string
+          - 'null'
+          description: Preset value (only used when is_preset=true)
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+      - id
+      - field_name
+      - field_label
+    SigningRequestCustomField:
+      type: object
+      description: A custom field definition for a signing request
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier
+        field_name:
+          type: string
+          description: Machine-readable field name
+        field_label:
+          type: string
+          description: Human-readable display label
+        copied_from_template:
+          type: boolean
+          description: True if this field was copied from a template
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+      - id
+      - field_name
+    MessageResponse:
+      type: object
+      description: Simple success response with a message
+      properties:
+        message:
+          type: string
+          description: Success message
+      required:
+      - message
+    CustomFieldListResponse:
+      type: object
+      properties:
+        custom_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkspaceCustomField'
+      description: List of custom fields
+      required:
+      - custom_fields
+  responses:
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Unauthorized
+            message: Invalid API key
+    ValidationError:
+      description: Bad Request - Validation failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Validation Error
+            message: Invalid input data
+            details:
+              name: Name is required
+              email: Invalid email format
+    NotFoundError:
+      description: Not Found - Resource does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Not Found
+            message: The requested resource was not found
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

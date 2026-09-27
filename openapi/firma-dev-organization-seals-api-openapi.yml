@@ -554,38 +554,38 @@ paths:
           $ref: '#/components/responses/RateLimitError'
 components:
   schemas:
-    SealStatement:
+    Error:
       type: object
-      required:
-      - language
-      - signatory_name
-      - text
-      - accepted
-      description: Attestation statement affirming authority to apply the seal.
       properties:
-        language:
+        error:
           type: string
-          description: Language code of the statement
-        signatory_name:
+          description: Human-readable error message
+        code:
           type: string
-          maxLength: 200
-          description: Name of the person attesting
-        signatory_title:
-          type:
-          - string
-          - 'null'
-          maxLength: 200
-          description: Title of the person attesting
-        text:
+          description: 'Machine-readable error code Seal-related codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
+        errors:
+          type: array
+          description: All validation errors when multiple failures are reported together. The top-level error repeats the first item for backward compatibility.
+          items:
+            type: object
+            required:
+            - message
+            properties:
+              message:
+                type: string
+        message:
           type: string
-          description: On create, the statement rendered with the authority name (the stored workspace or company name exactly as returned by the API, including HTML escaping). On replace, it must equal the seal's stored statement text.
-        accepted:
-          type: boolean
-          description: Must be true to confirm acceptance
-        version:
-          type: integer
-          minimum: 1
-          description: Statement version number
+          description: Detailed error description
+        details:
+          type: object
+          description: Additional error details
+          additionalProperties: true
+      required:
+      - error
+      description: '
+
+
+        Organization Seal error codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
     SealAccessLogEntry:
       type: object
       description: Access log entry for a seal lineage.
@@ -705,22 +705,85 @@ components:
           enum:
           - 0
           - 1
-    SealImage:
+    SealErrorCode:
+      type: string
+      enum:
+      - SEALS_DISABLED
+      - SEAL_ALREADY_REVOKED
+      - SEAL_CREATION_DISABLED_EDGE
+      - SEAL_ERASE_NOT_ELIGIBLE
+      - SEAL_IMAGE_INVALID
+      - SEAL_MUTATION_NOT_ALLOWED
+      - SEAL_NOT_FOUND
+      - SEAL_ORDER_COLLISION
+      - SEAL_PAUSED
+      - SEAL_SCOPE_FORBIDDEN
+      - SEAL_UNAVAILABLE
+      description: Error codes specific to organization seal operations.
+    SealStatement:
       type: object
-      description: Seal image response.
+      required:
+      - language
+      - signatory_name
+      - text
+      - accepted
+      description: Attestation statement affirming authority to apply the seal.
       properties:
-        kind:
+        language:
+          type: string
+          description: Language code of the statement
+        signatory_name:
+          type: string
+          maxLength: 200
+          description: Name of the person attesting
+        signatory_title:
+          type:
+          - string
+          - 'null'
+          maxLength: 200
+          description: Title of the person attesting
+        text:
+          type: string
+          description: On create, the statement rendered with the authority name (the stored workspace or company name exactly as returned by the API, including HTML escaping). On replace, it must equal the seal's stored statement text.
+        accepted:
+          type: boolean
+          description: Must be true to confirm acceptance
+        version:
+          type: integer
+          minimum: 1
+          description: Statement version number
+    SealApplication:
+      type: object
+      description: Record of a seal being applied to a signing request.
+      properties:
+        id:
+          type: string
+          format: uuid
+        signing_request_id:
+          type: string
+          format: uuid
+        signing_request_name:
+          type: string
+        seal_id:
+          type: string
+          format: uuid
+        seal_name:
+          type: string
+        status:
           type: string
           enum:
-          - uploaded
-          - typed
-          - drawn
-        content_type:
+          - applied
+          - paused
+          - pending
+          description: Application status
+        applied_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        created_at:
           type: string
-          example: image/png
-        data_url:
-          type: string
-          description: Base64-encoded PNG data URI
+          format: date-time
     OrganizationSealCreate:
       type: object
       required:
@@ -781,86 +844,53 @@ components:
           type: boolean
           default: false
           description: Set as default seal for this scope
-    SealApplication:
+    SealImage:
       type: object
-      description: Record of a seal being applied to a signing request.
+      description: Seal image response.
       properties:
-        id:
-          type: string
-          format: uuid
-        signing_request_id:
-          type: string
-          format: uuid
-        signing_request_name:
-          type: string
-        seal_id:
-          type: string
-          format: uuid
-        seal_name:
-          type: string
-        status:
+        kind:
           type: string
           enum:
-          - applied
-          - paused
-          - pending
-          description: Application status
-        applied_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        created_at:
+          - uploaded
+          - typed
+          - drawn
+        content_type:
           type: string
-          format: date-time
-    SealErrorCode:
-      type: string
-      enum:
-      - SEALS_DISABLED
-      - SEAL_ALREADY_REVOKED
-      - SEAL_CREATION_DISABLED_EDGE
-      - SEAL_ERASE_NOT_ELIGIBLE
-      - SEAL_IMAGE_INVALID
-      - SEAL_MUTATION_NOT_ALLOWED
-      - SEAL_NOT_FOUND
-      - SEAL_ORDER_COLLISION
-      - SEAL_PAUSED
-      - SEAL_SCOPE_FORBIDDEN
-      - SEAL_UNAVAILABLE
-      description: Error codes specific to organization seal operations.
-    Error:
-      type: object
-      properties:
-        error:
+          example: image/png
+        data_url:
           type: string
-          description: Human-readable error message
-        code:
-          type: string
-          description: 'Machine-readable error code Seal-related codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
-        errors:
-          type: array
-          description: All validation errors when multiple failures are reported together. The top-level error repeats the first item for backward compatibility.
-          items:
-            type: object
-            required:
-            - message
-            properties:
-              message:
-                type: string
-        message:
-          type: string
-          description: Detailed error description
-        details:
-          type: object
-          description: Additional error details
-          additionalProperties: true
-      required:
-      - error
-      description: '
-
-
-        Organization Seal error codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
+          description: Base64-encoded PNG data URI
   responses:
+    ValidationError:
+      description: Bad Request - Validation failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Validation Error
+            message: Invalid input data
+            details:
+              name: Name is required
+              email: Invalid email format
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Unauthorized
+            message: Invalid API key
+    ForbiddenError:
+      description: Forbidden - Insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Forbidden
+            message: You do not have permission to access this resource
     RateLimitError:
       description: Too Many Requests - Rate limit exceeded
       headers:
@@ -898,36 +928,6 @@ components:
           example:
             error: Not Found
             message: The requested resource was not found
-    ValidationError:
-      description: Bad Request - Validation failed
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: Validation Error
-            message: Invalid input data
-            details:
-              name: Name is required
-              email: Invalid email format
-    UnauthorizedError:
-      description: Unauthorized - Invalid or missing API key
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: Unauthorized
-            message: Invalid API key
-    ForbiddenError:
-      description: Forbidden - Insufficient permissions
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: Forbidden
-            message: You do not have permission to access this resource
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

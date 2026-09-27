@@ -551,6 +551,51 @@ paths:
           console.log(response);'
 components:
   schemas:
+    LogoUploadResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        icon_url:
+          type: string
+          format: uri
+          description: Public URL to the uploaded logo
+      description: Logo upload confirmation with URL
+      required:
+      - success
+      - icon_url
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Human-readable error message
+        code:
+          type: string
+          description: 'Machine-readable error code Seal-related codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
+        errors:
+          type: array
+          description: All validation errors when multiple failures are reported together. The top-level error repeats the first item for backward compatibility.
+          items:
+            type: object
+            required:
+            - message
+            properties:
+              message:
+                type: string
+        message:
+          type: string
+          description: Detailed error description
+        details:
+          type: object
+          description: Additional error details
+          additionalProperties: true
+      required:
+      - error
+      description: '
+
+
+        Organization Seal error codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
     Company:
       type: object
       properties:
@@ -622,27 +667,6 @@ components:
       - account_owner
       - account_owner_email
       - created_date
-    LogoDeleteResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-      description: Logo deletion confirmation
-      required:
-      - success
-    LogoUploadResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-        icon_url:
-          type: string
-          format: uri
-          description: Public URL to the uploaded logo
-      description: Logo upload confirmation with URL
-      required:
-      - success
-      - icon_url
     CompanySettings:
       type: object
       properties:
@@ -767,48 +791,36 @@ components:
           example: en
       required:
       - default_expiration_hours
-    Error:
+    LogoDeleteResponse:
       type: object
       properties:
-        error:
-          type: string
-          description: Human-readable error message
-        code:
-          type: string
-          description: 'Machine-readable error code Seal-related codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
-        errors:
-          type: array
-          description: All validation errors when multiple failures are reported together. The top-level error repeats the first item for backward compatibility.
-          items:
-            type: object
-            required:
-            - message
-            properties:
-              message:
-                type: string
-        message:
-          type: string
-          description: Detailed error description
-        details:
-          type: object
-          description: Additional error details
-          additionalProperties: true
+        success:
+          type: boolean
+      description: Logo deletion confirmation
       required:
-      - error
-      description: '
-
-
-        Organization Seal error codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
+      - success
   responses:
-    NotFoundError:
-      description: Not Found - Resource does not exist
+    ValidationError:
+      description: Bad Request - Validation failed
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
           example:
-            error: Not Found
-            message: The requested resource was not found
+            error: Validation Error
+            message: Invalid input data
+            details:
+              name: Name is required
+              email: Invalid email format
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Unauthorized
+            message: Invalid API key
     RateLimitError:
       description: Too Many Requests - Rate limit exceeded
       headers:
@@ -837,27 +849,15 @@ components:
             message: Too many requests. Please wait before retrying.
             details:
               retry_after: 45
-    ValidationError:
-      description: Bad Request - Validation failed
+    NotFoundError:
+      description: Not Found - Resource does not exist
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
           example:
-            error: Validation Error
-            message: Invalid input data
-            details:
-              name: Name is required
-              email: Invalid email format
-    UnauthorizedError:
-      description: Unauthorized - Invalid or missing API key
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: Unauthorized
-            message: Invalid API key
+            error: Not Found
+            message: The requested resource was not found
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

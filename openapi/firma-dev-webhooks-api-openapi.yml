@@ -643,151 +643,39 @@ paths:
         label: '@firma-dev/sdk'
         source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.webhooks.getWorkspaceWebhookSecretStatus({\n    id: \"id\"\n});\nconsole.log(response);"
 components:
-  responses:
-    NotFoundError:
-      description: Not Found - Resource does not exist
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: Not Found
-            message: The requested resource was not found
-    RateLimitError:
-      description: Too Many Requests - Rate limit exceeded
-      headers:
-        X-RateLimit-Limit:
-          schema:
-            type: integer
-          description: Maximum requests per minute
-        X-RateLimit-Remaining:
-          schema:
-            type: integer
-          description: Requests remaining
-        X-RateLimit-Reset:
-          schema:
-            type: integer
-          description: Unix timestamp of reset
-        Retry-After:
-          schema:
-            type: integer
-          description: Seconds until retry allowed
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: Rate Limit Exceeded
-            message: Too many requests. Please wait before retrying.
-            details:
-              retry_after: 45
-    ValidationError:
-      description: Bad Request - Validation failed
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: Validation Error
-            message: Invalid input data
-            details:
-              name: Name is required
-              email: Invalid email format
-    UnauthorizedError:
-      description: Unauthorized - Invalid or missing API key
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: Unauthorized
-            message: Invalid API key
   schemas:
-    Pagination:
+    Error:
       type: object
       properties:
-        current_page:
-          type: integer
-        page_size:
-          type: integer
-        total_count:
-          type: integer
-        total_pages:
-          type: integer
-      description: Pagination metadata for list responses
-      required:
-      - current_page
-      - page_size
-      - total_count
-      - total_pages
-    SecretStatusResponse:
-      type: object
-      properties:
-        created_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: When the webhook secret was created
-        last_rotated_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: When the webhook secret was last rotated
-        grace_period_active:
-          type: boolean
-          description: Whether the old secret is still valid alongside the new one
-        grace_period_ends_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: When the old secret grace period expires
-      description: Webhook secret status and rotation info
-      required:
-      - created_at
-    TestWebhookResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          description: Whether the test webhook was delivered successfully
-        status_code:
-          type: integer
-          description: HTTP status code returned by the webhook endpoint
-        webhook_event_id:
+        error:
           type: string
-          format: uuid
-          description: ID of the webhook event record
+          description: Human-readable error message
+        code:
+          type: string
+          description: 'Machine-readable error code Seal-related codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
+        errors:
+          type: array
+          description: All validation errors when multiple failures are reported together. The top-level error repeats the first item for backward compatibility.
+          items:
+            type: object
+            required:
+            - message
+            properties:
+              message:
+                type: string
         message:
           type: string
-        headers_sent:
+          description: Detailed error description
+        details:
           type: object
-          description: Headers sent with the test webhook request
-          properties:
-            X-Firma-Event:
-              type: string
-            X-Firma-Signature:
-              type: string
-            X-Firma-Delivery:
-              type: string
-            X-Firma-Signature-Old:
-              type: string
-              description: Only present during grace period after secret rotation
-      description: Webhook test execution result
+          description: Additional error details
+          additionalProperties: true
       required:
-      - success
-      - status_code
-    MessageResponse:
-      type: object
-      description: Simple success response with a message
-      properties:
-        message:
-          type: string
-          description: Success message
-      required:
-      - message
+      - error
+      description: '
+
+
+        Organization Seal error codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
     Webhook:
       type: object
       properties:
@@ -835,6 +723,42 @@ components:
       - events
       - enabled
       - created_at
+    SecretStatusResponse:
+      type: object
+      properties:
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: When the webhook secret was created
+        last_rotated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: When the webhook secret was last rotated
+        grace_period_active:
+          type: boolean
+          description: Whether the old secret is still valid alongside the new one
+        grace_period_ends_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: When the old secret grace period expires
+      description: Webhook secret status and rotation info
+      required:
+      - created_at
+    MessageResponse:
+      type: object
+      description: Simple success response with a message
+      properties:
+        message:
+          type: string
+          description: Success message
+      required:
+      - message
     RotateSecretResponse:
       type: object
       properties:
@@ -854,6 +778,55 @@ components:
       - message
       - new_secret
       - grace_period_hours
+    Pagination:
+      type: object
+      properties:
+        current_page:
+          type: integer
+        page_size:
+          type: integer
+        total_count:
+          type: integer
+        total_pages:
+          type: integer
+      description: Pagination metadata for list responses
+      required:
+      - current_page
+      - page_size
+      - total_count
+      - total_pages
+    TestWebhookResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Whether the test webhook was delivered successfully
+        status_code:
+          type: integer
+          description: HTTP status code returned by the webhook endpoint
+        webhook_event_id:
+          type: string
+          format: uuid
+          description: ID of the webhook event record
+        message:
+          type: string
+        headers_sent:
+          type: object
+          description: Headers sent with the test webhook request
+          properties:
+            X-Firma-Event:
+              type: string
+            X-Firma-Signature:
+              type: string
+            X-Firma-Delivery:
+              type: string
+            X-Firma-Signature-Old:
+              type: string
+              description: Only present during grace period after secret rotation
+      description: Webhook test execution result
+      required:
+      - success
+      - status_code
     WebhookListResponse:
       type: object
       description: Paginated list of webhooks
@@ -867,38 +840,65 @@ components:
       required:
       - results
       - pagination
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Human-readable error message
-        code:
-          type: string
-          description: 'Machine-readable error code Seal-related codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
-        errors:
-          type: array
-          description: All validation errors when multiple failures are reported together. The top-level error repeats the first item for backward compatibility.
-          items:
-            type: object
-            required:
-            - message
-            properties:
-              message:
-                type: string
-        message:
-          type: string
-          description: Detailed error description
-        details:
-          type: object
-          description: Additional error details
-          additionalProperties: true
-      required:
-      - error
-      description: '
-
-
-        Organization Seal error codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
+  responses:
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Unauthorized
+            message: Invalid API key
+    ValidationError:
+      description: Bad Request - Validation failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Validation Error
+            message: Invalid input data
+            details:
+              name: Name is required
+              email: Invalid email format
+    RateLimitError:
+      description: Too Many Requests - Rate limit exceeded
+      headers:
+        X-RateLimit-Limit:
+          schema:
+            type: integer
+          description: Maximum requests per minute
+        X-RateLimit-Remaining:
+          schema:
+            type: integer
+          description: Requests remaining
+        X-RateLimit-Reset:
+          schema:
+            type: integer
+          description: Unix timestamp of reset
+        Retry-After:
+          schema:
+            type: integer
+          description: Seconds until retry allowed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Rate Limit Exceeded
+            message: Too many requests. Please wait before retrying.
+            details:
+              retry_after: 45
+    NotFoundError:
+      description: Not Found - Resource does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Not Found
+            message: The requested resource was not found
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

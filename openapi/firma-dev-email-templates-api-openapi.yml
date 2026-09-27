@@ -473,21 +473,38 @@ paths:
           console.log(response);'
 components:
   schemas:
-    WorkspaceEmailTemplateListResponse:
+    Error:
       type: object
-      description: List of workspace email templates
       properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/EmailTemplate'
-        workspace_id:
+        error:
           type: string
-          format: uuid
-          description: Workspace ID
+          description: Human-readable error message
+        code:
+          type: string
+          description: 'Machine-readable error code Seal-related codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
+        errors:
+          type: array
+          description: All validation errors when multiple failures are reported together. The top-level error repeats the first item for backward compatibility.
+          items:
+            type: object
+            required:
+            - message
+            properties:
+              message:
+                type: string
+        message:
+          type: string
+          description: Detailed error description
+        details:
+          type: object
+          description: Additional error details
+          additionalProperties: true
       required:
-      - results
-      - workspace_id
+      - error
+      description: '
+
+
+        Organization Seal error codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
     CompanyEmailTemplateListResponse:
       type: object
       description: List of company email templates
@@ -509,6 +526,25 @@ components:
       required:
       - message
       - email_type
+    EmailTemplateDefaultsResponse:
+      type: object
+      properties:
+        language:
+          type: string
+        templates:
+          type: object
+          description: Map of email_type to default template {subject, body}
+          additionalProperties:
+            type: object
+            properties:
+              subject:
+                type: string
+              body:
+                type: string
+      description: Default email templates for a language
+      required:
+      - language
+      - templates
     EmailTemplatePlaceholdersResponse:
       type: object
       properties:
@@ -526,6 +562,21 @@ components:
       description: Available email template placeholders
       required:
       - placeholders
+    WorkspaceEmailTemplateListResponse:
+      type: object
+      description: List of workspace email templates
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmailTemplate'
+        workspace_id:
+          type: string
+          format: uuid
+          description: Workspace ID
+      required:
+      - results
+      - workspace_id
     EmailTemplate:
       type: object
       description: Custom email template for signing request notifications
@@ -561,58 +612,28 @@ components:
       - email_type
       - subject
       - body
-    EmailTemplateDefaultsResponse:
-      type: object
-      properties:
-        language:
-          type: string
-        templates:
-          type: object
-          description: Map of email_type to default template {subject, body}
-          additionalProperties:
-            type: object
-            properties:
-              subject:
-                type: string
-              body:
-                type: string
-      description: Default email templates for a language
-      required:
-      - language
-      - templates
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Human-readable error message
-        code:
-          type: string
-          description: 'Machine-readable error code Seal-related codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
-        errors:
-          type: array
-          description: All validation errors when multiple failures are reported together. The top-level error repeats the first item for backward compatibility.
-          items:
-            type: object
-            required:
-            - message
-            properties:
-              message:
-                type: string
-        message:
-          type: string
-          description: Detailed error description
-        details:
-          type: object
-          description: Additional error details
-          additionalProperties: true
-      required:
-      - error
-      description: '
-
-
-        Organization Seal error codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
   responses:
+    ValidationError:
+      description: Bad Request - Validation failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Validation Error
+            message: Invalid input data
+            details:
+              name: Name is required
+              email: Invalid email format
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Unauthorized
+            message: Invalid API key
     RateLimitError:
       description: Too Many Requests - Rate limit exceeded
       headers:
@@ -650,27 +671,6 @@ components:
           example:
             error: Not Found
             message: The requested resource was not found
-    ValidationError:
-      description: Bad Request - Validation failed
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: Validation Error
-            message: Invalid input data
-            details:
-              name: Name is required
-              email: Invalid email format
-    UnauthorizedError:
-      description: Unauthorized - Invalid or missing API key
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: Unauthorized
-            message: Invalid API key
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
