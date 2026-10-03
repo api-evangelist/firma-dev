@@ -473,6 +473,35 @@ paths:
           console.log(response);'
 components:
   schemas:
+    CompanyEmailTemplateListResponse:
+      type: object
+      description: List of company email templates
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmailTemplate'
+      required:
+      - results
+    EmailTemplateDefaultsResponse:
+      type: object
+      properties:
+        language:
+          type: string
+        templates:
+          type: object
+          description: Map of email_type to default template {subject, body}
+          additionalProperties:
+            type: object
+            properties:
+              subject:
+                type: string
+              body:
+                type: string
+      description: Default email templates for a language
+      required:
+      - language
+      - templates
     Error:
       type: object
       properties:
@@ -505,63 +534,6 @@ components:
 
 
         Organization Seal error codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
-    CompanyEmailTemplateListResponse:
-      type: object
-      description: List of company email templates
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/EmailTemplate'
-      required:
-      - results
-    EmailTemplateDeleteResponse:
-      type: object
-      properties:
-        message:
-          type: string
-        email_type:
-          type: string
-      description: Email template deletion confirmation
-      required:
-      - message
-      - email_type
-    EmailTemplateDefaultsResponse:
-      type: object
-      properties:
-        language:
-          type: string
-        templates:
-          type: object
-          description: Map of email_type to default template {subject, body}
-          additionalProperties:
-            type: object
-            properties:
-              subject:
-                type: string
-              body:
-                type: string
-      description: Default email templates for a language
-      required:
-      - language
-      - templates
-    EmailTemplatePlaceholdersResponse:
-      type: object
-      properties:
-        placeholders:
-          type: array
-          items:
-            type: object
-            properties:
-              key:
-                type: string
-                description: Placeholder key (e.g., 'signing_link')
-              description:
-                type: string
-                description: What this placeholder resolves to
-      description: Available email template placeholders
-      required:
-      - placeholders
     WorkspaceEmailTemplateListResponse:
       type: object
       description: List of workspace email templates
@@ -612,28 +584,44 @@ components:
       - email_type
       - subject
       - body
+    EmailTemplateDeleteResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        email_type:
+          type: string
+      description: Email template deletion confirmation
+      required:
+      - message
+      - email_type
+    EmailTemplatePlaceholdersResponse:
+      type: object
+      properties:
+        placeholders:
+          type: array
+          items:
+            type: object
+            properties:
+              key:
+                type: string
+                description: Placeholder key (e.g., 'signing_link')
+              description:
+                type: string
+                description: What this placeholder resolves to
+      description: Available email template placeholders
+      required:
+      - placeholders
   responses:
-    ValidationError:
-      description: Bad Request - Validation failed
+    NotFoundError:
+      description: Not Found - Resource does not exist
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
           example:
-            error: Validation Error
-            message: Invalid input data
-            details:
-              name: Name is required
-              email: Invalid email format
-    UnauthorizedError:
-      description: Unauthorized - Invalid or missing API key
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: Unauthorized
-            message: Invalid API key
+            error: Not Found
+            message: The requested resource was not found
     RateLimitError:
       description: Too Many Requests - Rate limit exceeded
       headers:
@@ -662,15 +650,27 @@ components:
             message: Too many requests. Please wait before retrying.
             details:
               retry_after: 45
-    NotFoundError:
-      description: Not Found - Resource does not exist
+    ValidationError:
+      description: Bad Request - Validation failed
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
           example:
-            error: Not Found
-            message: The requested resource was not found
+            error: Validation Error
+            message: Invalid input data
+            details:
+              name: Name is required
+              email: Invalid email format
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Unauthorized
+            message: Invalid API key
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

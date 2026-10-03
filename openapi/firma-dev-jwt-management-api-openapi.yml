@@ -261,6 +261,56 @@ paths:
         source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.jwtManagement.revokeSigningRequestToken({\n    jwt_id: \"123e4567-e89b-12d3-a456-426614174000\"\n});\nconsole.log(response);"
 components:
   schemas:
+    GenerateSigningRequestJWTRequest:
+      type: object
+      required:
+      - companies_workspaces_signing_requests_id
+      properties:
+        companies_workspaces_signing_requests_id:
+          type: string
+          format: uuid
+          description: ID of the signing request to generate JWT for
+    GenerateSigningRequestJWTResponse:
+      type: object
+      properties:
+        jwt:
+          type: string
+          description: The generated JWT token
+        jwt_id:
+          type: string
+          format: uuid
+          description: Unique identifier for this JWT
+        expires_at:
+          type: string
+          format: date-time
+          description: JWT expiration timestamp (7 days from creation)
+        signing_request_id:
+          type: string
+          format: uuid
+          description: ID of the signing request this JWT is for
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the JWT was created
+      required:
+      - jwt
+      - expires_at
+      - signing_request_id
+    RevokeSigningRequestJWTResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Confirmation message
+        jwt_id:
+          type: string
+          format: uuid
+          description: ID of the revoked JWT
+        revoked:
+          type: boolean
+          description: Whether the JWT was successfully revoked
+      required:
+      - message
     GenerateTemplateTokenResponse:
       type: object
       properties:
@@ -311,33 +361,6 @@ components:
 
 
         Organization Seal error codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
-    GenerateSigningRequestJWTRequest:
-      type: object
-      required:
-      - companies_workspaces_signing_requests_id
-      properties:
-        companies_workspaces_signing_requests_id:
-          type: string
-          format: uuid
-          description: ID of the signing request to generate JWT for
-    RevokeJWTRequest:
-      type: object
-      required:
-      - jwt_id
-      properties:
-        jwt_id:
-          type: string
-          format: uuid
-          description: ID of the JWT token to revoke
-    RevokeSigningRequestJWTRequest:
-      type: object
-      required:
-      - jwt_id
-      properties:
-        jwt_id:
-          type: string
-          format: uuid
-          description: ID of the JWT token to revoke
     GenerateJWTRequest:
       type: object
       required:
@@ -347,6 +370,24 @@ components:
           type: string
           format: uuid
           description: ID of the template to generate JWT for
+    RevokeSigningRequestJWTRequest:
+      type: object
+      required:
+      - jwt_id
+      properties:
+        jwt_id:
+          type: string
+          format: uuid
+          description: ID of the JWT token to revoke
+    RevokeJWTRequest:
+      type: object
+      required:
+      - jwt_id
+      properties:
+        jwt_id:
+          type: string
+          format: uuid
+          description: ID of the JWT token to revoke
     RevokeJWTResponse:
       type: object
       properties:
@@ -362,48 +403,16 @@ components:
           description: Whether the JWT was successfully revoked
       required:
       - message
-    RevokeSigningRequestJWTResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          description: Confirmation message
-        jwt_id:
-          type: string
-          format: uuid
-          description: ID of the revoked JWT
-        revoked:
-          type: boolean
-          description: Whether the JWT was successfully revoked
-      required:
-      - message
-    GenerateSigningRequestJWTResponse:
-      type: object
-      properties:
-        jwt:
-          type: string
-          description: The generated JWT token
-        jwt_id:
-          type: string
-          format: uuid
-          description: Unique identifier for this JWT
-        expires_at:
-          type: string
-          format: date-time
-          description: JWT expiration timestamp (7 days from creation)
-        signing_request_id:
-          type: string
-          format: uuid
-          description: ID of the signing request this JWT is for
-        created_at:
-          type: string
-          format: date-time
-          description: Timestamp when the JWT was created
-      required:
-      - jwt
-      - expires_at
-      - signing_request_id
   responses:
+    NotFoundError:
+      description: Not Found - Resource does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Not Found
+            message: The requested resource was not found
     ValidationError:
       description: Bad Request - Validation failed
       content:
@@ -416,15 +425,6 @@ components:
             details:
               name: Name is required
               email: Invalid email format
-    UnauthorizedError:
-      description: Unauthorized - Invalid or missing API key
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: Unauthorized
-            message: Invalid API key
     RateLimitError:
       description: Too Many Requests - Rate limit exceeded
       headers:
@@ -453,15 +453,15 @@ components:
             message: Too many requests. Please wait before retrying.
             details:
               retry_after: 45
-    NotFoundError:
-      description: Not Found - Resource does not exist
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
           example:
-            error: Not Found
-            message: The requested resource was not found
+            error: Unauthorized
+            message: Invalid API key
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

@@ -655,6 +655,107 @@ paths:
         source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.workspaces.deleteWorkspaceLogo({\n    id: \"id\"\n});\nconsole.log(response);"
 components:
   schemas:
+    WorkspaceListResponse:
+      type: object
+      description: Paginated list of workspaces
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Workspace'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - results
+      - pagination
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Human-readable error message
+        code:
+          type: string
+          description: 'Machine-readable error code Seal-related codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
+        errors:
+          type: array
+          description: All validation errors when multiple failures are reported together. The top-level error repeats the first item for backward compatibility.
+          items:
+            type: object
+            required:
+            - message
+            properties:
+              message:
+                type: string
+        message:
+          type: string
+          description: Detailed error description
+        details:
+          type: object
+          description: Additional error details
+          additionalProperties: true
+      required:
+      - error
+      description: '
+
+
+        Organization Seal error codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
+    LogoUploadResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        icon_url:
+          type: string
+          format: uri
+          description: Public URL to the uploaded logo
+      description: Logo upload confirmation with URL
+      required:
+      - success
+      - icon_url
+    ApiKeyRegenerateResponse:
+      type: object
+      properties:
+        new_key:
+          type: object
+          description: The newly generated API key
+          properties:
+            api_key:
+              type: string
+              description: The new API key value
+            created_at:
+              type: string
+              format: date-time
+              description: When the key was created
+        key_type:
+          type: string
+          enum:
+          - live
+          - test
+          description: The key type that was regenerated
+        expiring_keys:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+              api_key:
+                type: string
+                description: The expiring API key value
+              expires_at:
+                type: string
+                format: date-time
+          description: List of keys that were set to expire in 24 hours
+        workspace_id:
+          type: string
+          format: uuid
+      description: API key regeneration result
+      required:
+      - new_key
+      - key_type
+      - workspace_id
     Workspace:
       type: object
       properties:
@@ -721,111 +822,6 @@ components:
       - id
       - name
       - created_date
-    Pagination:
-      type: object
-      properties:
-        current_page:
-          type: integer
-        page_size:
-          type: integer
-        total_count:
-          type: integer
-        total_pages:
-          type: integer
-      description: Pagination metadata for list responses
-      required:
-      - current_page
-      - page_size
-      - total_count
-      - total_pages
-    LogoUploadResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-        icon_url:
-          type: string
-          format: uri
-          description: Public URL to the uploaded logo
-      description: Logo upload confirmation with URL
-      required:
-      - success
-      - icon_url
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Human-readable error message
-        code:
-          type: string
-          description: 'Machine-readable error code Seal-related codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
-        errors:
-          type: array
-          description: All validation errors when multiple failures are reported together. The top-level error repeats the first item for backward compatibility.
-          items:
-            type: object
-            required:
-            - message
-            properties:
-              message:
-                type: string
-        message:
-          type: string
-          description: Detailed error description
-        details:
-          type: object
-          description: Additional error details
-          additionalProperties: true
-      required:
-      - error
-      description: '
-
-
-        Organization Seal error codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
-    ApiKeyRegenerateResponse:
-      type: object
-      properties:
-        new_key:
-          type: object
-          description: The newly generated API key
-          properties:
-            api_key:
-              type: string
-              description: The new API key value
-            created_at:
-              type: string
-              format: date-time
-              description: When the key was created
-        key_type:
-          type: string
-          enum:
-          - live
-          - test
-          description: The key type that was regenerated
-        expiring_keys:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-                format: uuid
-              api_key:
-                type: string
-                description: The expiring API key value
-              expires_at:
-                type: string
-                format: date-time
-          description: List of keys that were set to expire in 24 hours
-        workspace_id:
-          type: string
-          format: uuid
-      description: API key regeneration result
-      required:
-      - new_key
-      - key_type
-      - workspace_id
     ApiKeyExpireResponse:
       type: object
       properties:
@@ -862,19 +858,23 @@ components:
       required:
       - success
       - workspace_id
-    WorkspaceListResponse:
+    Pagination:
       type: object
-      description: Paginated list of workspaces
       properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Workspace'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
+        current_page:
+          type: integer
+        page_size:
+          type: integer
+        total_count:
+          type: integer
+        total_pages:
+          type: integer
+      description: Pagination metadata for list responses
       required:
-      - results
-      - pagination
+      - current_page
+      - page_size
+      - total_count
+      - total_pages
     LogoDeleteResponse:
       type: object
       properties:
@@ -884,6 +884,15 @@ components:
       required:
       - success
   responses:
+    NotFoundError:
+      description: Not Found - Resource does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Not Found
+            message: The requested resource was not found
     UnauthorizedError:
       description: Unauthorized - Invalid or missing API key
       content:
@@ -893,6 +902,15 @@ components:
           example:
             error: Unauthorized
             message: Invalid API key
+    ForbiddenError:
+      description: Forbidden - Insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Forbidden
+            message: You do not have permission to access this resource
     ValidationError:
       description: Bad Request - Validation failed
       content:
@@ -905,15 +923,6 @@ components:
             details:
               name: Name is required
               email: Invalid email format
-    ForbiddenError:
-      description: Forbidden - Insufficient permissions
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: Forbidden
-            message: You do not have permission to access this resource
     RateLimitError:
       description: Too Many Requests - Rate limit exceeded
       headers:
@@ -942,15 +951,6 @@ components:
             message: Too many requests. Please wait before retrying.
             details:
               retry_after: 45
-    NotFoundError:
-      description: Not Found - Resource does not exist
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: Not Found
-            message: The requested resource was not found
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

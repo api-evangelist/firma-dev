@@ -1043,6 +1043,61 @@ paths:
         source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.emailDomains.setWorkspacePrimaryDomain({\n    workspace_id: \"workspace_id\",\n    id: \"id\"\n});\nconsole.log(response);"
 components:
   schemas:
+    DomainCreateResponse:
+      type: object
+      properties:
+        domain:
+          $ref: '#/components/schemas/Domain'
+        verification_instructions:
+          type: object
+          properties:
+            record_type:
+              type: string
+              example: TXT
+            record_name:
+              type: string
+              example: _firma-verification.acme.com
+            record_value:
+              type: string
+              example: firma-verify=abc123xyz
+            next_step:
+              type: string
+              example: Add this TXT record to your DNS, then call POST /company/domains/{id}/verify-ownership
+      description: Domain created with verification instructions
+      required:
+      - domain
+      - verification_instructions
+    DomainSetPrimaryResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        domain:
+          $ref: '#/components/schemas/Domain'
+      description: Primary domain update confirmation
+      required:
+      - message
+      - domain
+    DomainVerifyDnsResponse:
+      type: object
+      properties:
+        verified:
+          type: boolean
+          description: Whether all DNS records are verified
+        message:
+          type: string
+        domain:
+          $ref: '#/components/schemas/Domain'
+        dns_records:
+          type: array
+          items:
+            $ref: '#/components/schemas/DomainDnsRecord'
+          description: Status of each DNS record
+      description: DNS verification result
+      required:
+      - verified
+      - message
+      - domain
     DomainFinalizeResponse:
       type: object
       properties:
@@ -1063,6 +1118,18 @@ components:
       - domain
       - dns_records
       - next_step
+    DomainDeleteResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        domain_id:
+          type: string
+          format: uuid
+      description: Domain deletion confirmation
+      required:
+      - message
+      - domain_id
     Error:
       type: object
       properties:
@@ -1095,44 +1162,6 @@ components:
 
 
         Organization Seal error codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
-    DomainListResponse:
-      type: object
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Domain'
-        workspace_id:
-          type: string
-          format: uuid
-          description: Workspace ID for scoped results
-      description: List of domains with workspace context
-      required:
-      - results
-    DomainCreateResponse:
-      type: object
-      properties:
-        domain:
-          $ref: '#/components/schemas/Domain'
-        verification_instructions:
-          type: object
-          properties:
-            record_type:
-              type: string
-              example: TXT
-            record_name:
-              type: string
-              example: _firma-verification.acme.com
-            record_value:
-              type: string
-              example: firma-verify=abc123xyz
-            next_step:
-              type: string
-              example: Add this TXT record to your DNS, then call POST /company/domains/{id}/verify-ownership
-      description: Domain created with verification instructions
-      required:
-      - domain
-      - verification_instructions
     DomainDnsRecord:
       type: object
       description: DNS record required for email domain verification
@@ -1165,26 +1194,34 @@ components:
           - verified
           - failed
           description: Verification status of this specific record
-    DomainVerifyDnsResponse:
+    DomainListResponse:
       type: object
       properties:
-        verified:
-          type: boolean
-          description: Whether all DNS records are verified
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Domain'
+        workspace_id:
+          type: string
+          format: uuid
+          description: Workspace ID for scoped results
+      description: List of domains with workspace context
+      required:
+      - results
+    DomainVerifyOwnershipResponse:
+      type: object
+      properties:
         message:
           type: string
         domain:
           $ref: '#/components/schemas/Domain'
-        dns_records:
-          type: array
-          items:
-            $ref: '#/components/schemas/DomainDnsRecord'
-          description: Status of each DNS record
-      description: DNS verification result
+        next_step:
+          type: string
+      description: Domain ownership verification result
       required:
-      - verified
       - message
       - domain
+      - next_step
     Domain:
       type: object
       description: Email domain configuration for sending signing request emails
@@ -1240,53 +1277,16 @@ components:
       - domain
       - domain_status
       - verification_status
-    DomainDeleteResponse:
-      type: object
-      properties:
-        message:
-          type: string
-        domain_id:
-          type: string
-          format: uuid
-      description: Domain deletion confirmation
-      required:
-      - message
-      - domain_id
-    DomainVerifyOwnershipResponse:
-      type: object
-      properties:
-        message:
-          type: string
-        domain:
-          $ref: '#/components/schemas/Domain'
-        next_step:
-          type: string
-      description: Domain ownership verification result
-      required:
-      - message
-      - domain
-      - next_step
-    DomainSetPrimaryResponse:
-      type: object
-      properties:
-        message:
-          type: string
-        domain:
-          $ref: '#/components/schemas/Domain'
-      description: Primary domain update confirmation
-      required:
-      - message
-      - domain
   responses:
-    UnauthorizedError:
-      description: Unauthorized - Invalid or missing API key
+    NotFoundError:
+      description: Not Found - Resource does not exist
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
           example:
-            error: Unauthorized
-            message: Invalid API key
+            error: Not Found
+            message: The requested resource was not found
     RateLimitError:
       description: Too Many Requests - Rate limit exceeded
       headers:
@@ -1315,15 +1315,15 @@ components:
             message: Too many requests. Please wait before retrying.
             details:
               retry_after: 45
-    NotFoundError:
-      description: Not Found - Resource does not exist
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
           example:
-            error: Not Found
-            message: The requested resource was not found
+            error: Unauthorized
+            message: Invalid API key
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

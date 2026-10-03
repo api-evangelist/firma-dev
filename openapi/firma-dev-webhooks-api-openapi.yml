@@ -644,6 +644,78 @@ paths:
         source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.webhooks.getWorkspaceWebhookSecretStatus({\n    id: \"id\"\n});\nconsole.log(response);"
 components:
   schemas:
+    RotateSecretResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        new_secret:
+          type: string
+          description: The new webhook signing secret (64 character hex string)
+        grace_period_hours:
+          type: integer
+          description: Hours the old secret remains valid alongside the new one
+        warning:
+          type: string
+          description: Reminder to update webhook signature verification
+      description: Secret rotation result with grace period
+      required:
+      - message
+      - new_secret
+      - grace_period_hours
+    SecretStatusResponse:
+      type: object
+      properties:
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: When the webhook secret was created
+        last_rotated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: When the webhook secret was last rotated
+        grace_period_active:
+          type: boolean
+          description: Whether the old secret is still valid alongside the new one
+        grace_period_ends_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: When the old secret grace period expires
+      description: Webhook secret status and rotation info
+      required:
+      - created_at
+    MessageResponse:
+      type: object
+      description: Simple success response with a message
+      properties:
+        message:
+          type: string
+          description: Success message
+      required:
+      - message
+    Pagination:
+      type: object
+      properties:
+        current_page:
+          type: integer
+        page_size:
+          type: integer
+        total_count:
+          type: integer
+        total_pages:
+          type: integer
+      description: Pagination metadata for list responses
+      required:
+      - current_page
+      - page_size
+      - total_count
+      - total_pages
     Error:
       type: object
       properties:
@@ -723,78 +795,19 @@ components:
       - events
       - enabled
       - created_at
-    SecretStatusResponse:
+    WebhookListResponse:
       type: object
+      description: Paginated list of webhooks
       properties:
-        created_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: When the webhook secret was created
-        last_rotated_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: When the webhook secret was last rotated
-        grace_period_active:
-          type: boolean
-          description: Whether the old secret is still valid alongside the new one
-        grace_period_ends_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: When the old secret grace period expires
-      description: Webhook secret status and rotation info
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Webhook'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
       required:
-      - created_at
-    MessageResponse:
-      type: object
-      description: Simple success response with a message
-      properties:
-        message:
-          type: string
-          description: Success message
-      required:
-      - message
-    RotateSecretResponse:
-      type: object
-      properties:
-        message:
-          type: string
-        new_secret:
-          type: string
-          description: The new webhook signing secret (64 character hex string)
-        grace_period_hours:
-          type: integer
-          description: Hours the old secret remains valid alongside the new one
-        warning:
-          type: string
-          description: Reminder to update webhook signature verification
-      description: Secret rotation result with grace period
-      required:
-      - message
-      - new_secret
-      - grace_period_hours
-    Pagination:
-      type: object
-      properties:
-        current_page:
-          type: integer
-        page_size:
-          type: integer
-        total_count:
-          type: integer
-        total_pages:
-          type: integer
-      description: Pagination metadata for list responses
-      required:
-      - current_page
-      - page_size
-      - total_count
-      - total_pages
+      - results
+      - pagination
     TestWebhookResponse:
       type: object
       properties:
@@ -827,20 +840,16 @@ components:
       required:
       - success
       - status_code
-    WebhookListResponse:
-      type: object
-      description: Paginated list of webhooks
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Webhook'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-      required:
-      - results
-      - pagination
   responses:
+    NotFoundError:
+      description: Not Found - Resource does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Not Found
+            message: The requested resource was not found
     UnauthorizedError:
       description: Unauthorized - Invalid or missing API key
       content:
@@ -890,15 +899,6 @@ components:
             message: Too many requests. Please wait before retrying.
             details:
               retry_after: 45
-    NotFoundError:
-      description: Not Found - Resource does not exist
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: Not Found
-            message: The requested resource was not found
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

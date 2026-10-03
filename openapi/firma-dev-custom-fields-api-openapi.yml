@@ -450,30 +450,47 @@ paths:
         label: '@firma-dev/sdk'
         source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.customFields.deleteSigningRequestCustomField({\n    request_id: \"request_id\",\n    field_id: \"field_id\"\n});\nconsole.log(response);"
 components:
+  responses:
+    NotFoundError:
+      description: Not Found - Resource does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Not Found
+            message: The requested resource was not found
+    ValidationError:
+      description: Bad Request - Validation failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Validation Error
+            message: Invalid input data
+            details:
+              name: Name is required
+              email: Invalid email format
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Unauthorized
+            message: Invalid API key
   schemas:
-    TemplateCustomField:
+    MessageResponse:
       type: object
-      description: A custom field definition for a template
+      description: Simple success response with a message
       properties:
-        id:
+        message:
           type: string
-          format: uuid
-          description: Unique identifier
-        field_name:
-          type: string
-          description: Machine-readable field name
-        field_label:
-          type: string
-          description: Human-readable display label
-        created_at:
-          type: string
-          format: date-time
-        updated_at:
-          type: string
-          format: date-time
+          description: Success message
       required:
-      - id
-      - field_name
+      - message
     Error:
       type: object
       properties:
@@ -564,15 +581,6 @@ components:
       required:
       - id
       - field_name
-    MessageResponse:
-      type: object
-      description: Simple success response with a message
-      properties:
-        message:
-          type: string
-          description: Success message
-      required:
-      - message
     CustomFieldListResponse:
       type: object
       properties:
@@ -583,37 +591,29 @@ components:
       description: List of custom fields
       required:
       - custom_fields
-  responses:
-    UnauthorizedError:
-      description: Unauthorized - Invalid or missing API key
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: Unauthorized
-            message: Invalid API key
-    ValidationError:
-      description: Bad Request - Validation failed
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: Validation Error
-            message: Invalid input data
-            details:
-              name: Name is required
-              email: Invalid email format
-    NotFoundError:
-      description: Not Found - Resource does not exist
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: Not Found
-            message: The requested resource was not found
+    TemplateCustomField:
+      type: object
+      description: A custom field definition for a template
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier
+        field_name:
+          type: string
+          description: Machine-readable field name
+        field_label:
+          type: string
+          description: Human-readable display label
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+      - id
+      - field_name
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
