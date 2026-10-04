@@ -644,25 +644,15 @@ paths:
         source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.webhooks.getWorkspaceWebhookSecretStatus({\n    id: \"id\"\n});\nconsole.log(response);"
 components:
   schemas:
-    RotateSecretResponse:
+    MessageResponse:
       type: object
+      description: Simple success response with a message
       properties:
         message:
           type: string
-        new_secret:
-          type: string
-          description: The new webhook signing secret (64 character hex string)
-        grace_period_hours:
-          type: integer
-          description: Hours the old secret remains valid alongside the new one
-        warning:
-          type: string
-          description: Reminder to update webhook signature verification
-      description: Secret rotation result with grace period
+          description: Success message
       required:
       - message
-      - new_secret
-      - grace_period_hours
     SecretStatusResponse:
       type: object
       properties:
@@ -690,15 +680,6 @@ components:
       description: Webhook secret status and rotation info
       required:
       - created_at
-    MessageResponse:
-      type: object
-      description: Simple success response with a message
-      properties:
-        message:
-          type: string
-          description: Success message
-      required:
-      - message
     Pagination:
       type: object
       properties:
@@ -748,6 +729,70 @@ components:
 
 
         Organization Seal error codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
+    RotateSecretResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        new_secret:
+          type: string
+          description: The new webhook signing secret (64 character hex string)
+        grace_period_hours:
+          type: integer
+          description: Hours the old secret remains valid alongside the new one
+        warning:
+          type: string
+          description: Reminder to update webhook signature verification
+      description: Secret rotation result with grace period
+      required:
+      - message
+      - new_secret
+      - grace_period_hours
+    TestWebhookResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Whether the test webhook was delivered successfully
+        status_code:
+          type: integer
+          description: HTTP status code returned by the webhook endpoint
+        webhook_event_id:
+          type: string
+          format: uuid
+          description: ID of the webhook event record
+        message:
+          type: string
+        headers_sent:
+          type: object
+          description: Headers sent with the test webhook request
+          properties:
+            X-Firma-Event:
+              type: string
+            X-Firma-Signature:
+              type: string
+            X-Firma-Delivery:
+              type: string
+            X-Firma-Signature-Old:
+              type: string
+              description: Only present during grace period after secret rotation
+      description: Webhook test execution result
+      required:
+      - success
+      - status_code
+    WebhookListResponse:
+      type: object
+      description: Paginated list of webhooks
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Webhook'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - results
+      - pagination
     Webhook:
       type: object
       properties:
@@ -795,82 +840,7 @@ components:
       - events
       - enabled
       - created_at
-    WebhookListResponse:
-      type: object
-      description: Paginated list of webhooks
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Webhook'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-      required:
-      - results
-      - pagination
-    TestWebhookResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          description: Whether the test webhook was delivered successfully
-        status_code:
-          type: integer
-          description: HTTP status code returned by the webhook endpoint
-        webhook_event_id:
-          type: string
-          format: uuid
-          description: ID of the webhook event record
-        message:
-          type: string
-        headers_sent:
-          type: object
-          description: Headers sent with the test webhook request
-          properties:
-            X-Firma-Event:
-              type: string
-            X-Firma-Signature:
-              type: string
-            X-Firma-Delivery:
-              type: string
-            X-Firma-Signature-Old:
-              type: string
-              description: Only present during grace period after secret rotation
-      description: Webhook test execution result
-      required:
-      - success
-      - status_code
   responses:
-    NotFoundError:
-      description: Not Found - Resource does not exist
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: Not Found
-            message: The requested resource was not found
-    UnauthorizedError:
-      description: Unauthorized - Invalid or missing API key
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: Unauthorized
-            message: Invalid API key
-    ValidationError:
-      description: Bad Request - Validation failed
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: Validation Error
-            message: Invalid input data
-            details:
-              name: Name is required
-              email: Invalid email format
     RateLimitError:
       description: Too Many Requests - Rate limit exceeded
       headers:
@@ -899,6 +869,36 @@ components:
             message: Too many requests. Please wait before retrying.
             details:
               retry_after: 45
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Unauthorized
+            message: Invalid API key
+    ValidationError:
+      description: Bad Request - Validation failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Validation Error
+            message: Invalid input data
+            details:
+              name: Name is required
+              email: Invalid email format
+    NotFoundError:
+      description: Not Found - Resource does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Not Found
+            message: The requested resource was not found
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

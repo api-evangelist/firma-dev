@@ -347,36 +347,6 @@ paths:
         source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.signerTerms.deleteWorkspaceSignerTerms({\n    workspace_id: \"workspace_id\",\n    language: \"en\"\n});\nconsole.log(response);"
 components:
   responses:
-    NotFoundError:
-      description: Not Found - Resource does not exist
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: Not Found
-            message: The requested resource was not found
-    ForbiddenError:
-      description: Forbidden - Insufficient permissions
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: Forbidden
-            message: You do not have permission to access this resource
-    ValidationError:
-      description: Bad Request - Validation failed
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: Validation Error
-            message: Invalid input data
-            details:
-              name: Name is required
-              email: Invalid email format
     RateLimitError:
       description: Too Many Requests - Rate limit exceeded
       headers:
@@ -414,18 +384,37 @@ components:
           example:
             error: Unauthorized
             message: Invalid API key
+    ValidationError:
+      description: Bad Request - Validation failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Validation Error
+            message: Invalid input data
+            details:
+              name: Name is required
+              email: Invalid email format
+    NotFoundError:
+      description: Not Found - Resource does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Not Found
+            message: The requested resource was not found
+    ForbiddenError:
+      description: Forbidden - Insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Forbidden
+            message: You do not have permission to access this resource
   schemas:
-    SignerTermsDeleteResponse:
-      type: object
-      properties:
-        message:
-          type: string
-        language:
-          type: string
-      description: Signer terms deletion confirmation
-      required:
-      - message
-      - language
     SignerTerms:
       type: object
       properties:
@@ -462,16 +451,6 @@ components:
       required:
       - language
       - statement_text
-    SignerTermsListResponse:
-      type: object
-      properties:
-        terms:
-          type: array
-          items:
-            $ref: '#/components/schemas/SignerTerms'
-      description: List of signer terms by language
-      required:
-      - terms
     Error:
       type: object
       properties:
@@ -518,6 +497,27 @@ components:
       description: Signer terms update result
       required:
       - ok
+    SignerTermsDeleteResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        language:
+          type: string
+      description: Signer terms deletion confirmation
+      required:
+      - message
+      - language
+    SignerTermsListResponse:
+      type: object
+      properties:
+        terms:
+          type: array
+          items:
+            $ref: '#/components/schemas/SignerTerms'
+      description: List of signer terms by language
+      required:
+      - terms
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

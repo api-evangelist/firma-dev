@@ -473,35 +473,21 @@ paths:
           console.log(response);'
 components:
   schemas:
-    CompanyEmailTemplateListResponse:
+    WorkspaceEmailTemplateListResponse:
       type: object
-      description: List of company email templates
+      description: List of workspace email templates
       properties:
         results:
           type: array
           items:
             $ref: '#/components/schemas/EmailTemplate'
+        workspace_id:
+          type: string
+          format: uuid
+          description: Workspace ID
       required:
       - results
-    EmailTemplateDefaultsResponse:
-      type: object
-      properties:
-        language:
-          type: string
-        templates:
-          type: object
-          description: Map of email_type to default template {subject, body}
-          additionalProperties:
-            type: object
-            properties:
-              subject:
-                type: string
-              body:
-                type: string
-      description: Default email templates for a language
-      required:
-      - language
-      - templates
+      - workspace_id
     Error:
       type: object
       properties:
@@ -534,21 +520,52 @@ components:
 
 
         Organization Seal error codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
-    WorkspaceEmailTemplateListResponse:
+    EmailTemplatePlaceholdersResponse:
       type: object
-      description: List of workspace email templates
+      properties:
+        placeholders:
+          type: array
+          items:
+            type: object
+            properties:
+              key:
+                type: string
+                description: Placeholder key (e.g., 'signing_link')
+              description:
+                type: string
+                description: What this placeholder resolves to
+      description: Available email template placeholders
+      required:
+      - placeholders
+    CompanyEmailTemplateListResponse:
+      type: object
+      description: List of company email templates
       properties:
         results:
           type: array
           items:
             $ref: '#/components/schemas/EmailTemplate'
-        workspace_id:
-          type: string
-          format: uuid
-          description: Workspace ID
       required:
       - results
-      - workspace_id
+    EmailTemplateDefaultsResponse:
+      type: object
+      properties:
+        language:
+          type: string
+        templates:
+          type: object
+          description: Map of email_type to default template {subject, body}
+          additionalProperties:
+            type: object
+            properties:
+              subject:
+                type: string
+              body:
+                type: string
+      description: Default email templates for a language
+      required:
+      - language
+      - templates
     EmailTemplate:
       type: object
       description: Custom email template for signing request notifications
@@ -595,33 +612,7 @@ components:
       required:
       - message
       - email_type
-    EmailTemplatePlaceholdersResponse:
-      type: object
-      properties:
-        placeholders:
-          type: array
-          items:
-            type: object
-            properties:
-              key:
-                type: string
-                description: Placeholder key (e.g., 'signing_link')
-              description:
-                type: string
-                description: What this placeholder resolves to
-      description: Available email template placeholders
-      required:
-      - placeholders
   responses:
-    NotFoundError:
-      description: Not Found - Resource does not exist
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: Not Found
-            message: The requested resource was not found
     RateLimitError:
       description: Too Many Requests - Rate limit exceeded
       headers:
@@ -650,6 +641,15 @@ components:
             message: Too many requests. Please wait before retrying.
             details:
               retry_after: 45
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Unauthorized
+            message: Invalid API key
     ValidationError:
       description: Bad Request - Validation failed
       content:
@@ -662,15 +662,15 @@ components:
             details:
               name: Name is required
               email: Invalid email format
-    UnauthorizedError:
-      description: Unauthorized - Invalid or missing API key
+    NotFoundError:
+      description: Not Found - Resource does not exist
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
           example:
-            error: Unauthorized
-            message: Invalid API key
+            error: Not Found
+            message: The requested resource was not found
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
