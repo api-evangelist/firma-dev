@@ -1,0 +1,12 @@
+{
+ "url": "https://docs.firma.dev/api-reference/v01.38.00/openapi-v01.38.00.json",
+ "requested_url": "https://docs.firma.dev/api-reference/v01.38.00/openapi-v01.38.00.json",
+ "status": 200,
+ "content_type": "application/json",
+ "bytes": 697101,
+ "sha256": "c38127a2a25b64213504fd142d5ced0923015cac94e377810920c864b017c97b",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "equivalent",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the provider's current document describes the same operations (Jaccard 1.0), but the bytes differ, so the archive is an earlier or reformatted copy."
+}
