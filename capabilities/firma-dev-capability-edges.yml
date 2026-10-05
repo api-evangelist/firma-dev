@@ -1,0 +1,38 @@
+slug: firma-dev
+provider: Firma.dev
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 2
+edges:
+- tag: Webhooks
+  spec_file: firma-dev-webhooks-api-openapi.yml
+  capability_id: BC-4270.80
+  capability_id_l1: BC-4270
+  capability_name: Webhook & Event Subscription Management
+  confidence: 0.75
+  evidence: POST /webhooks createWebhook Create Webhook; POST /webhooks/{id}/test Test a webhook; POST
+    /webhooks/rotate-secret Rotate webhook signing secret
+  reason: Operations manage the lifecycle of outbound webhook subscriptions (create/update/delete/test)
+    and their signing secrets for an API-first e-signature platform, which is exactly outbound webhook
+    & event subscription management within the developer platform/API ecosystem capability. Confidence
+    held below 0.9 because webhook plumbing could also be read as pure technical infrastructure.
+- tag: Workspaces
+  spec_file: firma-dev-workspaces-api-openapi.yml
+  capability_id: BC-4230.10
+  capability_id_l1: BC-4230
+  capability_name: Tenant Provisioning & Lifecycle
+  confidence: 0.7
+  evidence: POST /workspaces createWorkspace Create a new workspace; POST /workspaces/{id}/api-key/regenerate
+    Regenerate workspace API key; POST /workspaces/{id}/logo Upload Workspace Logo
+  reason: The partner API creates and maintains workspaces — the tenant unit of this white-labelled signing
+    platform — including credential issuance and branding, which maps to tenant provisioning and lifecycle.
+    Some overlap with tenant configuration (branding/logo) keeps confidence moderate.
