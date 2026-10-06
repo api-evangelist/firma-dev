@@ -1,6 +1,17 @@
-generated: '2026-09-25'
+generated: '2026-10-06'
 method: probed
-generator: harvest-llms.py
-source: https://docs.firma.dev/llms.txt
-bytes: 24573
-note: saved verbatim; the provider's own document
+generator: hand (correction request 2026-10-06)
+files:
+- file: llms/firma-dev-llms.txt
+  source: https://www.firma.dev/llms.txt
+  resolved: https://firma.dev/llms.txt
+  status: 200
+  content_type: text/plain;charset=utf-8
+  bytes: 8068
+- file: llms/firma-dev-docs-llms.txt
+  source: https://docs.firma.dev/llms.txt
+  status: 200
+  content_type: text/plain; charset=utf-8
+  bytes: 24686
+note: saved verbatim; the provider's own documents. The earlier llms/firma-dev-llms.txt was an empty 'method: none' stub although the provenance
+  named docs.firma.dev/llms.txt.

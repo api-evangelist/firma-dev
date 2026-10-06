@@ -1,0 +1,229 @@
+# Firma
+
+- [v1.38.0 (167 pages)](https://docs.firma.dev/_llms/en/v1-38-0.md): Documentation for v1.38.0.
+- [v1.37.0 (167 pages)](https://docs.firma.dev/_llms/en/v1-37-0.md): Documentation for v1.37.0.
+- [v1.36.0 (156 pages)](https://docs.firma.dev/_llms/en/v1-36-0.md): Documentation for v1.36.0.
+- [v1.35.0 (156 pages)](https://docs.firma.dev/_llms/en/v1-35-0.md): Documentation for v1.35.0.
+- [v1.34.0 (155 pages)](https://docs.firma.dev/_llms/en/v1-34-0.md): Documentation for v1.34.0.
+- [v1.33.0 (155 pages)](https://docs.firma.dev/_llms/en/v1-33-0.md): Documentation for v1.33.0.
+- [v1.32.0 (155 pages)](https://docs.firma.dev/_llms/en/v1-32-0.md): Documentation for v1.32.0.
+- [v1.31.0 (155 pages)](https://docs.firma.dev/_llms/en/v1-31-0.md): Documentation for v1.31.0.
+- [v1.30.0 (155 pages)](https://docs.firma.dev/_llms/en/v1-30-0.md): Documentation for v1.30.0.
+- [v1.29.0 (151 pages)](https://docs.firma.dev/_llms/en/v1-29-0.md): Documentation for v1.29.0.
+- [v1.28.0 (150 pages)](https://docs.firma.dev/_llms/en/v1-28-0.md): Documentation for v1.28.0.
+- [v1.27.0 (155 pages)](https://docs.firma.dev/_llms/en/v1-27-0.md): Documentation for v1.27.0.
+- [v1.26.0 (155 pages)](https://docs.firma.dev/_llms/en/v1-26-0.md): Documentation for v1.26.0.
+- [v1.25.2 (155 pages)](https://docs.firma.dev/_llms/en/v1-25-2.md): Documentation for v1.25.2.
+- [v1.25.1 (155 pages)](https://docs.firma.dev/_llms/en/v1-25-1.md): Documentation for v1.25.1.
+- [v1.25.0 (155 pages)](https://docs.firma.dev/_llms/en/v1-25-0.md): Documentation for v1.25.0.
+- [v1.24.0 (155 pages)](https://docs.firma.dev/_llms/en/v1-24-0.md): Documentation for v1.24.0.
+- [v1.23.0 (155 pages)](https://docs.firma.dev/_llms/en/v1-23-0.md): Documentation for v1.23.0.
+- [v1.22.1 (147 pages)](https://docs.firma.dev/_llms/en/v1-22-1.md): Documentation for v1.22.1.
+- [v1.22.0 (147 pages)](https://docs.firma.dev/_llms/en/v1-22-0.md): Documentation for v1.22.0.
+- [v1.21.1 (146 pages)](https://docs.firma.dev/_llms/en/v1-21-1.md): Documentation for v1.21.1.
+- [v1.21.0 (146 pages)](https://docs.firma.dev/_llms/en/v1-21-0.md): Documentation for v1.21.0.
+- [v1.20.0 (146 pages)](https://docs.firma.dev/_llms/en/v1-20-0.md): Documentation for v1.20.0.
+- [v1.19.0 (146 pages)](https://docs.firma.dev/_llms/en/v1-19-0.md): Documentation for v1.19.0.
+- [v1.18.0 (142 pages)](https://docs.firma.dev/_llms/en/v1-18-0.md): Documentation for v1.18.0.
+- [v1.17.0 (142 pages)](https://docs.firma.dev/_llms/en/v1-17-0.md): Documentation for v1.17.0.
+- [v1.16.0 (142 pages)](https://docs.firma.dev/_llms/en/v1-16-0.md): Documentation for v1.16.0.
+- [v1.15.3 (141 pages)](https://docs.firma.dev/_llms/en/v1-15-3.md): Documentation for v1.15.3.
+- [v1.15.2 (141 pages)](https://docs.firma.dev/_llms/en/v1-15-2.md): Documentation for v1.15.2.
+- [v1.15.1 (141 pages)](https://docs.firma.dev/_llms/en/v1-15-1.md): Documentation for v1.15.1.
+- [v1.15.0 (141 pages)](https://docs.firma.dev/_llms/en/v1-15-0.md): Documentation for v1.15.0.
+- [v1.14.0 (139 pages)](https://docs.firma.dev/_llms/en/v1-14-0.md): Documentation for v1.14.0.
+- [v1.13.0 (139 pages)](https://docs.firma.dev/_llms/en/v1-13-0.md): Documentation for v1.13.0.
+- [v1.12.1 (139 pages)](https://docs.firma.dev/_llms/en/v1-12-1.md): Documentation for v1.12.1.
+- [v1.12.0 (139 pages)](https://docs.firma.dev/_llms/en/v1-12-0.md): Documentation for v1.12.0.
+- [v1.11.0 (139 pages)](https://docs.firma.dev/_llms/en/v1-11-0.md): Documentation for v1.11.0.
+- [v1.10.0 (139 pages)](https://docs.firma.dev/_llms/en/v1-10-0.md): Documentation for v1.10.0.
+- [v1.9.0 (138 pages)](https://docs.firma.dev/_llms/en/v1-9-0.md): Documentation for v1.9.0.
+- [v1.8.0 (137 pages)](https://docs.firma.dev/_llms/en/v1-8-0.md): Documentation for v1.8.0.
+- [v1.7.0 (126 pages)](https://docs.firma.dev/_llms/en/v1-7-0.md): Documentation for v1.7.0.
+- [v1.5.0 (126 pages)](https://docs.firma.dev/_llms/en/v1-5-0.md): Documentation for v1.5.0.
+- [v1.4.0 (126 pages)](https://docs.firma.dev/_llms/en/v1-4-0.md): Documentation for v1.4.0.
+- [v1.3.0 (126 pages)](https://docs.firma.dev/_llms/en/v1-3-0.md): Documentation for v1.3.0.
+- [v1.2.0 (110 pages)](https://docs.firma.dev/_llms/en/v1-2-0.md): Documentation for v1.2.0.
+- [v1.1.0 (110 pages)](https://docs.firma.dev/_llms/en/v1-1-0.md): Documentation for v1.1.0.
+- [v1.0.2 (109 pages)](https://docs.firma.dev/_llms/en/v1-0-2.md): Documentation for v1.0.2.
+- [v1.0.1 (97 pages)](https://docs.firma.dev/_llms/en/v1-0-1.md): Documentation for v1.0.1.
+
+## OpenAPI Specs
+
+- [openapi-v01.38.00](/api-reference/v01.38.00/openapi-v01.38.00.json)
+- [openapi-v01.37.00](/api-reference/v01.37.00/openapi-v01.37.00.json)
+- [openapi-v01.36.00](/api-reference/v01.36.00/openapi-v01.36.00.json)
+- [openapi-v01.35.00](/api-reference/v01.35.00/openapi-v01.35.00.json)
+- [openapi-v01.33.00](/api-reference/v01.33.00/openapi-v01.33.00.json)
+- [openapi-v01.32.00](/api-reference/v01.32.00/openapi-v01.32.00.json)
+- [openapi-v01.31.00](/api-reference/v01.31.00/openapi-v01.31.00.json)
+- [openapi-v01.30.00](/api-reference/v01.30.00/openapi-v01.30.00.json)
+- [openapi-v01.29.00](/api-reference/v01.29.00/openapi-v01.29.00.json)
+- [openapi-v01.28.00](/api-reference/v01.28.00/openapi-v01.28.00.json)
+- [openapi-v01.27.00](/api-reference/v01.27.00/openapi-v01.27.00.json)
+- [openapi-v01.26.00](/api-reference/v01.26.00/openapi-v01.26.00.json)
+- [openapi-v01.25.02](/api-reference/v01.25.02/openapi-v01.25.02.json)
+- [openapi-v01.25.01](/api-reference/v01.25.01/openapi-v01.25.01.json)
+- [openapi-v01.25.00](/api-reference/v01.25.00/openapi-v01.25.00.json)
+- [openapi-v01.24.00](/api-reference/v01.24.00/openapi-v01.24.00.json)
+- [openapi-v01.23.00](/api-reference/v01.23.00/openapi-v01.23.00.json)
+- [openapi-v01.22.01](/api-reference/v01.22.01/openapi-v01.22.01.json)
+- [openapi-v01.22.00](/api-reference/v01.22.00/openapi-v01.22.00.json)
+- [openapi-v01.21.01](/api-reference/v01.21.01/openapi-v01.21.01.json)
+- [openapi-v01.21.00](/api-reference/v01.21.00/openapi-v01.21.00.json)
+- [openapi-v01.20.00](/api-reference/v01.20.00/openapi-v01.20.00.json)
+- [openapi-v01.19.00](/api-reference/v01.19.00/openapi-v01.19.00.json)
+- [openapi-v01.18.00](/api-reference/v01.18.00/openapi-v01.18.00.json)
+- [openapi-v01.17.00](/api-reference/v01.17.00/openapi-v01.17.00.json)
+- [openapi-v01.16.00](/api-reference/v01.16.00/openapi-v01.16.00.json)
+- [openapi-v01.15.03](/api-reference/v01.15.03/openapi-v01.15.03.json)
+- [openapi-v01.15.02](/api-reference/v01.15.02/openapi-v01.15.02.json)
+- [openapi-v01.15.01](/api-reference/v01.15.01/openapi-v01.15.01.json)
+- [openapi-v01.13.00](/api-reference/v01.13.00/openapi-v01.13.00.json)
+- [openapi-v01.12.01](/api-reference/v01.12.01/openapi-v01.12.01.json)
+- [openapi-v01.12.00](/api-reference/v01.12.00/openapi-v01.12.00.json)
+- [openapi-v01.11.00](/api-reference/v01.11.00/openapi-v01.11.00.json)
+- [openapi-v01.10.00](/api-reference/v01.10.00/openapi-v01.10.00.json)
+- [openapi-v01.09.00](/api-reference/v01.09.00/openapi-v01.09.00.json)
+- [openapi-v01.08.00](/api-reference/v01.08.00/openapi-v01.08.00.json)
+- [openapi-v01.07.00](/api-reference/v01.07.00/openapi-v01.07.00.json)
+- [openapi-v01.05.00](/api-reference/v01.05.00/openapi-v01.05.00.json)
+- [openapi-v01.04.00](/api-reference/v01.04.00/openapi-v01.04.00.json)
+- [openapi-v01.03.00](/api-reference/v01.03.00/openapi-v01.03.00.json)
+- [openapi-v01.02.00](/api-reference/v01.02.00/openapi-v01.02.00.json)
+- [openapi-v01.01.00](/api-reference/v01.01.00/openapi-v01.01.00.json)
+- [openapi-v01.00.02](/api-reference/v01.00.02/openapi-v01.00.02.json)
+- [openapi-v01.00.01](/api-reference/v01.00.01/openapi-v01.00.01.json)
+- [openapi-v01.06.00](/api-reference/v01.06.00/openapi-v01.06.00.json)
+- [openapi-v01.14.00](/api-reference/v01.14.00/openapi-v01.14.00.json)
+- [openapi-v01.15.00](/api-reference/v01.15.00/openapi-v01.15.00.json)
+- [openapi-v01.34.00](/api-reference/v01.34.00/openapi-v01.34.00.json)
+
+> The links below point to documentation indexes. Follow each `/_llms/` index recursively until you reach documentation pages.
+
+## Indexes
+
+- [English / v1.38.0 (167 pages)](https://docs.firma.dev/_llms/en/v1-38-0.md): Documentation for English / v1.38.0.
+- [English / v1.38.0 / API reference (115 pages)](https://docs.firma.dev/_llms/en/v1-38-0/api-reference.md): Documentation for English / v1.38.0 / API reference.
+- [English / v1.37.0 (167 pages)](https://docs.firma.dev/_llms/en/v1-37-0.md): Documentation for English / v1.37.0.
+- [English / v1.37.0 / API reference (115 pages)](https://docs.firma.dev/_llms/en/v1-37-0/api-reference.md): Documentation for English / v1.37.0 / API reference.
+- [English / v1.36.0 (156 pages)](https://docs.firma.dev/_llms/en/v1-36-0.md): Documentation for English / v1.36.0.
+- [English / v1.36.0 / API reference (105 pages)](https://docs.firma.dev/_llms/en/v1-36-0/api-reference.md): Documentation for English / v1.36.0 / API reference.
+- [English / v1.35.0 (156 pages)](https://docs.firma.dev/_llms/en/v1-35-0.md): Documentation for English / v1.35.0.
+- [English / v1.35.0 / API reference (105 pages)](https://docs.firma.dev/_llms/en/v1-35-0/api-reference.md): Documentation for English / v1.35.0 / API reference.
+- [English / v1.34.0 (155 pages)](https://docs.firma.dev/_llms/en/v1-34-0.md): Documentation for English / v1.34.0.
+- [English / v1.33.0 (155 pages)](https://docs.firma.dev/_llms/en/v1-33-0.md): Documentation for English / v1.33.0.
+- [English / v1.33.0 / API reference (104 pages)](https://docs.firma.dev/_llms/en/v1-33-0/api-reference.md): Documentation for English / v1.33.0 / API reference.
+- [English / v1.32.0 (155 pages)](https://docs.firma.dev/_llms/en/v1-32-0.md): Documentation for English / v1.32.0.
+- [English / v1.32.0 / API reference (104 pages)](https://docs.firma.dev/_llms/en/v1-32-0/api-reference.md): Documentation for English / v1.32.0 / API reference.
+- [English / v1.31.0 (155 pages)](https://docs.firma.dev/_llms/en/v1-31-0.md): Documentation for English / v1.31.0.
+- [English / v1.31.0 / API reference (104 pages)](https://docs.firma.dev/_llms/en/v1-31-0/api-reference.md): Documentation for English / v1.31.0 / API reference.
+- [English / v1.30.0 (155 pages)](https://docs.firma.dev/_llms/en/v1-30-0.md): Documentation for English / v1.30.0.
+- [English / v1.30.0 / API reference (104 pages)](https://docs.firma.dev/_llms/en/v1-30-0/api-reference.md): Documentation for English / v1.30.0 / API reference.
+- [English / v1.29.0 (151 pages)](https://docs.firma.dev/_llms/en/v1-29-0.md): Documentation for English / v1.29.0.
+- [English / v1.29.0 / API reference (100 pages)](https://docs.firma.dev/_llms/en/v1-29-0/api-reference.md): Documentation for English / v1.29.0 / API reference.
+- [English / v1.28.0 (150 pages)](https://docs.firma.dev/_llms/en/v1-28-0.md): Documentation for English / v1.28.0.
+- [English / v1.28.0 / API reference (99 pages)](https://docs.firma.dev/_llms/en/v1-28-0/api-reference.md): Documentation for English / v1.28.0 / API reference.
+- [English / v1.27.0 (155 pages)](https://docs.firma.dev/_llms/en/v1-27-0.md): Documentation for English / v1.27.0.
+- [English / v1.27.0 / API reference (104 pages)](https://docs.firma.dev/_llms/en/v1-27-0/api-reference.md): Documentation for English / v1.27.0 / API reference.
+- [English / v1.26.0 (155 pages)](https://docs.firma.dev/_llms/en/v1-26-0.md): Documentation for English / v1.26.0.
+- [English / v1.26.0 / API reference (104 pages)](https://docs.firma.dev/_llms/en/v1-26-0/api-reference.md): Documentation for English / v1.26.0 / API reference.
+- [English / v1.25.2 (155 pages)](https://docs.firma.dev/_llms/en/v1-25-2.md): Documentation for English / v1.25.2.
+- [English / v1.25.2 / API reference (104 pages)](https://docs.firma.dev/_llms/en/v1-25-2/api-reference.md): Documentation for English / v1.25.2 / API reference.
+- [English / v1.25.1 (155 pages)](https://docs.firma.dev/_llms/en/v1-25-1.md): Documentation for English / v1.25.1.
+- [English / v1.25.1 / API reference (104 pages)](https://docs.firma.dev/_llms/en/v1-25-1/api-reference.md): Documentation for English / v1.25.1 / API reference.
+- [English / v1.25.0 (155 pages)](https://docs.firma.dev/_llms/en/v1-25-0.md): Documentation for English / v1.25.0.
+- [English / v1.25.0 / API reference (104 pages)](https://docs.firma.dev/_llms/en/v1-25-0/api-reference.md): Documentation for English / v1.25.0 / API reference.
+- [English / v1.24.0 (155 pages)](https://docs.firma.dev/_llms/en/v1-24-0.md): Documentation for English / v1.24.0.
+- [English / v1.24.0 / API reference (104 pages)](https://docs.firma.dev/_llms/en/v1-24-0/api-reference.md): Documentation for English / v1.24.0 / API reference.
+- [English / v1.23.0 (155 pages)](https://docs.firma.dev/_llms/en/v1-23-0.md): Documentation for English / v1.23.0.
+- [English / v1.23.0 / API reference (104 pages)](https://docs.firma.dev/_llms/en/v1-23-0/api-reference.md): Documentation for English / v1.23.0 / API reference.
+- [English / v1.22.1 (147 pages)](https://docs.firma.dev/_llms/en/v1-22-1.md): Documentation for English / v1.22.1.
+- [English / v1.22.1 / API reference (96 pages)](https://docs.firma.dev/_llms/en/v1-22-1/api-reference.md): Documentation for English / v1.22.1 / API reference.
+- [English / v1.22.0 (147 pages)](https://docs.firma.dev/_llms/en/v1-22-0.md): Documentation for English / v1.22.0.
+- [English / v1.22.0 / API reference (96 pages)](https://docs.firma.dev/_llms/en/v1-22-0/api-reference.md): Documentation for English / v1.22.0 / API reference.
+- [English / v1.21.1 (146 pages)](https://docs.firma.dev/_llms/en/v1-21-1.md): Documentation for English / v1.21.1.
+- [English / v1.21.1 / API reference (95 pages)](https://docs.firma.dev/_llms/en/v1-21-1/api-reference.md): Documentation for English / v1.21.1 / API reference.
+- [English / v1.21.0 (146 pages)](https://docs.firma.dev/_llms/en/v1-21-0.md): Documentation for English / v1.21.0.
+- [English / v1.21.0 / API reference (95 pages)](https://docs.firma.dev/_llms/en/v1-21-0/api-reference.md): Documentation for English / v1.21.0 / API reference.
+- [English / v1.20.0 (146 pages)](https://docs.firma.dev/_llms/en/v1-20-0.md): Documentation for English / v1.20.0.
+- [English / v1.20.0 / API reference (95 pages)](https://docs.firma.dev/_llms/en/v1-20-0/api-reference.md): Documentation for English / v1.20.0 / API reference.
+- [English / v1.19.0 (146 pages)](https://docs.firma.dev/_llms/en/v1-19-0.md): Documentation for English / v1.19.0.
+- [English / v1.19.0 / API reference (95 pages)](https://docs.firma.dev/_llms/en/v1-19-0/api-reference.md): Documentation for English / v1.19.0 / API reference.
+- [English / v1.18.0 (142 pages)](https://docs.firma.dev/_llms/en/v1-18-0.md): Documentation for English / v1.18.0.
+- [English / v1.18.0 / API reference (91 pages)](https://docs.firma.dev/_llms/en/v1-18-0/api-reference.md): Documentation for English / v1.18.0 / API reference.
+- [English / v1.17.0 (142 pages)](https://docs.firma.dev/_llms/en/v1-17-0.md): Documentation for English / v1.17.0.
+- [English / v1.17.0 / API reference (91 pages)](https://docs.firma.dev/_llms/en/v1-17-0/api-reference.md): Documentation for English / v1.17.0 / API reference.
+- [English / v1.16.0 (142 pages)](https://docs.firma.dev/_llms/en/v1-16-0.md): Documentation for English / v1.16.0.
+- [English / v1.16.0 / API reference (91 pages)](https://docs.firma.dev/_llms/en/v1-16-0/api-reference.md): Documentation for English / v1.16.0 / API reference.
+- [English / v1.15.3 (141 pages)](https://docs.firma.dev/_llms/en/v1-15-3.md): Documentation for English / v1.15.3.
+- [English / v1.15.3 / API reference (90 pages)](https://docs.firma.dev/_llms/en/v1-15-3/api-reference.md): Documentation for English / v1.15.3 / API reference.
+- [English / v1.15.2 (141 pages)](https://docs.firma.dev/_llms/en/v1-15-2.md): Documentation for English / v1.15.2.
+- [English / v1.15.2 / API reference (90 pages)](https://docs.firma.dev/_llms/en/v1-15-2/api-reference.md): Documentation for English / v1.15.2 / API reference.
+- [English / v1.15.1 (141 pages)](https://docs.firma.dev/_llms/en/v1-15-1.md): Documentation for English / v1.15.1.
+- [English / v1.15.1 / API reference (90 pages)](https://docs.firma.dev/_llms/en/v1-15-1/api-reference.md): Documentation for English / v1.15.1 / API reference.
+- [English / v1.15.0 (141 pages)](https://docs.firma.dev/_llms/en/v1-15-0.md): Documentation for English / v1.15.0.
+- [English / v1.14.0 (139 pages)](https://docs.firma.dev/_llms/en/v1-14-0.md): Documentation for English / v1.14.0.
+- [English / v1.13.0 (139 pages)](https://docs.firma.dev/_llms/en/v1-13-0.md): Documentation for English / v1.13.0.
+- [English / v1.13.0 / API reference (88 pages)](https://docs.firma.dev/_llms/en/v1-13-0/api-reference.md): Documentation for English / v1.13.0 / API reference.
+- [English / v1.12.1 (139 pages)](https://docs.firma.dev/_llms/en/v1-12-1.md): Documentation for English / v1.12.1.
+- [English / v1.12.1 / API reference (88 pages)](https://docs.firma.dev/_llms/en/v1-12-1/api-reference.md): Documentation for English / v1.12.1 / API reference.
+- [English / v1.12.0 (139 pages)](https://docs.firma.dev/_llms/en/v1-12-0.md): Documentation for English / v1.12.0.
+- [English / v1.12.0 / API reference (88 pages)](https://docs.firma.dev/_llms/en/v1-12-0/api-reference.md): Documentation for English / v1.12.0 / API reference.
+- [English / v1.11.0 (139 pages)](https://docs.firma.dev/_llms/en/v1-11-0.md): Documentation for English / v1.11.0.
+- [English / v1.11.0 / API reference (88 pages)](https://docs.firma.dev/_llms/en/v1-11-0/api-reference.md): Documentation for English / v1.11.0 / API reference.
+- [English / v1.10.0 (139 pages)](https://docs.firma.dev/_llms/en/v1-10-0.md): Documentation for English / v1.10.0.
+- [English / v1.10.0 / API reference (88 pages)](https://docs.firma.dev/_llms/en/v1-10-0/api-reference.md): Documentation for English / v1.10.0 / API reference.
+- [English / v1.9.0 (138 pages)](https://docs.firma.dev/_llms/en/v1-9-0.md): Documentation for English / v1.9.0.
+- [English / v1.9.0 / API reference (87 pages)](https://docs.firma.dev/_llms/en/v1-9-0/api-reference.md): Documentation for English / v1.9.0 / API reference.
+- [English / v1.8.0 (137 pages)](https://docs.firma.dev/_llms/en/v1-8-0.md): Documentation for English / v1.8.0.
+- [English / v1.8.0 / API reference (86 pages)](https://docs.firma.dev/_llms/en/v1-8-0/api-reference.md): Documentation for English / v1.8.0 / API reference.
+- [English / v1.7.0 (126 pages)](https://docs.firma.dev/_llms/en/v1-7-0.md): Documentation for English / v1.7.0.
+- [English / v1.5.0 (126 pages)](https://docs.firma.dev/_llms/en/v1-5-0.md): Documentation for English / v1.5.0.
+- [English / v1.4.0 (126 pages)](https://docs.firma.dev/_llms/en/v1-4-0.md): Documentation for English / v1.4.0.
+- [English / v1.3.0 (126 pages)](https://docs.firma.dev/_llms/en/v1-3-0.md): Documentation for English / v1.3.0.
+- [English / v1.2.0 (110 pages)](https://docs.firma.dev/_llms/en/v1-2-0.md): Documentation for English / v1.2.0.
+- [English / v1.1.0 (110 pages)](https://docs.firma.dev/_llms/en/v1-1-0.md): Documentation for English / v1.1.0.
+- [English / v1.0.2 (109 pages)](https://docs.firma.dev/_llms/en/v1-0-2.md): Documentation for English / v1.0.2.
+- [English / v1.0.1 (97 pages)](https://docs.firma.dev/_llms/en/v1-0-1.md): Documentation for English / v1.0.1.
+- [Spanish (1010 pages)](https://docs.firma.dev/_llms/es.md): Documentation for Spanish.
+- [Spanish / v1.38.0 (165 pages)](https://docs.firma.dev/_llms/es/v1-38-0.md): Documentation for Spanish / v1.38.0.
+- [Spanish / v1.38.0 / Referencia de API (115 pages)](https://docs.firma.dev/_llms/es/v1-38-0/referencia-de-api.md): Documentation for Spanish / v1.38.0 / Referencia de API.
+- [Spanish / v1.37.0 (165 pages)](https://docs.firma.dev/_llms/es/v1-37-0.md): Documentation for Spanish / v1.37.0.
+- [Spanish / v1.37.0 / Referencia de API (115 pages)](https://docs.firma.dev/_llms/es/v1-37-0/referencia-de-api.md): Documentation for Spanish / v1.37.0 / Referencia de API.
+- [Spanish / v1.36.0 (154 pages)](https://docs.firma.dev/_llms/es/v1-36-0.md): Documentation for Spanish / v1.36.0.
+- [Spanish / v1.36.0 / Referencia de API (105 pages)](https://docs.firma.dev/_llms/es/v1-36-0/referencia-de-api.md): Documentation for Spanish / v1.36.0 / Referencia de API.
+- [Spanish / v1.35.0 (154 pages)](https://docs.firma.dev/_llms/es/v1-35-0.md): Documentation for Spanish / v1.35.0.
+- [Spanish / v1.35.0 / Referencia de API (105 pages)](https://docs.firma.dev/_llms/es/v1-35-0/referencia-de-api.md): Documentation for Spanish / v1.35.0 / Referencia de API.
+- [Spanish / v1.34.0 (153 pages)](https://docs.firma.dev/_llms/es/v1-34-0.md): Documentation for Spanish / v1.34.0.
+- [Spanish / v1.34.0 / Referencia de API (104 pages)](https://docs.firma.dev/_llms/es/v1-34-0/referencia-de-api.md): Documentation for Spanish / v1.34.0 / Referencia de API.
+- [Spanish / v1.33.0 (153 pages)](https://docs.firma.dev/_llms/es/v1-33-0.md): Documentation for Spanish / v1.33.0.
+- [Spanish / v1.33.0 / Referencia de API (104 pages)](https://docs.firma.dev/_llms/es/v1-33-0/referencia-de-api.md): Documentation for Spanish / v1.33.0 / Referencia de API.
+- [Spanish / v1.32.0 (153 pages)](https://docs.firma.dev/_llms/es/v1-32-0.md): Documentation for Spanish / v1.32.0.
+- [Spanish / v1.32.0 / Referencia de API (104 pages)](https://docs.firma.dev/_llms/es/v1-32-0/referencia-de-api.md): Documentation for Spanish / v1.32.0 / Referencia de API.
+- [Spanish / v1.31.0 (153 pages)](https://docs.firma.dev/_llms/es/v1-31-0.md): Documentation for Spanish / v1.31.0.
+- [Spanish / v1.31.0 / Referencia de API (104 pages)](https://docs.firma.dev/_llms/es/v1-31-0/referencia-de-api.md): Documentation for Spanish / v1.31.0 / Referencia de API.
+- [Spanish / v1.30.0 (153 pages)](https://docs.firma.dev/_llms/es/v1-30-0.md): Documentation for Spanish / v1.30.0.
+- [Spanish / v1.30.0 / Referencia de API (104 pages)](https://docs.firma.dev/_llms/es/v1-30-0/referencia-de-api.md): Documentation for Spanish / v1.30.0 / Referencia de API.
+- [French (1010 pages)](https://docs.firma.dev/_llms/fr.md): Documentation for French.
+- [French / v1.38.0 (165 pages)](https://docs.firma.dev/_llms/fr/v1-38-0.md): Documentation for French / v1.38.0.
+- [French / v1.38.0 / Référence API (115 pages)](https://docs.firma.dev/_llms/fr/v1-38-0/reference-api.md): Documentation for French / v1.38.0 / Référence API.
+- [French / v1.37.0 (165 pages)](https://docs.firma.dev/_llms/fr/v1-37-0.md): Documentation for French / v1.37.0.
+- [French / v1.37.0 / Référence API (115 pages)](https://docs.firma.dev/_llms/fr/v1-37-0/reference-api.md): Documentation for French / v1.37.0 / Référence API.
+- [French / v1.36.0 (154 pages)](https://docs.firma.dev/_llms/fr/v1-36-0.md): Documentation for French / v1.36.0.
+- [French / v1.36.0 / Référence API (105 pages)](https://docs.firma.dev/_llms/fr/v1-36-0/reference-api.md): Documentation for French / v1.36.0 / Référence API.
+- [French / v1.35.0 (154 pages)](https://docs.firma.dev/_llms/fr/v1-35-0.md): Documentation for French / v1.35.0.
+- [French / v1.35.0 / Référence API (105 pages)](https://docs.firma.dev/_llms/fr/v1-35-0/reference-api.md): Documentation for French / v1.35.0 / Référence API.
+- [French / v1.34.0 (153 pages)](https://docs.firma.dev/_llms/fr/v1-34-0.md): Documentation for French / v1.34.0.
+- [French / v1.34.0 / Référence API (104 pages)](https://docs.firma.dev/_llms/fr/v1-34-0/reference-api.md): Documentation for French / v1.34.0 / Référence API.
+- [French / v1.33.0 (153 pages)](https://docs.firma.dev/_llms/fr/v1-33-0.md): Documentation for French / v1.33.0.
+- [French / v1.33.0 / Référence API (104 pages)](https://docs.firma.dev/_llms/fr/v1-33-0/reference-api.md): Documentation for French / v1.33.0 / Référence API.
+- [French / v1.32.0 (153 pages)](https://docs.firma.dev/_llms/fr/v1-32-0.md): Documentation for French / v1.32.0.
+- [French / v1.32.0 / Référence API (104 pages)](https://docs.firma.dev/_llms/fr/v1-32-0/reference-api.md): Documentation for French / v1.32.0 / Référence API.
+- [French / v1.31.0 (153 pages)](https://docs.firma.dev/_llms/fr/v1-31-0.md): Documentation for French / v1.31.0.
+- [French / v1.31.0 / Référence API (104 pages)](https://docs.firma.dev/_llms/fr/v1-31-0/reference-api.md): Documentation for French / v1.31.0 / Référence API.
+- [French / v1.30.0 (153 pages)](https://docs.firma.dev/_llms/fr/v1-30-0.md): Documentation for French / v1.30.0.
+- [French / v1.30.0 / Référence API (104 pages)](https://docs.firma.dev/_llms/fr/v1-30-0/reference-api.md): Documentation for French / v1.30.0 / Référence API.
+
+
+This documentation is built and hosted on [Mintlify](https://mintlify.com), a developer documentation platform.

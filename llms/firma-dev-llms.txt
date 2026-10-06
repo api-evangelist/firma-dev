@@ -1,2 +1,163 @@
-generated: 2026-09-25
-method: none
+# Firma.dev - E-Signature API for SaaS
+
+> The most affordable secure, compliant e-signature API in the world. Pay-as-you-go at EUR 0.049 per envelope (about 5 cents USD). No contracts, no minimums.
+
+Firma.dev lets SaaS companies embed document signing directly into their products. You get a REST API, embeddable editors (template builder and signing experience), isolated customer workspaces, webhooks, and white-labeling. Most teams integrate in under a day.
+
+---
+
+## What Firma.dev Does
+
+Firma.dev provides hosted signing flows and embeddable UI components so you can add e-signatures to your product without building a document pipeline from scratch. Core capabilities:
+
+- **Customer Workspaces**: Create isolated environments for each of your customers. Each workspace has its own templates, signing activity, usage tracking, and scoped API key. Data never crosses between workspaces.
+- **Embeddable Template Editor**: Let your users design document templates with drag-and-drop field placement inside your app. No redirects.
+- **Embeddable Signing Experience**: Signers complete the signing flow without leaving your interface. Fully white-labeled.
+- **Embeddable Signing Request Editor**: A UI component for configuring recipients, roles, and sending options without building the JSON payload yourself.
+- **Webhooks**: Real-time callbacks when documents are viewed, partially signed, or fully completed.
+- **White-Labeling**: Apply your own branding to the entire signing experience. Your users never see Firma.dev.
+- **Localization**: Multi-language support for signing flows and email notifications.
+
+---
+
+## API Overview
+
+Base URL: `https://api.firma.dev`
+Authentication: API key via `Authorization` header.
+
+### Resources
+
+| Resource | Description |
+|----------|-------------|
+| **Workspaces** | Create and manage isolated customer environments. Each workspace gets its own API key. |
+| **Templates** | Define reusable document workflows with signer roles and field placements. Upload PDFs, configure fields via API or embedded editor. |
+| **Signing Requests** | Send documents for signing. Specify signers, roles, signing order, expiration, and metadata. |
+| **Custom Fields** | Define and manage custom form fields on templates. |
+| **Account/Company** | Retrieve company info including credit balance. |
+| **Email Domains** | Configure custom email domains for sending notifications. |
+| **Email Templates** | Customize the email notifications sent to signers. |
+| **Webhooks** | Register endpoints to receive real-time document lifecycle events. |
+| **JWT Management** | Generate short-lived tokens for embedded UI components. |
+| **Workspace Settings** | Configure workspace-level preferences and branding. |
+
+---
+
+## Pricing
+
+EUR 0.049 per envelope (about 5 cents USD). That's it. The cheapest secure, compliant e-signature API on the market.
+
+- No subscriptions, no monthly fees, no contracts.
+- Test with real documents for free using the included testing mode API key. No limits, no credit card. Pay when you ship.
+- Buy credits as you need them. Credits are shared across all workspaces under your account.
+- Free to start, no credit card required.
+
+---
+
+## Compliance & Security
+
+Firma.dev is designed to support compliance with:
+
+- **U.S.**: ESIGN Act, UETA, HIPAA, FDA 21 CFR Part 11
+- **EU/UK**: eIDAS (SES and AdES levels), UK eIDAS, GDPR
+- **Security**: SOC 2, ISO/IEC 27001
+
+All data is hosted in the EU (AWS Paris region, CloudFront Stockholm).
+
+## E-Signature Legality by Country
+
+Guides to e-signature law in 55+ countries — governing statutes, recognized signature types, and documents that still require wet ink: https://firma.dev/e-signature-legality
+
+Currently published: Brazil (https://firma.dev/e-signature-legality/brazil), Colombia (https://firma.dev/e-signature-legality/colombia), France (https://firma.dev/e-signature-legality/france), Germany (https://firma.dev/e-signature-legality/germany), Mexico (https://firma.dev/e-signature-legality/mexico), Philippines (https://firma.dev/e-signature-legality/philippines), South Africa (https://firma.dev/e-signature-legality/south-africa), Spain (https://firma.dev/e-signature-legality/spain), United Kingdom (https://firma.dev/e-signature-legality/united-kingdom), United States (https://firma.dev/e-signature-legality/united-states). More added regularly.
+
+---
+
+## MCP Servers
+
+Firma.dev runs two live Model Context Protocol (MCP) servers that connect AI assistants like Claude, ChatGPT, Cursor, and GitHub Copilot to Firma.dev. Both are full, production servers you can use right now. Setup instructions for every supported client are at https://docs.firma.dev/guides/mcp.
+
+- **Data MCP** (`https://mcp.firma.dev/mcp`): Gives AI assistants direct access to the Firma.dev API. Manage templates, create and send signing requests, configure workspaces, set up webhooks, and more through natural language, with 84 tools across 10 categories. Requires OAuth authentication with your Firma.dev account. Setup: https://docs.firma.dev/guides/mcp#data-mcp
+- **Docs MCP** (`https://docs.firma.dev/mcp`): Gives AI assistants read-only access to the full Firma.dev documentation and API reference, so they generate accurate integration code with correct endpoints, request shapes, and auth patterns. No authentication required. Setup: https://docs.firma.dev/guides/mcp#docs-mcp
+
+Most developers connect both: the Data MCP to operate on Firma.dev data, and the Docs MCP to build Firma.dev integrations.
+
+---
+
+## Integrations
+
+Firma.dev has step-by-step integration guides for the tools developers use most. Each one covers authentication, sending a signing request, and handling webhooks.
+
+- **Claude Code**: https://docs.firma.dev/guides/claude-code-integration
+- **Cursor**: https://docs.firma.dev/guides/cursor-integration
+- **Salesforce**: https://docs.firma.dev/guides/salesforce-integration
+- **ChatGPT**: https://docs.firma.dev/guides/chatgpt-integration
+
+More guides cover Supabase, Lovable, Bolt.new, v0, Replit, Cloudflare, Gemini, Wasp, and others. Full list: https://docs.firma.dev/llms.txt
+
+---
+
+## Brand & Media
+
+Logos, color palette, product screenshots, and boilerplate copy for press and partners, no login required: https://firma.dev/media
+
+---
+
+## Getting Started
+
+1. Sign up at https://app.firma.dev/signup (free, no credit card)
+2. Get your API key from the dashboard
+3. Create a workspace for your first customer
+4. Upload a PDF and create a template
+5. Send a signing request
+6. Embed the signing experience in your app
+
+Complete setup guide: https://docs.firma.dev/guides/complete-setup-guide
+
+---
+
+## Quick Example
+
+    # Create a workspace
+    curl -X POST https://api.firma.dev/v1/workspaces \
+      -H "Authorization: your_api_key" \
+      -H "Content-Type: application/json" \
+      -d '{"name": "Acme Inc."}'
+
+    # Send a signing request
+    curl -X POST https://api.firma.dev/v1/signing-requests/create-and-send \
+      -H "Authorization: your_workspace_api_key" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "template_id": "tpl456",
+        "name": "Contract for Jane Smith",
+        "recipients": [
+          {
+            "first_name": "Jane",
+            "last_name": "Smith",
+            "email": "jane@example.com",
+            "designation": "Signer",
+            "order": 1
+          }
+        ]
+      }'
+
+---
+
+## Links
+
+- Website: https://firma.dev
+- API Documentation: https://docs.firma.dev
+- API Changelog: https://docs.firma.dev/guides/api-changelog
+- Platform Updates: https://docs.firma.dev/guides/platform-updates
+- Sign Up: https://app.firma.dev/signup
+- Dashboard: https://app.firma.dev/dashboard
+- Pricing: https://firma.dev/pricing
+- System Status: https://status.firma.dev
+- Support: support@firma.dev
+- MCP Integration Guide: https://docs.firma.dev/guides/mcp
+- Data MCP: https://mcp.firma.dev/mcp
+- Docs MCP: https://docs.firma.dev/mcp
+- Integration Guides: https://docs.firma.dev/llms.txt
+- Brand & Media Kit: https://firma.dev/media
+- E-Signature Legality by Country: https://firma.dev/e-signature-legality
+
+---

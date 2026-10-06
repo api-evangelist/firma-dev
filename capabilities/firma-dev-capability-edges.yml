@@ -33,6 +33,6 @@ edges:
   confidence: 0.7
   evidence: POST /workspaces createWorkspace Create a new workspace; POST /workspaces/{id}/api-key/regenerate
     Regenerate workspace API key; POST /workspaces/{id}/logo Upload Workspace Logo
-  reason: The partner API creates and maintains workspaces — the tenant unit of this white-labelled signing
+  reason: The partner API creates and maintains workspaces — the tenant unit of this embeddable, custom-branded signing
     platform — including credential issuance and branding, which maps to tenant provisioning and lifecycle.
     Some overlap with tenant configuration (branding/logo) keeps confidence moderate.

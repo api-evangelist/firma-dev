@@ -1,0 +1,142 @@
+generated: '2026-10-06'
+method: searched
+source:
+- https://docs.firma.dev/guides/webhooks
+- https://docs.firma.dev/api-reference/v01.00.02/webhooks/create-webhook
+- openapi/firma-dev-webhooks-api-openapi.yml
+description: Webhook surface documented in the Firma.dev webhooks guide and the Webhooks section of the API reference (create, list, get, update,
+  delete, test, signing-secret rotation and status, per company and per workspace).
+management_operations:
+- 'POST /webhooks (createWebhook)'
+- 'GET /webhooks (listWebhooks)'
+- 'GET /webhooks/{id} (getWebhook)'
+- 'PUT /webhooks/{id} (updateWebhook)'
+- 'DELETE /webhooks/{id} (deleteWebhook)'
+- 'POST /webhooks/{id}/test (testWebhook)'
+- 'POST /webhooks/rotate-secret (rotateWebhookSecret)'
+- 'GET /webhooks/secret-status (getWebhookSecretStatus)'
+- 'POST /workspaces/{id}/webhooks/rotate-secret (rotateWorkspaceWebhookSecret)'
+- 'GET /workspaces/{id}/webhooks/secret-status (getWorkspaceWebhookSecretStatus)'
+events:
+- event: signing_request.created
+  description: 'New signing request created'
+  group: Signing Request Events
+  declared_in: docs
+- event: signing_request.sent
+  description: 'Signing request sent to recipients'
+  group: Signing Request Events
+  declared_in: docs
+- event: signing_request.viewed
+  description: 'Recipient viewed the document'
+  group: Signing Request Events
+  declared_in: docs
+- event: signing_request.completed
+  description: 'All recipients finished signing'
+  group: Signing Request Events
+  declared_in: docs
+- event: signing_request.expired
+  description: 'Signing request expired'
+  group: Signing Request Events
+  declared_in: docs
+- event: signing_request.cancelled
+  description: 'Signing request was cancelled'
+  group: Signing Request Events
+  declared_in: docs
+- event: signing_request.updated
+  description: 'Signing request metadata updated'
+  group: Signing Request Events
+  declared_in: docs
+- event: signing_request.deleted
+  description: 'Signing request deleted (before sending)'
+  group: Signing Request Events
+  declared_in: docs
+- event: signing_request.certificate.generated
+  description: 'Signing certificate generated'
+  group: Signing Request Events
+  declared_in: docs
+- event: signing_request.reminder.sent
+  description: 'Reminder sent to recipients'
+  group: Signing Request Events
+  declared_in: docs
+- event: signing_request.recipient.signed
+  description: 'Recipient completed signing'
+  group: Recipient Events
+  declared_in: docs
+- event: signing_request.recipient.declined
+  description: 'Recipient declined to sign'
+  group: Recipient Events
+  declared_in: docs
+- event: signing_request.recipient.identity_changed
+  description: 'Recipient changed their identity (name, company, etc.) during signing'
+  group: Recipient Events
+  declared_in: docs
+- event: template.updated
+  description: 'Template modified'
+  group: Template Events
+  declared_in: docs
+- event: template.used
+  description: 'Template used to create a signing request'
+  group: Template Events
+  declared_in: docs
+- event: organization_seal.created
+  description: 'New seal created'
+  group: Organization Seal Events
+  declared_in: docs
+- event: organization_seal.updated
+  description: 'Seal image replaced (new version), renamed, or default flag changed'
+  group: Organization Seal Events
+  declared_in: docs
+- event: organization_seal.deleted
+  description: 'Seal revoked'
+  group: Organization Seal Events
+  declared_in: docs
+- event: organization_seal.erased
+  description: 'Revoked seal lineage permanently erased'
+  group: Organization Seal Events
+  declared_in: docs
+- event: signing_request.seal.applied
+  description: 'Seal applied to a document'
+  group: Signing Request Seal Events
+  declared_in: docs
+- event: signing_request.seal.paused
+  description: 'Seal participant paused (revoked seal with stop pending, or integrity mismatch)'
+  group: Signing Request Seal Events
+  declared_in: docs
+- event: signing_request.seal.swapped
+  description: 'Paused seal participant swapped to a different seal'
+  group: Signing Request Seal Events
+  declared_in: docs
+- event: workspace.created
+  description: 'New workspace created'
+  group: Workspace Events
+  declared_in: docs
+- event: workspace.updated
+  description: 'Workspace modified'
+  group: Workspace Events
+  declared_in: docs
+- event: domain.verified
+  description: 'Domain verified successfully'
+  group: Domain Events
+  declared_in: docs
+- event: domain.verification.failed
+  description: 'Domain verification failed'
+  group: Domain Events
+  declared_in: docs
+events_note: The guide lists 26 event types. The OpenAPI events enum on create/update also accepts subscription values the guide does not list
+  (for example template.created, template.deleted, workspace.deleted, signing_request.declined); the guide is recorded as the event surface.
+availability: Webhook delivery needs both the per-webhook enabled flag and the company- or workspace-level master switch; POST /webhooks/{id}/test bypasses the master switch.
+delivery:
+  method: 'POST, Content-Type: application/json'
+  timeout: Endpoint must use HTTPS and respond within 5 seconds.
+  payload: '{id, type, created_at, company_id, workspace_id, data}'
+signature:
+  header: X-Firma-Signature
+  format: t=<unix timestamp>,v1=<hex>
+  algorithm: HMAC-SHA256
+  signed_payload: '''{timestamp}.{json_body}'''
+  rotation: X-Firma-Signature-Old carries the signature with the previous secret during a 7-day rotation grace period.
+headers:
+- X-Firma-Signature
+- X-Firma-Signature-Old
+- X-Firma-Event
+- X-Firma-Delivery
