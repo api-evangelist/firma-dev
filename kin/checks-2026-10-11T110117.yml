@@ -2,8 +2,8 @@
 kin_checks:
   slug: firma-dev
   schema_version: 0.23.0
-  scored_at: '2026-10-03'
-  run_ts: 2026-10-03T024842
+  scored_at: '2026-10-11'
+  run_ts: 2026-10-11T110117
   note: Actionable checks (missed + partial) in `checks`, plus the ids that did not
     apply in `na`. Everything else in rubric/scoring-0.23.0.yml was earned; counts
     below let you verify that.
@@ -11,8 +11,8 @@ kin_checks:
     total: 153
     earned: 39
     partial: 32
-    missed: 55
-    na: 27
+    missed: 56
+    na: 26
   checks:
   - id: leadership_present
     status: missed
@@ -40,6 +40,8 @@ kin_checks:
     status: missed
     detail: 0 of 12 openapi documents pass; credited at 90% because of their provenance
       (unknown)
+  - id: inbound_contract_published
+    status: missed
   - id: asyncapi_present
     status: missed
   - id: domain_standard_conformance
@@ -270,7 +272,6 @@ kin_checks:
   - graphql_descriptions
   - graphql_sdl_present
   - graphql_type_depth
-  - inbound_contract_published
   - messages_with_schema
   - os_code_of_conduct
   - os_contribution_guide
