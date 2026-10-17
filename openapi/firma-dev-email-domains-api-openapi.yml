@@ -1043,12 +1043,67 @@ paths:
         source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.emailDomains.setWorkspacePrimaryDomain({\n    workspace_id: \"workspace_id\",\n    id: \"id\"\n});\nconsole.log(response);"
 components:
   schemas:
-    DomainVerifyDnsResponse:
+    DomainDnsRecord:
+      type: object
+      description: DNS record required for email domain verification
+      properties:
+        type:
+          type: string
+          enum:
+          - TXT
+          - CNAME
+          - MX
+          description: DNS record type
+        name:
+          type: string
+          description: DNS record name/host (e.g., 'resend._domainkey' or '@')
+        value:
+          type: string
+          description: DNS record value
+        ttl:
+          type: string
+          description: Time to live (e.g., 'Auto' or seconds)
+        priority:
+          type:
+          - integer
+          - 'null'
+          description: Priority for MX records
+        status:
+          type: string
+          enum:
+          - pending
+          - verified
+          - failed
+          description: Verification status of this specific record
+    DomainVerifyOwnershipResponse:
       type: object
       properties:
-        verified:
-          type: boolean
-          description: Whether all DNS records are verified
+        message:
+          type: string
+        domain:
+          $ref: '#/components/schemas/Domain'
+        next_step:
+          type: string
+      description: Domain ownership verification result
+      required:
+      - message
+      - domain
+      - next_step
+    DomainDeleteResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        domain_id:
+          type: string
+          format: uuid
+      description: Domain deletion confirmation
+      required:
+      - message
+      - domain_id
+    DomainFinalizeResponse:
+      type: object
+      properties:
         message:
           type: string
         domain:
@@ -1057,12 +1112,47 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/DomainDnsRecord'
-          description: Status of each DNS record
-      description: DNS verification result
+          description: DNS records to add for email sending
+        next_step:
+          type: string
+      description: Domain finalization with DNS records
       required:
-      - verified
       - message
       - domain
+      - dns_records
+      - next_step
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Human-readable error message
+        code:
+          type: string
+          description: 'Machine-readable error code Seal-related codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
+        errors:
+          type: array
+          description: All validation errors when multiple failures are reported together. The top-level error repeats the first item for backward compatibility.
+          items:
+            type: object
+            required:
+            - message
+            properties:
+              message:
+                type: string
+        message:
+          type: string
+          description: Detailed error description
+        details:
+          type: object
+          description: Additional error details
+          additionalProperties: true
+      required:
+      - error
+      description: '
+
+
+        Organization Seal error codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
     Domain:
       type: object
       description: Email domain configuration for sending signing request emails
@@ -1118,75 +1208,40 @@ components:
       - domain
       - domain_status
       - verification_status
-    DomainSetPrimaryResponse:
+    DomainVerifyDnsResponse:
       type: object
       properties:
+        verified:
+          type: boolean
+          description: Whether all DNS records are verified
         message:
           type: string
         domain:
           $ref: '#/components/schemas/Domain'
-      description: Primary domain update confirmation
-      required:
-      - message
-      - domain
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Human-readable error message
-        code:
-          type: string
-          description: 'Machine-readable error code Seal-related codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
-        errors:
+        dns_records:
           type: array
-          description: All validation errors when multiple failures are reported together. The top-level error repeats the first item for backward compatibility.
           items:
-            type: object
-            required:
-            - message
-            properties:
-              message:
-                type: string
-        message:
-          type: string
-          description: Detailed error description
-        details:
-          type: object
-          description: Additional error details
-          additionalProperties: true
+            $ref: '#/components/schemas/DomainDnsRecord'
+          description: Status of each DNS record
+      description: DNS verification result
       required:
-      - error
-      description: '
-
-
-        Organization Seal error codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
-    DomainVerifyOwnershipResponse:
-      type: object
-      properties:
-        message:
-          type: string
-        domain:
-          $ref: '#/components/schemas/Domain'
-        next_step:
-          type: string
-      description: Domain ownership verification result
-      required:
+      - verified
       - message
       - domain
-      - next_step
-    DomainDeleteResponse:
+    DomainListResponse:
       type: object
       properties:
-        message:
-          type: string
-        domain_id:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Domain'
+        workspace_id:
           type: string
           format: uuid
-      description: Domain deletion confirmation
+          description: Workspace ID for scoped results
+      description: List of domains with workspace context
       required:
-      - message
-      - domain_id
+      - results
     DomainCreateResponse:
       type: object
       properties:
@@ -1211,72 +1266,17 @@ components:
       required:
       - domain
       - verification_instructions
-    DomainListResponse:
-      type: object
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Domain'
-        workspace_id:
-          type: string
-          format: uuid
-          description: Workspace ID for scoped results
-      description: List of domains with workspace context
-      required:
-      - results
-    DomainDnsRecord:
-      type: object
-      description: DNS record required for email domain verification
-      properties:
-        type:
-          type: string
-          enum:
-          - TXT
-          - CNAME
-          - MX
-          description: DNS record type
-        name:
-          type: string
-          description: DNS record name/host (e.g., 'resend._domainkey' or '@')
-        value:
-          type: string
-          description: DNS record value
-        ttl:
-          type: string
-          description: Time to live (e.g., 'Auto' or seconds)
-        priority:
-          type:
-          - integer
-          - 'null'
-          description: Priority for MX records
-        status:
-          type: string
-          enum:
-          - pending
-          - verified
-          - failed
-          description: Verification status of this specific record
-    DomainFinalizeResponse:
+    DomainSetPrimaryResponse:
       type: object
       properties:
         message:
           type: string
         domain:
           $ref: '#/components/schemas/Domain'
-        dns_records:
-          type: array
-          items:
-            $ref: '#/components/schemas/DomainDnsRecord'
-          description: DNS records to add for email sending
-        next_step:
-          type: string
-      description: Domain finalization with DNS records
+      description: Primary domain update confirmation
       required:
       - message
       - domain
-      - dns_records
-      - next_step
   responses:
     UnauthorizedError:
       description: Unauthorized - Invalid or missing API key

@@ -451,6 +451,48 @@ paths:
         source: "import { FirmaClient } from \"@firma-dev/sdk\";\n\nconst firma = new FirmaClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await firma.customFields.deleteSigningRequestCustomField({\n    request_id: \"request_id\",\n    field_id: \"field_id\"\n});\nconsole.log(response);"
 components:
   schemas:
+    CustomFieldListResponse:
+      type: object
+      properties:
+        custom_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkspaceCustomField'
+      description: List of custom fields
+      required:
+      - custom_fields
+    TemplateCustomField:
+      type: object
+      description: A custom field definition for a template
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier
+        field_name:
+          type: string
+          description: Machine-readable field name
+        field_label:
+          type: string
+          description: Human-readable display label
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+      - id
+      - field_name
+    MessageResponse:
+      type: object
+      description: Simple success response with a message
+      properties:
+        message:
+          type: string
+          description: Success message
+      required:
+      - message
     WorkspaceCustomField:
       type: object
       description: A custom field definition for a workspace
@@ -483,18 +525,9 @@ components:
       - id
       - field_name
       - field_label
-    MessageResponse:
+    SigningRequestCustomField:
       type: object
-      description: Simple success response with a message
-      properties:
-        message:
-          type: string
-          description: Success message
-      required:
-      - message
-    TemplateCustomField:
-      type: object
-      description: A custom field definition for a template
+      description: A custom field definition for a signing request
       properties:
         id:
           type: string
@@ -506,6 +539,9 @@ components:
         field_label:
           type: string
           description: Human-readable display label
+        copied_from_template:
+          type: boolean
+          description: True if this field was copied from a template
         created_at:
           type: string
           format: date-time
@@ -547,42 +583,6 @@ components:
 
 
         Organization Seal error codes: SEALS_DISABLED, SEAL_ALREADY_REVOKED, SEAL_CREATION_DISABLED_EDGE, SEAL_ERASE_NOT_ELIGIBLE, SEAL_IMAGE_INVALID, SEAL_MUTATION_NOT_ALLOWED, SEAL_NOT_FOUND, SEAL_ORDER_COLLISION, SEAL_PAUSED, SEAL_SCOPE_FORBIDDEN, SEAL_UNAVAILABLE'
-    CustomFieldListResponse:
-      type: object
-      properties:
-        custom_fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/WorkspaceCustomField'
-      description: List of custom fields
-      required:
-      - custom_fields
-    SigningRequestCustomField:
-      type: object
-      description: A custom field definition for a signing request
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Unique identifier
-        field_name:
-          type: string
-          description: Machine-readable field name
-        field_label:
-          type: string
-          description: Human-readable display label
-        copied_from_template:
-          type: boolean
-          description: True if this field was copied from a template
-        created_at:
-          type: string
-          format: date-time
-        updated_at:
-          type: string
-          format: date-time
-      required:
-      - id
-      - field_name
   responses:
     UnauthorizedError:
       description: Unauthorized - Invalid or missing API key
