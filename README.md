@@ -64,5 +64,177 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Firma.dev is a company surfaced via the API Evangelist harvest backlog (source: new-submission) and added to the network as a stub for full-pipeline profiling.
-- https://firma.dev/
+Firma.dev provides an electronic signature API for developers, with pay-as-you-go pricing starting at €0.049 per envelope and no minimums or contracts. It offers embeddable signing with custom branding - template and signing-request editors and the signing experience embed in the customer's own product, with isolated customer workspaces. It is built for ESIGN, UETA and eIDAS with audit trails, supports SOC 2 and ISO/IEC 27001, and addresses GDPR. It offers a REST API described in OpenAPI, webhook events, and sample apps for embedding e-signatures directly into applications.
+
+**Areas:** Company · E-Signature · Developer Tools · LowCost
+
+## Firma.dev on APIs.io
+
+Everything profiled for Firma.dev is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/firma-dev/](https://apis.io/providers/firma-dev/)** — or go straight to one of the APIs or properties below.
+
+### APIs (12)
+
+- [Firma.dev Company API](https://apis.io/apis/firma-dev/firma-dev-company-api/) — Company information and settings
+- [Firma.dev Custom Fields API](https://apis.io/apis/firma-dev/firma-dev-custom-fields-api/) — Custom field definition management for workspaces, templates, and signing requests
+- [Firma.dev Email Domains API](https://apis.io/apis/firma-dev/firma-dev-email-domains-api/) — Email domain setup and verification for sending signing request emails from custom domains
+- [Firma.dev Email Templates API](https://apis.io/apis/firma-dev/firma-dev-email-templates-api/) — Email template management for workspace and company-level customization of signing request notifications
+- [Firma.dev JWT Management API](https://apis.io/apis/firma-dev/firma-dev-jwt-management-api/) — JWT token generation and revocation for embedded templates
+- [Firma.dev Organization Seals API](https://apis.io/apis/firma-dev/firma-dev-organization-seals-api/) — Organization seal management: create, update, revoke, and erase seals applied to signing requests
+- [Firma.dev Signer Terms API](https://apis.io/apis/firma-dev/firma-dev-signer-terms-api/) — Custom signer terms-of-service / consent statements, company-level with per-language workspace overrides
+- [Firma.dev Signing Requests API](https://apis.io/apis/firma-dev/firma-dev-signing-requests-api/) — Document signing request operations
+- [Firma.dev Templates API](https://apis.io/apis/firma-dev/firma-dev-templates-api/) — Template management operations
+- [Firma.dev Webhooks API](https://apis.io/apis/firma-dev/firma-dev-webhooks-api/) — Webhook configuration and management
+- [Firma.dev Workspace Settings API](https://apis.io/apis/firma-dev/firma-dev-workspace-settings-api/) — Workspace configuration and settings
+- [Firma.dev Workspaces API](https://apis.io/apis/firma-dev/firma-dev-workspaces-api/) — Workspace management operations
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### AsyncAPI (1)
+
+Event-driven and webhook contracts.
+
+- [Firma Dev Webhooks](https://apis.io/asyncapis/firma-dev/firma-dev-webhooks/)
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [firma-dev-mcp.yml](https://apis.io/servers/firma-dev/firma-dev-mcp-yml/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Firma Dev Agentic Access](https://apis.io/agentic-access/firma-dev/firma-dev-agentic-access/)
+
+#### JSON Schema (58)
+
+The data models the API reads and writes.
+
+- [AnchorTag](https://apis.io/schemas/firma-dev/firma-dev-anchor-tag/)
+- [ApiKeyExpireResponse](https://apis.io/schemas/firma-dev/firma-dev-api-key-expire-response/)
+- [ApiKeyRegenerateResponse](https://apis.io/schemas/firma-dev/firma-dev-api-key-regenerate-response/)
+- [Company](https://apis.io/schemas/firma-dev/firma-dev-company/)
+- [CompanyEmailTemplateListResponse](https://apis.io/schemas/firma-dev/firma-dev-company-email-template-list-response/)
+- [CompanySettings](https://apis.io/schemas/firma-dev/firma-dev-company-settings/)
+- [ConditionSet](https://apis.io/schemas/firma-dev/firma-dev-condition-set/)
+- [CustomFieldListResponse](https://apis.io/schemas/firma-dev/firma-dev-custom-field-list-response/)
+- [Domain](https://apis.io/schemas/firma-dev/firma-dev-domain/)
+- [DomainCreateResponse](https://apis.io/schemas/firma-dev/firma-dev-domain-create-response/)
+- [DomainFinalizeResponse](https://apis.io/schemas/firma-dev/firma-dev-domain-finalize-response/)
+- [DomainListResponse](https://apis.io/schemas/firma-dev/firma-dev-domain-list-response/)
+- [DomainVerifyDnsResponse](https://apis.io/schemas/firma-dev/firma-dev-domain-verify-dns-response/)
+- [DomainVerifyOwnershipResponse](https://apis.io/schemas/firma-dev/firma-dev-domain-verify-ownership-response/)
+- [EmailTemplate](https://apis.io/schemas/firma-dev/firma-dev-email-template/)
+- [EmailTemplateDefaultsResponse](https://apis.io/schemas/firma-dev/firma-dev-email-template-defaults-response/)
+- [EmailTemplateDeleteResponse](https://apis.io/schemas/firma-dev/firma-dev-email-template-delete-response/)
+- [EmailTemplatePlaceholdersResponse](https://apis.io/schemas/firma-dev/firma-dev-email-template-placeholders-response/)
+- [Field](https://apis.io/schemas/firma-dev/firma-dev-field/)
+- [GenerateJWTRequest](https://apis.io/schemas/firma-dev/firma-dev-generate-jwtrequest/)
+- [GenerateSigningRequestJWTRequest](https://apis.io/schemas/firma-dev/firma-dev-generate-signing-request-jwtrequest/)
+- [GenerateSigningRequestJWTResponse](https://apis.io/schemas/firma-dev/firma-dev-generate-signing-request-jwtresponse/)
+- [GenerateTemplateTokenResponse](https://apis.io/schemas/firma-dev/firma-dev-generate-template-token-response/)
+- [LogoDeleteResponse](https://apis.io/schemas/firma-dev/firma-dev-logo-delete-response/)
+- [LogoUploadResponse](https://apis.io/schemas/firma-dev/firma-dev-logo-upload-response/)
+- …and 33 more published on APIs.io
+
+#### JSON-LD (1)
+
+Linked-data contexts for the provider's vocabulary.
+
+- [Firma Dev Context](https://apis.io/jsonld/firma-dev/firma-dev-context/)
+
+#### Governance rules (1)
+
+Spectral rulesets for the provider's contracts.
+
+- [Firma.dev API Rules](https://apis.io/rules/firma-dev/firma-dev-rules/)
+
+#### Security (3)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Firma Dev Authentication](https://apis.io/security/firma-dev/firma-dev-authentication/)
+- [Firma Dev Domain Security](https://apis.io/security/firma-dev/firma-dev-domain-security/)
+- [Firma Dev Trust Center](https://apis.io/security/firma-dev/firma-dev-trust-center/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Firma Dev Plans Pricing](https://apis.io/plans/firma-dev/firma-dev-plans-pricing/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://firma.dev/)
+- [Documentation](https://docs.firma.dev/)
+- [Getting started](https://docs.firma.dev/guides/complete-setup-guide)
+- [API reference](https://docs.firma.dev/api-reference/v01.38.00/)
+- [Pricing](https://firma.dev/pricing)
+- [Sign up](https://app.firma.dev/signup)
+- [Support](https://firma.dev/contact)
+- [Blog](https://firma.dev/insights)
+- [Security](https://firma.dev/security)
+- [Compliance](https://firma.dev/trust)
+- [Terms of service](https://firma.dev/legal/terms-conditions)
+- [Privacy policy](https://firma.dev/legal/privacy-policy)
+- [Status](https://status.firma.dev)
+
+## API Evangelist rating
+
+**Kin Score 63.3** — strong · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 51.7 |
+| Contract quality | 76.4 |
+| Contract governance | 22.0 |
+| Operational transparency | 34.2 |
+| Developer ergonomics | 54.2 |
+| Access clarity | 81.6 |
+
+**Agent readiness 40.8** — agent-ready (gated down from agent-native)
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | verified |
+| MCP Server | documented (partial credit) |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | verified |
+| OpenAPI Examples | partial |
+| Rate Limit Signal | verified |
+| Event Surface Described | yes |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | — |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 29.4** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/firma-dev/](https://apis.io/providers/firma-dev/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Firma.dev: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/firma-dev/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
